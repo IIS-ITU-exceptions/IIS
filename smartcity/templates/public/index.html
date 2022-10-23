@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+{% block content %}
+
+    <div class="container">
+        <h1>Welcome!</h1>
+        <h3>Roles:</h3>
+        <p>{{ roles }}</p>
+        <h3>Users:</h3>
+        <p>{{ users }}</p>
+        <h3>Current user:</h3>
+        <p>{{ current_user }}</p>
+        {% if not current_user.is_anonymous %}
+            <h3>Current user role:</h3>
+            <p>{{ current_user.role[0] }}</p>
+        {% endif %}
+    </div>
+
+
+
+
+{% endblock %}

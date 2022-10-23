@@ -1,0 +1,29 @@
+<div class="container">
+    <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom sticky-top" style="overflow: visible !important;">
+        <a href="{{ url_for("home.index") }}" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
+            <i class="las la-city" style="font-size: 32px"></i><b style="font-size: 26px; margin-left: 10px">Smartcity</b>
+        </a>
+
+        <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+            <li><a href="#" class="nav-link px-2 link-secondary">Home</a></li>
+            <li><a href="#" class="nav-link px-2 link-dark">Features</a></li>
+            <li><a href="#" class="nav-link px-2 link-dark">About</a></li>
+        </ul>
+
+        <div class="col-md-3 text-end align-items-center">
+            {% if current_user.is_anonymous %}
+                <a href="{{ url_for("auth.login") }}"><button type="button" class="btn btn-outline-primary me-2">Login</button></a>
+                <a href="{{ url_for("auth.signup") }}"><button type="button" class="btn btn-primary">Sign-up</button></a>
+            {% else %}
+                <div class="dropdown">
+                    <a class="caret dropdown-toggle d-block link-dark text-decoration-none" style="outline: 0;" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="las la-user" style="font-size: 24px"></i>{{ current_user.fullname }}
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#logoutModal">Logout</a></li>
+                    </ul>
+                </div>
+            {% endif %}
+        </div>
+    </header>
+</div>

@@ -1,0 +1,25 @@
+{% macro render_text_field(field, form_text="") %}
+    {{ field.label(class_="form-label") }}
+    {{ field(class_="form-control") }}
+    {% if form_text != "" %}
+        <div class="form-text">{{ form_text }}</div>
+    {% endif %}
+
+    <div id="{{ field.name }}-error" class="invalid-feedback"></div>
+{% endmacro %}
+
+
+{% macro render_boolean_field(field) %}
+    {{ field(class_="form-check-input") }}
+    {{ field.label(class_="form-check-label ms-2") }}
+
+    <div id="{{ field.name }}-error" class="invalid-feedback"></div>
+{% endmacro %}
+
+
+{% macro render_alert(message, type) %}
+    <div class="alert alert-{{ warning }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+{% endmacro %}
