@@ -25,9 +25,22 @@ def signup():
                     name=data.get("name"),
                     surname=data.get("surname"),
                 )
-                role = Role.query.filter_by(name="resident").first()
-                if not role:
-                    raise AttributeError
+                if data.get("role") == 1:
+                    role = Role.query.filter_by(name="resident").first()
+                    if not role:
+                        raise AttributeError
+                elif data.get("role") == 2:
+                    role = Role.query.filter_by(name="technician").first()
+                    if not role:
+                        raise AttributeError
+                elif data.get("role") == 3:
+                    role = Role.query.filter_by(name="manager").first()
+                    if not role:
+                        raise AttributeError
+                elif data.get("role") == 4:
+                    role = Role.query.filter_by(name="admin").first()
+                    if not role:
+                        raise AttributeError
                 new_user.role.append(role)
                 db.session.expunge_all()
                 db.session.add(new_user)

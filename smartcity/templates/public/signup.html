@@ -97,6 +97,7 @@ form.addEventListener("submit", async (e) => {
        email: fields.email.input.value,
        password: fields.password.input.value,
        confirm: fields.confirm.input.value,
+       role: 1,
    });
 
    const response = await fetch("{{ url_for("auth.signup") }}", {
