@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+{% from "macros/fields.html" import render_text_field, render_boolean_field, render_alert%}
+{% block content %}
+
+    <div class="container">
+        <h3>Current user: {{ current_user.fullname ~', ' ~ current_user.role[0].name }}</h3>
+    </div>
+    <br>
+
+{% endblock %}
+

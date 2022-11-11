@@ -14,10 +14,3 @@ def index():
     else:
         users = User.query.filter_by(email=current_user.email).first()
     return render_template("public/index.html", roles=roles, users=users, current_user=current_user)
-
-
-@home_bp.route("/dashboard", methods=["GET"])
-@login_required
-@roles_required(["manager"])
-def dashboard():
-    return render_template("manager/dashboard.html", current_user=current_user)

@@ -8,6 +8,18 @@
             <li><a href="#" class="nav-link px-2 link-secondary">Home</a></li>
             <li><a href="#" class="nav-link px-2 link-dark">Features</a></li>
             <li><a href="#" class="nav-link px-2 link-dark">About</a></li>
+        {% if current_user.is_authenticated %}
+            {% if current_user.role[0].name == 'manager' %}
+                <li><a href="{{ url_for("manager.manager_dashboard") }}" class="nav-link px-2 link-dark">Dashboard</a></li>
+                <li><a href="{{ url_for("manager.create_technician") }}" class="nav-link px-2 link-dark">Create technician</a></li>
+            {% endif %}
+        {% endif %}
+                {% if current_user.is_authenticated %}
+            {% if current_user.role[0].name == 'admin' %}
+                <li><a href="{{ url_for("admin.admin_dashboard") }}" class="nav-link px-2 link-dark">Dashboard</a></li>
+                <li><a href="{{ url_for("admin.create_city_manager") }}" class="nav-link px-2 link-dark">Create city manager</a></li>
+            {% endif %}
+        {% endif %}
         </ul>
 
         <div class="col-md-3 text-end align-items-center">
