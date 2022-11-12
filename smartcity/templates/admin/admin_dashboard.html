@@ -3,9 +3,65 @@
 {% block content %}
 
     <div class="container">
-        <h3>Current user: {{ current_user.fullname ~', ' ~ current_user.role[0].name }}</h3>
+        <h3>Current user: {{ current_user.fullname ~', ' ~ current_user.role[0].name ~', ' ~ current_user.id}}</h3>
+        <p>All users: {{ all_users }}</p>
     </div>
     <br>
+    {% for user in all_users %}
+        {% if not user.id == current_user.id %}
+        <div class="d-flex justify-content-center align-items-center">
+        <div class="w-75 card text-black mb-4 bg-light">
+            <div class="card-body">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-1">
+                            <div class="text-black-75 small">Id</div>
+                            <div class="text-lg fw-bold">{{ user.id }}</div>
+                        </div>
+                        <div class="col-1">
+                            <div class="text-black-75 small">Name</div>
+                            <div class="text-lg fw-bold">{{ user.name }}</div>
+                        </div>
+                        <div class="col-2">
+                            <div class="text-black-75 small">Surname</div>
+                            <div class="text-lg fw-bold">{{ user.surname }}</div>
+                        </div>
+                        <div class="col-2">
+                            <div class="text-black-75 small">Email</div>
+                            <div class="text-lg fw-bold">{{ user.email }}</div>
+                        </div>
+                        <div class="col-2">
+                            <div class="text-black-75 small">Role</div>
+                            <div class="text-lg fw-bold">{{ user.role[0] }}</div>
+                        </div>
+                        <div class="col-2">
+                            <button type="submit" class="btn btn-outline-primary" id="{{ user.id }}">Edit user</button>
+                        </div>
+                        <div class="col-2">
+                            <button type="submit" class="btn btn-outline-danger" id="{{ user.id }}">Delete user</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <!--
+            <div class="card-footer d-flex align-items-center justify-content-between">
+                <a class="small text-white stretched-link" href="/dashboard">View Report</a>
+                <div class="small text-white">
+                    LALALALA
+                </div>
+            </div>
+            -->
+        </div>
+    </div>
+    {% endif %}
+    {% endfor %}
 
+
+
+
+
+<script>
+
+</script>
 {% endblock %}
 
