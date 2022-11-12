@@ -116,6 +116,7 @@ class ServiceTaskUsers(db.Model):
 class ServiceTask(db.Model):
     __tablename__ = "service_task"
     id = Column(Integer, primary_key=True)
+    name = Column(String(255), nullable=False)
     description = Column(Text(2048), nullable=False)
     days_to_complete = Column(Integer)
     state = Column(Enum(TicketStateEnum), nullable=False, server_default=TicketStateEnum.NEW.value)
@@ -123,6 +124,5 @@ class ServiceTask(db.Model):
     creator_id = Column(Integer, ForeignKey("user.id"), nullable=False)
     parent_ticket = Column(Integer, ForeignKey("ticket.id"), nullable=False)
     cost = Column(Integer)
-    technicians = relationship("User", secondary="service_task_users",
-                               backref=backref("service_task", lazy="dynamic"))
+    technicians = relationship("User", secondary="service_task_users", backref=backref("service_task", lazy="dynamic"))
 

@@ -1,6 +1,9 @@
 from wtforms.validators import Email, DataRequired, Length, EqualTo
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField
+from wtforms import StringField, PasswordField, BooleanField, TextAreaField, SelectField
+
+from smartcity.models import User, RolesUsers
+
 
 class CreateTechnician(FlaskForm):
     name = StringField("Name", [DataRequired(message="Forgot technician name?")])
@@ -12,3 +15,8 @@ class CreateTechnician(FlaskForm):
         EqualTo("confirm", message="Passwords must match.")
     ])
     confirm = PasswordField("Repeat Password", [EqualTo("password", message="Passwords must match.")])
+
+
+class CreateServiceTask(FlaskForm):
+    name = StringField("Name", [DataRequired(message="Forgot service task name?")])
+    description = TextAreaField("Description", [DataRequired(message="Forgot service task description?")])

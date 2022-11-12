@@ -1,66 +1,117 @@
 {% extends "layout.html" %}
-{% from "macros/fields.html" import render_text_field, render_boolean_field, render_alert%}
+{% from "macros/fields.html" import render_text_field, render_boolean_field, render_alert %}
 {% block content %}
 
     <div class="container">
-        <h3>Current user: {{ current_user.fullname ~', ' ~ current_user.role[0].name ~', ' ~ current_user.id}}</h3>
+        <h3>Current user: {{ current_user.fullname ~', ' ~ current_user.role[0].name ~', ' ~ current_user.id }}</h3>
         <p>All users: {{ all_users }}</p>
+        <!-- <p>Forms list: {{ forms_list }}</p> -->
+        <p>len: {{ x }}</p>
     </div>
     <br>
+
     {% for user in all_users %}
         {% if not user.id == current_user.id %}
-        <div class="d-flex justify-content-center align-items-center">
-        <div class="w-75 card text-black mb-4 bg-light">
-            <div class="card-body">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-1">
-                            <div class="text-black-75 small">Id</div>
-                            <div class="text-lg fw-bold">{{ user.id }}</div>
-                        </div>
-                        <div class="col-1">
-                            <div class="text-black-75 small">Name</div>
-                            <div class="text-lg fw-bold">{{ user.name }}</div>
-                        </div>
-                        <div class="col-2">
-                            <div class="text-black-75 small">Surname</div>
-                            <div class="text-lg fw-bold">{{ user.surname }}</div>
-                        </div>
-                        <div class="col-2">
-                            <div class="text-black-75 small">Email</div>
-                            <div class="text-lg fw-bold">{{ user.email }}</div>
-                        </div>
-                        <div class="col-2">
-                            <div class="text-black-75 small">Role</div>
-                            <div class="text-lg fw-bold">{{ user.role[0] }}</div>
-                        </div>
-                        <div class="col-2">
-                            <button type="submit" class="btn btn-outline-primary" id="{{ user.id }}">Edit user</button>
-                        </div>
-                        <div class="col-2">
-                            <button type="submit" class="btn btn-outline-danger" id="{{ user.id }}">Delete user</button>
+            <div class="d-flex justify-content-center align-items-center">
+                <div class="w-75 card text-black mb-4 bg-light">
+                    <div class="card-body">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-1">
+                                    <div class="text-black-75 small">Id</div>
+                                    <div class="text-lg fw-bold">{{ user.id }}</div>
+                                </div>
+                                <div class="col-1">
+                                    <div class="text-black-75 small">Name</div>
+                                    <div class="text-lg fw-bold">{{ user.name }}</div>
+                                </div>
+                                <div class="col-2">
+                                    <div class="text-black-75 small">Surname</div>
+                                    <div class="text-lg fw-bold">{{ user.surname }}</div>
+                                </div>
+                                <div class="col-2">
+                                    <div class="text-black-75 small">Email</div>
+                                    <div class="text-lg fw-bold">{{ user.email }}</div>
+                                </div>
+                                <div class="col-2">
+                                    <div class="text-black-75 small">Role</div>
+                                    <div class="text-lg fw-bold">{{ user.role[0] }}</div>
+                                </div>
+                                <div class="col-2">
+                                    <button data-bs-toggle="modal" data-bs-target="#editUserModal{{ user.id }}" type="submit"
+                                            class="btn btn-outline-primary" id="{{ user.id }}">Edit user
+                                    </button>
+                                </div>
+                                <div class="col-2">
+                                    <button type="submit" class="btn btn-outline-danger" id="{{ user.id }}" onClick="getId(this.id)">Delete
+                                        user
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        <!--
-            <div class="card-footer d-flex align-items-center justify-content-between">
-                <a class="small text-white stretched-link" href="/dashboard">View Report</a>
-                <div class="small text-white">
-                    LALALALA
+        {% endif %}
+    {% endfor %}
+    <!-- Edit User Modal -->
+    {% for user in all_users %}
+        {% if not user.id == current_user.id %}
+    <div class="modal fade" id="editUserModal{{ user.id }}" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true"
+         style="z-index: 999999999;">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit user</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body py-0">
+                    {% for form in forms_list %}
+                    {% if user.email == form.email.object_data %}
+                    <form id="form" class="mb-3 mt-md-4" method="POST" novalidate>
+                        {# CSRF Token #}
+                        {{ form.csrf_token() }}
+                        <div id="csrf_token_error" class="text-danger"></div>
+                        {# Form fields #}
+                        <div class="mb-3 row">
+                            <div class="col">
+                                {{ render_text_field(form.name) }}
+                            </div>
+                            <div class="col">
+                                {{ render_text_field(form.surname) }}
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            {{ render_text_field(form.email) }}
+                        </div>
+                        <div class="mb-3">
+                            {{ render_text_field(form.password) }}
+                        </div>
+                        <div class="my-3">
+                            {{ render_text_field(form.confirm) }}
+                        </div>
+                        <div class="my-3">
+                            {{ render_text_field(form.role) }}
+                        </div>
+                        <div class="d-grid mt-5">
+                            <button class="btn btn-outline-dark" type="submit">Update User</button>
+                        </div>
+                    </form>
+                        {% endif %}
+                    {% endfor %}
+                    <div id="alerts" class="mt-3"></div>
+                    <div id="success-message" style="display: none;"></div>
                 </div>
             </div>
-            -->
         </div>
     </div>
     {% endif %}
     {% endfor %}
 
-
-
-
-
 <script>
+function getId(clicked_id){
+    alert(clicked_id);
+}
 
 </script>
 {% endblock %}

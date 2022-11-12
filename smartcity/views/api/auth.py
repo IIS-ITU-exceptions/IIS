@@ -1,6 +1,8 @@
 from flask import Blueprint, request, jsonify, make_response, current_app
 from flask_login import login_required, login_user, logout_user, current_user
-from ...models import User, Role, db
+
+from .. import roles_required
+from ...models import User, Role, db, ServiceTaskUsers, ServiceTask, Comment, Ticket, TicketStateEnum
 
 auth_api_bp = Blueprint("auth_api", __name__)
 
@@ -99,6 +101,82 @@ def login():
 @auth_api_bp.route("/logout", methods=["POST"])
 def logout():
     logout_user()
+    response_object = {
+        "status": "success",
+        "message": "User successfully logged out.",
+    }
+    return make_response(jsonify(response_object), 200)
+
+
+@login_required
+@roles_required(["manager"])
+@auth_api_bp.route("/create_service_task", methods=["POST"])
+def create_service_task():
+    data = request.get_json()
+    with current_app.app_context():
+        try:
+            new_service_task = ServiceTask(
+                name=data.get("name"),
+                description=data.get("description"),
+                creator_id=int(data.get("creator_id")),
+                parent_ticket=int(data.get("parent_ticket")),
+            )
+            technician = User.query.filter_by(id=data.get("technician_id")).first()
+            new_service_task.technicians.append(technician)
+            db.session.expunge_all()
+            db.session.add(new_service_task)
+
+            db.session.flush()
+
+            new_service_task_users = ServiceTaskUsers(
+                user_id=data.get("technician_id"),
+                service_task_id=new_service_task.id,
+            )
+            db.session.expunge_all()
+            db.session.add(new_service_task_users)
+            db.session.commit()
+            db.session.expunge_all()
+
+            db.session.flush()
+
+            db.session.execute(
+                "DELETE FROM service_task_users WHERE id NOT IN (SELECT * FROM (SELECT MIN(id) FROM service_task_users GROUP BY user_id, service_task_id) AS t)")
+            db.session.commit()
+
+            response_object = {
+                "status": "success",
+                "message": "Service task successfully created.",
+            }
+            return make_response(jsonify(response_object), 201)
+        except Exception as e:
+            print(e)
+            response_object = {
+                "status": "fail",
+                "message": "An error has occurred. Please try again.",
+            }
+            return make_response(jsonify(response_object), 500)
+
+
+@login_required
+@roles_required(["admin"])
+@auth_api_bp.route("/delete_user", methods=["POST"])
+def delete_user():
+    data = request.get_json()
+    with current_app.app_context():
+        # user_to_delete = User.query.filter_by(id=data.get("id")).first()
+
+        try:
+            db.session.query(User).filter(User.id == data.get("id")).delete()
+            db.session.commit()
+            db.session.expunge_all()
+        except Exception as e:
+            print(e)
+            response_object = {
+                "status": "fail",
+                "message": "An error has occurred. Please try again.",
+            }
+            return make_response(jsonify(response_object), 500)
+
     response_object = {
         "status": "success",
         "message": "User successfully logged out.",

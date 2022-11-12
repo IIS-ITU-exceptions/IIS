@@ -12,6 +12,7 @@
             {% if current_user.role[0].name == 'manager' %}
                 <li><a href="{{ url_for("manager.manager_dashboard") }}" class="nav-link px-2 link-dark">Dashboard</a></li>
                 <li><a href="{{ url_for("manager.create_technician") }}" class="nav-link px-2 link-dark">Create technician</a></li>
+                <li><a href="{{ url_for("manager.create_service_task") }}" class="nav-link px-2 link-dark">Create service task</a></li>
             {% endif %}
         {% endif %}
                 {% if current_user.is_authenticated %}
