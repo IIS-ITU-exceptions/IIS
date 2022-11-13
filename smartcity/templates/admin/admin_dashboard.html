@@ -38,12 +38,13 @@
                                     <div class="text-lg fw-bold">{{ user.role[0] }}</div>
                                 </div>
                                 <div class="col-2">
-                                    <button data-bs-toggle="modal" data-bs-target="#editUserModal{{ user.id }}" type="submit"
+                                    <button data-bs-toggle="modal" data-bs-target="#editUserModal{{ user.id }}"
+                                            type="submit"
                                             class="btn btn-outline-primary" id="{{ user.id }}">Edit user
                                     </button>
                                 </div>
                                 <div class="col-2">
-                                    <button type="submit" class="btn btn-outline-danger" id="{{ user.id }}" onClick="getId(this.id)">Delete
+                                    <button type="submit" class="btn btn-outline-danger" id="{{ user.id }}">Delete
                                         user
                                     </button>
                                 </div>
@@ -57,62 +58,124 @@
     <!-- Edit User Modal -->
     {% for user in all_users %}
         {% if not user.id == current_user.id %}
-    <div class="modal fade" id="editUserModal{{ user.id }}" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true"
-         style="z-index: 999999999;">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Edit user</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body py-0">
-                    {% for form in forms_list %}
-                    {% if user.email == form.email.object_data %}
-                    <form id="form" class="mb-3 mt-md-4" method="POST" novalidate>
-                        {# CSRF Token #}
-                        {{ form.csrf_token() }}
-                        <div id="csrf_token_error" class="text-danger"></div>
-                        {# Form fields #}
-                        <div class="mb-3 row">
-                            <div class="col">
-                                {{ render_text_field(form.name) }}
-                            </div>
-                            <div class="col">
-                                {{ render_text_field(form.surname) }}
-                            </div>
+            <div class="modal fade" id="editUserModal{{ user.id }}" tabindex="-1" aria-labelledby="logoutModalLabel"
+                 aria-hidden="true"
+                 style="z-index: 999999999;">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Edit user</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div class="mb-3">
-                            {{ render_text_field(form.email) }}
+                        <div class="modal-body py-0">
+                            {% for form in forms_list %}
+                                {% if user.email == form.email.object_data %}
+                                    <form id="form" class="mb-3 mt-md-4" method="POST" novalidate>
+                                        {# CSRF Token #}
+                                        {{ form.csrf_token() }}
+                                        <div id="csrf_token_error" class="text-danger"></div>
+                                        {# Form fields #}
+                                        <div class="mb-3 row">
+                                            <div class="col">
+                                                {{ render_text_field(form.name) }}
+                                            </div>
+                                            <div class="col">
+                                                {{ render_text_field(form.surname) }}
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            {{ render_text_field(form.email) }}
+                                        </div>
+                                        <div class="mb-3">
+                                            {{ render_text_field(form.password) }}
+                                        </div>
+                                        <div class="my-3">
+                                            {{ render_text_field(form.confirm) }}
+                                        </div>
+                                        <div class="my-3">
+                                            {{ render_text_field(form.role) }}
+                                        </div>
+                                        <div class="d-grid mt-5">
+                                            <button class="btn btn-outline-dark" type="submit">Update User</button>
+                                        </div>
+                                    </form>
+                                {% endif %}
+                            {% endfor %}
+                            <div id="alerts" class="mt-3"></div>
+                            <div id="success-message" style="display: none;"></div>
                         </div>
-                        <div class="mb-3">
-                            {{ render_text_field(form.password) }}
-                        </div>
-                        <div class="my-3">
-                            {{ render_text_field(form.confirm) }}
-                        </div>
-                        <div class="my-3">
-                            {{ render_text_field(form.role) }}
-                        </div>
-                        <div class="d-grid mt-5">
-                            <button class="btn btn-outline-dark" type="submit">Update User</button>
-                        </div>
-                    </form>
-                        {% endif %}
-                    {% endfor %}
-                    <div id="alerts" class="mt-3"></div>
-                    <div id="success-message" style="display: none;"></div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
-    {% endif %}
+        {% endif %}
     {% endfor %}
+{% endblock %}
 
-<script>
-function getId(clicked_id){
-    alert(clicked_id);
-}
+{% block js %}
+    <script>
+        let elements = document.querySelectorAll('.btn-outline-danger');
+        let elementsArray = Array.prototype.slice.call(elements);
+        elementsArray.forEach(function (element) {
+            // Get elements by IDs
+            const successMessage = document.getElementById("success-message");
+            const alerts = document.getElementById("alerts");
+            const fields = {
+                user_id: {
+                    input: document.getElementById(element.id),
+                    error: document.getElementById(element.id + '-error')
+                },
+            }
+            console.log(fields);
+            console.log("FIELDS ID:" + fields.user_id.input.id)
+            // React to form submission
 
-</script>
+            element.addEventListener("click", async (e) => {
+                e.preventDefault();
+                console.log("ASYNC!");
+                console.log(element.id);
+                // Make JSON out of the form input value
+                let data = JSON.stringify({
+                    //csrf_token: fields.csrf_token.input.value,
+                    user_id: fields.user_id.input.id,
+                });
+                const response = await fetch("{{ url_for("admin.admin_dashboard") }}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: data,
+                });
+                for (let key in fields) {
+                    if (fields[key].input.classList.contains("is-invalid")) {
+                        fields[key].input.classList.remove("is-invalid");
+                        fields[key].error.innerText = "";
+                    }
+                }
+                console.log(data)
+                if (response.ok) {
+                    const api_response = await fetch("{{ url_for("api.auth_api.delete_user") }}", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: data,
+                    });
+
+                    if (api_response.ok) {
+                        window.location.assign("{{ url_for("admin.admin_dashboard") }}")
+                    } else {
+                        const message = await api_response.json();
+                        alerts.innerHTML = bootstrap_alert_macro(message["message"], "danger")
+                    }
+                } else {
+                    const errors = await response.json();
+                    Object.keys(errors).forEach((key) => {
+                        fields[key].input.classList.add("is-invalid");
+                        fields[key].error.innerText = errors[key][0];
+                    });
+                }
+            });
+        });
+    </script>
 {% endblock %}
 

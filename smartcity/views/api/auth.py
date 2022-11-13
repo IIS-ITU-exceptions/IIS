@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify, make_response, current_app
 from flask_login import login_required, login_user, logout_user, current_user
 
 from .. import roles_required
-from ...models import User, Role, db, ServiceTaskUsers, ServiceTask, Comment, Ticket, TicketStateEnum
+from ...models import User, Role, db, ServiceTaskUsers, ServiceTask, Comment, Ticket, TicketStateEnum, RolesUsers
 
 auth_api_bp = Blueprint("auth_api", __name__)
 
@@ -166,7 +166,8 @@ def delete_user():
         # user_to_delete = User.query.filter_by(id=data.get("id")).first()
 
         try:
-            db.session.query(User).filter(User.id == data.get("id")).delete()
+            db.session.query(RolesUsers).filter(RolesUsers.user_id == int(data.get("user_id"))).delete()
+            db.session.query(User).filter(User.id == int(data.get("user_id"))).delete()
             db.session.commit()
             db.session.expunge_all()
         except Exception as e:
