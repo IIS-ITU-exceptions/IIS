@@ -157,10 +157,18 @@ def create_service_task():
             return make_response(jsonify(response_object), 500)
 
 
+
 @login_required
 @roles_required(["admin"])
 @auth_api_bp.route("/delete_user", methods=["POST"])
 def delete_user():
+    # TODO NELZE ODSTRANIT UZIVATEL KDYZ VYTVORIL TICKET
+    """
+    (pymysql.err.IntegrityError)
+     (1451, 'Cannot delete or update a parent row: a foreign key constraint fails (`smartcity`.`ticket`, CONSTRAINT `ticket_ibfk_1` FOREIGN KEY (`reporter_id`) REFERENCES `user` (`id`))')
+[SQL: DELETE FROM user WHERE user.id = %(id_1)s]
+[parameters: {'id_1': 7}]
+    """
     data = request.get_json()
     with current_app.app_context():
         # user_to_delete = User.query.filter_by(id=data.get("id")).first()
@@ -170,6 +178,8 @@ def delete_user():
             db.session.query(User).filter(User.id == int(data.get("user_id"))).delete()
             db.session.commit()
             db.session.expunge_all()
+
+
         except Exception as e:
             print(e)
             response_object = {
@@ -180,6 +190,37 @@ def delete_user():
 
     response_object = {
         "status": "success",
-        "message": "User successfully logged out.",
+        "message": "User successfully deleted.",
     }
     return make_response(jsonify(response_object), 200)
+
+
+@login_required
+@roles_required(["admin"])
+@auth_api_bp.route("/edit_user", methods=["POST"])
+def edit_user():
+    data = request.get_json()
+    with current_app.app_context():
+        try:
+            db.session.query(User).filter(User.id == int(data.get("user_id"))).update(
+                {"email":data.get("email"),
+                 "name":data.get("name"),
+                 "surname":data.get("surname")
+                 })
+            db.session.commit()
+            db.session.expunge_all()
+
+            response_object = {
+                "status": "success",
+                "message": "User successfully deleted.",
+            }
+            return make_response(jsonify(response_object), 200)
+        except Exception as e:
+            print(e)
+            response_object = {
+                "status": "fail",
+                "message": "An error has occurred. Please try again.",
+            }
+            return make_response(jsonify(response_object), 500)
+
+

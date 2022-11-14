@@ -9,6 +9,17 @@
 {% endmacro %}
 
 
+{% macro render_specific_id_text_field(field, own_id, pure_id, own_val, form_text="") %}
+    {{ field.label(class_="form-label") }}
+    {{ field(class_="form-control", id=own_id, value=own_val) }}
+    {% if form_text != "" %}
+        <div class="form-text">{{ form_text }}</div>
+    {% endif %}
+
+    <div id="{{ field.name }}-error-{{ pure_id }}" class="invalid-feedback"></div>
+{% endmacro %}
+
+
 {% macro render_boolean_field(field) %}
     {{ field(class_="form-check-input") }}
     {{ field.label(class_="form-check-label ms-2") }}

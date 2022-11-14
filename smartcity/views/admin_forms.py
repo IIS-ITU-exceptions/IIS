@@ -15,11 +15,12 @@ class CreateCityManager(FlaskForm):
 
 
 class EditUser(FlaskForm):
+    id = StringField("Id")
     name = StringField("Name", [DataRequired(message="Forgot user's name?")])
     surname = StringField("Surname", [DataRequired(message="Forgot user's surname?")])
     email = StringField("Email Address", [Email(), DataRequired(message="Forgot user's email address?")])
     password = PasswordField("New password", [
-        DataRequired(message="You must provide a password."),
+        #DataRequired(message="You must provide a password."),
         Length(min=8, message="Password must be at least 8 characters long."),
         EqualTo("confirm", message="Passwords must match.")
     ])

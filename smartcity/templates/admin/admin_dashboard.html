@@ -1,11 +1,11 @@
 {% extends "layout.html" %}
-{% from "macros/fields.html" import render_text_field, render_boolean_field, render_alert %}
+{% from "macros/fields.html" import render_text_field, render_boolean_field, render_alert, render_specific_id_text_field %}
 {% block content %}
 
     <div class="container">
         <h3>Current user: {{ current_user.fullname ~', ' ~ current_user.role[0].name ~', ' ~ current_user.id }}</h3>
         <p>All users: {{ all_users }}</p>
-        <!-- <p>Forms list: {{ forms_list }}</p> -->
+        <p>Forms list: {{ forms_list }}</p>
         <p>len: {{ x }}</p>
     </div>
     <br>
@@ -70,33 +70,32 @@
                         <div class="modal-body py-0">
                             {% for form in forms_list %}
                                 {% if user.email == form.email.object_data %}
-                                    <form id="form" class="mb-3 mt-md-4" method="POST" novalidate>
+                                    <form id="form{{ user.id }}" class="mb-3 mt-md-4" method="POST" novalidate>
                                         {# CSRF Token #}
                                         {{ form.csrf_token() }}
                                         <div id="csrf_token_error" class="text-danger"></div>
                                         {# Form fields #}
                                         <div class="mb-3 row">
                                             <div class="col">
-                                                {{ render_text_field(form.name) }}
+                                                {{ render_specific_id_text_field(form.name, "name" ~ user.id, user.id, form.name.object_data ) }}
                                             </div>
                                             <div class="col">
-                                                {{ render_text_field(form.surname) }}
+                                                {{ render_specific_id_text_field(form.surname, "surname" ~ user.id, user.id, form.surname.object_data ) }}
                                             </div>
                                         </div>
                                         <div class="mb-3">
-                                            {{ render_text_field(form.email) }}
+                                            {{ render_specific_id_text_field(form.email, "email" ~ user.id, user.id, form.email.object_data ) }}
                                         </div>
                                         <div class="mb-3">
-                                            {{ render_text_field(form.password) }}
+                                            {{ render_specific_id_text_field(form.password, "password" ~ user.id, user.id ) }}
                                         </div>
                                         <div class="my-3">
-                                            {{ render_text_field(form.confirm) }}
-                                        </div>
-                                        <div class="my-3">
-                                            {{ render_text_field(form.role) }}
+                                            {{ render_specific_id_text_field(form.password, "confirm" ~ user.id, user.id ) }}
                                         </div>
                                         <div class="d-grid mt-5">
-                                            <button class="btn btn-outline-dark" type="submit">Update User</button>
+                                            <button class="btn btn-outline-dark" type="submit" id="{{ user.id }}">Update
+                                                User
+                                            </button>
                                         </div>
                                     </form>
                                 {% endif %}
@@ -176,6 +175,100 @@
                 }
             });
         });
+
+
+        let editButtons = document.querySelectorAll('.btn-outline-primary');
+        let editButtonsArray = Array.prototype.slice.call(editButtons);
+        editButtonsArray.forEach(function (editButtons) {
+            console.log(editButtons.id);
+            // Get form elements by IDs
+            const form = document.getElementById("form" + editButtons.id);
+            const successMessage = document.getElementById("success-message");
+            const alerts = document.getElementById("alerts");
+            const fields = {
+                csrf_token: {
+                    input: document.getElementById('csrf_token'),
+                    error: document.getElementById('csrf_token-error')
+                },
+                user_id: editButtons.id,
+                name: {
+                    input: document.getElementById('name' + editButtons.id),
+                    error: document.getElementById('name-error-' + editButtons.id)
+                },
+                surname: {
+                    input: document.getElementById('surname' + editButtons.id),
+                    error: document.getElementById('surname-error-' + editButtons.id)
+                },
+                email: {
+                    input: document.getElementById('email' + editButtons.id),
+                    error: document.getElementById('email-error-' + editButtons.id)
+                },
+                password: {
+                    input: document.getElementById('password' + editButtons.id),
+                    error: document.getElementById('password-error-' + editButtons.id)
+                },
+                confirm: {
+                    input: document.getElementById('confirm' + editButtons.id),
+                    error: document.getElementById('confirm-error-' + editButtons.id)
+                }
+            }
+            // React to form submission
+            form.addEventListener("submit", async (e) => {
+                e.preventDefault();
+                console.log("ASYNC HURAA!\n" + editButtons.id);
+                // Make JSON out of the form input value
+                let data = JSON.stringify({
+                    csrf_token: fields.csrf_token.input.value,
+                    user_id: fields.user_id,
+                    name: fields.name.input.value,
+                    surname: fields.surname.input.value,
+                    email: fields.email.input.value,
+                    password: fields.password.input.value,
+                    confirm: fields.confirm.input.value,
+                });
+                console.log(data)
+
+                const response = await fetch("{{ url_for("admin.admin_dashboard") }}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: data,
+                });
+                console.log(response)
+
+                {#for (let key in fields) {#}
+                {#    if (fields[key].input.classList.contains("is-invalid")) {#}
+                {#        fields[key].input.classList.remove("is-invalid");#}
+                {#        fields[key].error.innerText = "";#}
+                {#    }#}
+                {#}#}
+                if (response.ok) {
+                    const api_response = await fetch("{{ url_for("api.auth_api.edit_user") }}", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: data,
+                    });
+
+                    if (api_response.ok) {
+                        window.location.assign("{{ url_for("admin.admin_dashboard") }}")
+                    } else {
+                        const message = await api_response.json();
+                        alerts.innerHTML = bootstrap_alert_macro(message["message"], "danger")
+                    }
+                }
+                {#else{#}
+                {#    const errors = await response.json();#}
+                {#    Object.keys(errors).forEach((key) => {#}
+                {#        fields[key].input.classList.add("is-invalid");#}
+                {#        fields[key].error.innerText = errors[key][0];#}
+                {#    });#}
+                {#}#}
+            });
+        });
+
     </script>
 {% endblock %}
 
