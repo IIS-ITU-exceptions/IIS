@@ -12,7 +12,9 @@ manager_bp = Blueprint("manager", __name__)
 @login_required
 @roles_required(["manager"])
 def manager_dashboard():
-    return render_template("manager/manager_dashboard.html", current_user=current_user)
+    tickets = Ticket.query.all()
+    all_users = User.query.all()
+    return render_template("manager/manager_dashboard.html", current_user=current_user, tickets=tickets, all_users=all_users)
 
 
 @manager_bp.route("/create_technician", methods=["GET", "POST"])

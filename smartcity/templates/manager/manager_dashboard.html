@@ -1,11 +1,62 @@
 {% extends "layout.html" %}
-{% from "macros/fields.html" import render_text_field, render_boolean_field, render_alert%}
+{% from "macros/fields.html" import render_text_field, render_boolean_field, render_alert %}
 {% block content %}
 
     <div class="container">
         <h3>Current user: {{ current_user.fullname ~', ' ~ current_user.role[0].name }}</h3>
     </div>
     <br>
+    {% for ticket in tickets %}
+        <div class="d-flex justify-content-center align-items-center mt-4">
+            <div class="card col-10" style="max-width: 1000px;">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <img
+                             {% if ticket.assignee_id != None %}
+                             src="{{ ticket.image_path }}"
+                             {% else %}
+                             src="/"
+                             {% endif %}
+                             class="img-fluid rounded-start"
+                             alt="{{ ticket.image_path }}">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ ticket.name }}</h5>
+                            <b class="card-text me-5 mb-5 float-end state">{{ ticket.state.value }}</b>
 
+                            <p class="card-text">{{ ticket.description[:100] }}</p>
+                            <b class="card-text me-5 float-start">Reported by: {{ all_users[ticket.reporter_id - 1].fullname }}</b>
+                            {% if ticket.assignee_id != None %}
+                                <b class="card-text me-5 mb-3 float-start">Assignee: {{ all_users[ticket.assignee_id].fullname }}</b>
+                            {% else %}
+                                 <p class="card-text me-5 mb-3 float-start">Assignee: Nobody is assigned</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}
+
+{% block js %}
+<script>
+let statesList = document.getElementsByClassName("state");
+
+for (let i = 0; i < statesList.length; i++) {
+    if (statesList[i].innerHTML === "New") {
+        statesList[i].style.color = "red";
+    } else if (statesList[i].innerHTML === "Planned") {
+        statesList[i].style.color = "purple";
+    }else if (statesList[i].innerHTML === "Work In Progress") {
+        statesList[i].style.color = "orange";
+    } else if (statesList[i].innerHTML === "Done") {
+        statesList[i].style.color = "green";
+    }
+}
+
+
+</script>
 {% endblock %}
 
