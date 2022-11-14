@@ -16,6 +16,6 @@ flask run --host=0.0.0.0
 
 ## Images
 Save images in the `smartcity/static/images` folder. \
-In database set ticket attribute `image_path` with prefix `/static/images/` followed by the image name (e.g. `/static/images/image.png`).
+Set ticket attribute `image_path` with prefix `/static/images/` followed by the image name (e.g. `/static/images/image.png`).
 ### Example usage
 Then in image tag use `src="{{ ticket.image_path }}"` to display the image.
