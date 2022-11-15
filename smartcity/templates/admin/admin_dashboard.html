@@ -22,7 +22,7 @@
 
     </div>
     {% for user in all_users %}
-        {% if not user.id == current_user.id %}
+        {% if not user.id == current_user.id and user.deactivated != 1 %}
             <div class="d-flex justify-content-center align-items-center">
                 <div class="w-75 card text-black mb-4 bg-light {{ user.role[0] }}">
                     <div class="card-body">
