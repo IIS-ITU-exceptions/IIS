@@ -9,43 +9,54 @@
         <p>len: {{ x }}</p>
     </div>
     <br>
+    <div class="d-flex justify-content-center align-items-center">
+     <div class="mb-4" style="width: 80%">
+         <select class="form-select" aria-label="Default select example" id="filterUsers">
+            <option value="0" selected>All users</option>
+            <option value="3">Managers</option>
+            <option value="2">Technicians</option>
+            <option value="1">Normal users</option>
+        </select>
+     </div>
 
+    </div>
     {% for user in all_users %}
         {% if not user.id == current_user.id %}
             <div class="d-flex justify-content-center align-items-center">
-                <div class="w-75 card text-black mb-4 bg-light">
+                <div class="w-75 card text-black mb-4 bg-light {{ user.role[0] }}">
                     <div class="card-body">
                         <div class="container">
                             <div class="row">
-                                <div class="col-1">
+                                <div class="col-lg-1 col-md-1">
                                     <div class="text-black-75 small">Id</div>
                                     <div class="text-lg fw-bold">{{ user.id }}</div>
                                 </div>
-                                <div class="col-1">
+                                <div class="col-lg-1 col-md-2">
                                     <div class="text-black-75 small">Name</div>
                                     <div class="text-lg fw-bold">{{ user.name }}</div>
                                 </div>
-                                <div class="col-2">
+                                <div class="col-lg-2 col-md-2">
                                     <div class="text-black-75 small">Surname</div>
                                     <div class="text-lg fw-bold">{{ user.surname }}</div>
                                 </div>
-                                <div class="col-2">
+                                <div class="col-lg-2 col-md-4">
                                     <div class="text-black-75 small">Email</div>
                                     <div class="text-lg fw-bold">{{ user.email }}</div>
                                 </div>
-                                <div class="col-2">
+                                <div class="col-lg-2 col-md-3">
                                     <div class="text-black-75 small">Role</div>
                                     <div class="text-lg fw-bold">{{ user.role[0] }}</div>
                                 </div>
-                                <div class="col-2">
+                                <div class="col-lg-2 col-md-6 col-sm-6 mt-3 mt-lg-0">
                                     <button data-bs-toggle="modal" data-bs-target="#editUserModal{{ user.id }}"
                                             type="submit"
-                                            class="btn btn-outline-primary" id="{{ user.id }}">Edit user
+                                            class="btn btn-outline-primary" id="{{ user.id }}" style="width: 100%">
+                                        Edit user
                                     </button>
                                 </div>
-                                <div class="col-2">
-                                    <button type="submit" class="btn btn-outline-danger" id="{{ user.id }}">Delete
-                                        user
+                                <div class="col-lg-2 col-md-6 col-sm-6 mt-3 mt-lg-0">
+                                    <button type="submit" class="btn btn-outline-danger" id="{{ user.id }}"
+                                            style="width: 100%">Delete user
                                     </button>
                                 </div>
                             </div>
@@ -112,6 +123,29 @@
 
 {% block js %}
     <script>
+    $(function() {
+    $('#filterUsers').change(function(){
+        if($('#filterUsers').val() == '0') {
+            $('.manager').show();
+            $('.resident').show();
+            $('.technician').show();
+        } else if ($('#filterUsers').val() == '1') {
+            $('.manager').hide();
+            $('.resident').show();
+            $('.technician').hide();
+        } else if ($('#filterUsers').val() == '2') {
+            $('.manager').hide();
+            $('.resident').hide();
+            $('.technician').show();
+        } else if ($('#filterUsers').val() == '3') {
+            $('.manager').show();
+            $('.resident').hide();
+            $('.technician').hide();
+        }
+    });
+});
+
+
         let elements = document.querySelectorAll('.btn-outline-danger');
         let elementsArray = Array.prototype.slice.call(elements);
         elementsArray.forEach(function (element) {
@@ -243,31 +277,31 @@
                 {#        fields[key].error.innerText = "";#}
                 {#    }#}
                 {#}#}
-                if (response.ok) {
-                    const api_response = await fetch("{{ url_for("api.auth_api.edit_user") }}", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-                        body: data,
-                    });
+                    if (response.ok) {
+                        const api_response = await fetch("{{ url_for("api.auth_api.edit_user") }}", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: data,
+                        });
 
-                    if (api_response.ok) {
-                        window.location.assign("{{ url_for("admin.admin_dashboard") }}")
-                    } else {
-                        const message = await api_response.json();
-                        alerts.innerHTML = bootstrap_alert_macro(message["message"], "danger")
+                        if (api_response.ok) {
+                            window.location.assign("{{ url_for("admin.admin_dashboard") }}")
+                        } else {
+                            const message = await api_response.json();
+                            alerts.innerHTML = bootstrap_alert_macro(message["message"], "danger")
+                        }
                     }
-                }
-                {#else{#}
-                {#    const errors = await response.json();#}
-                {#    Object.keys(errors).forEach((key) => {#}
-                {#        fields[key].input.classList.add("is-invalid");#}
-                {#        fields[key].error.innerText = errors[key][0];#}
-                {#    });#}
-                {#}#}
-            });
-        });
+                    {#else{#}
+                    {#    const errors = await response.json();#}
+                    {#    Object.keys(errors).forEach((key) => {#}
+                    {#        fields[key].input.classList.add("is-invalid");#}
+                    {#        fields[key].error.innerText = errors[key][0];#}
+                    {#    });#}
+                    {#}#}
+                    });
+                });
 
     </script>
 {% endblock %}
