@@ -49,6 +49,7 @@ class User(db.Model):
     surname = Column(String(100), nullable=False)
     authenticated = Column(Boolean, default=False)
     role = relationship("Role", secondary="roles_users")
+    deactivated = Column(Boolean, default=False)
 
     def __repr__(self):
         return f"<User<{self.id}>: email={self.email}, name={self.name}, surname={self.surname},\n roles={self.role}\n>"
