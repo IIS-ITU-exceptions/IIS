@@ -174,8 +174,9 @@ def delete_user():
         # user_to_delete = User.query.filter_by(id=data.get("id")).first()
 
         try:
-            db.session.query(RolesUsers).filter(RolesUsers.user_id == int(data.get("user_id"))).delete()
-            db.session.query(User).filter(User.id == int(data.get("user_id"))).delete()
+            # db.session.query(RolesUsers).filter(RolesUsers.user_id == int(data.get("user_id"))).delete()
+            # db.session.query(User).filter(User.id == int(data.get("user_id"))).delete()
+            db.session.query(User).filter(User.id == int(data.get("user_id"))).update({"deactivated": 1})
             db.session.commit()
             db.session.expunge_all()
 
