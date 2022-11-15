@@ -1,24 +1,41 @@
 {% extends "layout.html" %}
 {% from "macros/fields.html" import render_text_field, render_boolean_field, render_alert %}
+
+{% block title %} Manager dashboard {% endblock %}
+
 {% block content %}
 
     <div class="container">
         <h3>Current user: {{ current_user.fullname ~', ' ~ current_user.role[0].name }}</h3>
     </div>
     <br>
+    <div class="d-flex justify-content-center align-items-center mt-4">
+            <div class="mb-4" style="width: 66%">
+                <label for="filterStates"><h4>State of tickets you want to be shown</h4></label>
+                <select class="form-select mt-2" aria-label="State-filter" id="filterStates">
+                    <option value="All states" selected>All states</option>
+                    <option value="New">New</option>
+                    <option value="Planned">Planned</option>
+                    <option value="WorkInProgress">Work in progress</option>
+                    <option value="Done">Done</option>
+                </select>
+            </div>
+        </div>
     {% for ticket in tickets %}
+
+
         <div class="d-flex justify-content-center align-items-center mt-4">
-            <div class="card col-10" style="max-width: 1000px;">
+            <div class="card col-10 {{ ticket.state.value }}" style="max-width: 1000px;">
                 <div class="row g-0">
                     <div class="col-md-4">
                         <img
-                             {% if ticket.assignee_id != None %}
-                             src="{{ ticket.image_path }}"
-                             {% else %}
-                             src="/"
-                             {% endif %}
-                             class="img-fluid rounded-start"
-                             alt="{{ ticket.image_path }}">
+                                {% if ticket.assignee_id != None %}
+                                    src="{{ ticket.image_path }}"
+                                {% else %}
+                                    src="/"
+                                {% endif %}
+                                    class="img-fluid rounded-start"
+                                    alt="{{ ticket.image_path }}">
                     </div>
                     <div class="col-md-8">
                         <div class="card-body">
@@ -26,11 +43,12 @@
                             <b class="card-text me-5 mb-5 float-end state">{{ ticket.state.value }}</b>
 
                             <p class="card-text">{{ ticket.description[:100] }}</p>
-                            <b class="card-text me-5 float-start">Reported by: {{ all_users[ticket.reporter_id - 1].fullname }}</b>
+                            <b class="card-text me-5 float-start">Reported
+                                by: {{ all_users[ticket.reporter_id - 1].fullname }}</b>
                             {% if ticket.assignee_id != None %}
                                 <b class="card-text me-5 mb-3 float-start">Assignee: {{ all_users[ticket.assignee_id].fullname }}</b>
                             {% else %}
-                                 <p class="card-text me-5 mb-3 float-start">Assignee: Nobody is assigned</p>
+                                <p class="card-text me-5 mb-3 float-start">Assignee: Nobody is assigned</p>
                             {% endif %}
                         </div>
                     </div>
@@ -41,22 +59,57 @@
 {% endblock %}
 
 {% block js %}
-<script>
-let statesList = document.getElementsByClassName("state");
+    <script>
+        $(function() {
+    $('#filterStates').change(function(){
+        console.log($('#filterStates').val());
+        if($('#filterStates').val() == 'All states') {
+            $('.New').show();
+            $('.Work in progress').show();
+            $('.Planned').show();
+            $('.Done').show();
+        } else if ($('#filterStates').val() == 'New') {
+            $('.New').show();
+            $('.Work in progress').hide();
+            $('.Planned').hide();
+            $('.Done').hide();
+        } else if ($('#filterStates').val() == 'Planned') {
+            $('.New').hide();
+            $('.Work in progress').hide();
+            $('.Planned').show();
+            $('.Done').hide();
+        } else if ($('#filterStates').val() == 'WorkInProgress') {
+            $('.New').hide();
+            $('.Work in progress').show();
+            $('.Planned').hide();
+            $('.Done').hide();
+        } else if ($('#filterStates').val() == 'Done') {
+            $('.New').hide();
+            $('.Work in progress').hide();
+            $('.Planned').hide();
+            $('.Done').show();
+        }
+    });
+});
 
-for (let i = 0; i < statesList.length; i++) {
-    if (statesList[i].innerHTML === "New") {
-        statesList[i].style.color = "red";
-    } else if (statesList[i].innerHTML === "Planned") {
-        statesList[i].style.color = "purple";
-    }else if (statesList[i].innerHTML === "Work In Progress") {
-        statesList[i].style.color = "orange";
-    } else if (statesList[i].innerHTML === "Done") {
-        statesList[i].style.color = "green";
-    }
-}
 
 
-</script>
+
+        let statesList = document.getElementsByClassName("state");
+
+        for (let i = 0; i < statesList.length; i++) {
+            if (statesList[i].innerHTML === "New") {
+                statesList[i].style.color = "red";
+            } else if (statesList[i].innerHTML === "Planned") {
+                statesList[i].style.color = "purple";
+            } else if (statesList[i].innerHTML === "Work In Progress") {
+                statesList[i].style.color = "orange";
+            } else if (statesList[i].innerHTML === "Done") {
+                statesList[i].style.color = "green";
+            }
+        }
+
+
+    </script>
 {% endblock %}
 

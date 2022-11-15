@@ -1,5 +1,8 @@
 {% extends "layout.html" %}
 {% from "macros/fields.html" import render_text_field, render_boolean_field, render_alert, render_specific_id_text_field %}
+
+{% block title %} Admin dashboard {% endblock %}
+
 {% block content %}
 
     <div class="container">
@@ -11,8 +14,8 @@
     <br>
     <div class="d-flex justify-content-center align-items-center">
      <div class="mb-4" style="width: 75%">
-         <label for="form_name"><h4>Type of users you want to be shown</h4></label>
-         <select class="form-select mt-2" aria-label="Default select example" id="filterUsers">
+         <label for="filterUsers"><h4>Type of users you want to be shown</h4></label>
+         <select class="form-select mt-2" aria-label="User-role-filter" id="filterUsers">
             <option value="0" selected>All users</option>
             <option value="3">Managers</option>
             <option value="2">Technicians</option>

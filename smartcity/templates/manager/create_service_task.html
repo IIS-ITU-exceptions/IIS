@@ -1,5 +1,8 @@
 {% extends "layout.html" %}
 {% from "macros/fields.html" import render_text_field, render_boolean_field, render_alert %}
+
+{% block title %} Create service task {% endblock %}
+
 {% block content %}
     <h3>Current user: {{ current_user.fullname ~', ' ~ current_user.role[0].name ~', ' ~ current_user.id }}</h3>
     <br>
