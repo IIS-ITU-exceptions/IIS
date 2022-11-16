@@ -10,6 +10,7 @@ from .views.auth import auth_bp
 from .views.manager import manager_bp
 from .views.admin import admin_bp
 from .views.api.auth import auth_api_bp
+from .views.resident import resident_bp
 from .extensions import (
     # migrate,
     login_manager,
@@ -60,6 +61,7 @@ def register_blueprints(app):
     app.register_blueprint(auth_bp)
     app.register_blueprint(manager_bp)
     app.register_blueprint(admin_bp)
+    app.register_blueprint(resident_bp)
     # API Blueprints
     api_bp = Blueprint("api", __name__, url_prefix="/api")
     api_bp.register_blueprint(auth_api_bp)
