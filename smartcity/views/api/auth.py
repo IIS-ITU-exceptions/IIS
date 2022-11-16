@@ -1,10 +1,15 @@
+import datetime
+
 from flask import Blueprint, request, jsonify, make_response, current_app
 from flask_login import login_required, login_user, logout_user, current_user
+from datetime import datetime
 
 from .. import roles_required
 from ...models import User, Role, db, ServiceTaskUsers, ServiceTask, Comment, Ticket, TicketStateEnum, RolesUsers
 
+
 auth_api_bp = Blueprint("auth_api", __name__)
+UPLOAD_PATH = 'smartcity/static/images'
 
 
 @auth_api_bp.route("/signup", methods=["POST"])
@@ -224,6 +229,7 @@ def edit_user():
             }
             return make_response(jsonify(response_object), 500)
 
+
 @login_required
 @roles_required(["resident"])
 @auth_api_bp.route("/new_ticket", methods=["POST"])
@@ -235,7 +241,8 @@ def create_new_ticket():
                 reporter_id=int(data.get("reporter_id")),
                 name=data.get("name"),
                 description=data.get("description"),
-                image_path=data.get("image"),
+                image_path=data.get('image'), #image_path=img_path
+                created_at=datetime.now()
             )
             db.session.expunge_all()
             db.session.add(new_ticket)
@@ -253,4 +260,4 @@ def create_new_ticket():
                 "message": "An error has occurred. Please try again.",
             }
             return make_response(jsonify(response_object), 500)
-
+# co se těch obrázků týče, tak v auth.py je uložím do smartcity/static/images a pak ukládám cestu, že?
