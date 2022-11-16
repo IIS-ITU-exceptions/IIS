@@ -97,6 +97,7 @@ class Ticket(db.Model):
     image_path = Column(String(255))
     reporter_id = Column(Integer, ForeignKey("user.id"), nullable=False)
     assignee_id = Column(Integer, ForeignKey("user.id"))
+    created_at = Column(DateTime(), nullable=False)
 
 
 class Comment(db.Model):
@@ -105,6 +106,7 @@ class Comment(db.Model):
     content = Column(Text(2048), nullable=False)
     created_at = Column(DateTime(), nullable=False)
     ticket_id = Column(Integer, ForeignKey("ticket.id"), nullable=False)
+    commenter_id = Column(Integer, ForeignKey("user.id"), nullable=False)
 
 
 class ServiceTaskUsers(db.Model):
