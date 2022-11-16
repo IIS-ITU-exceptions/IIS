@@ -224,4 +224,33 @@ def edit_user():
             }
             return make_response(jsonify(response_object), 500)
 
+@login_required
+@roles_required(["resident"])
+@auth_api_bp.route("/new_ticket", methods=["POST"])
+def create_new_ticket():
+    data = request.get_json()
+    with current_app.app_context():
+        try:
+            new_ticket = Ticket(
+                reporter_id=int(data.get("reporter_id")),
+                name=data.get("name"),
+                description=data.get("description"),
+                image_path=data.get("image"),
+            )
+            db.session.expunge_all()
+            db.session.add(new_ticket)
+            db.session.commit()
+
+            response_object = {
+                "status": "success",
+                "message": "Service task successfully created.",
+            }
+            return make_response(jsonify(response_object), 201)
+        except Exception as e:
+            print(e)
+            response_object = {
+                "status": "fail",
+                "message": "An error has occurred. Please try again.",
+            }
+            return make_response(jsonify(response_object), 500)
 

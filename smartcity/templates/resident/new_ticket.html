@@ -3,11 +3,134 @@
 
 {% block title %} New ticket {% endblock %}
 
-{#{% block content %}#}
-{#{% endblock %}#}
-{##}
-{#{%  block js %}#}
-{#    <script>#}
-{##}
-{#    </script>#}
-{#{% endblock %}#}
+{% block content %}
+    <div class="vh-100 d-flex justify-content-center align-items-center">
+        <div class="container">
+            <div class="row d-flex justify-content-center">
+                <div class="col-12 col-md-10 col-lg-8">
+                    <div class="card bg-white shadow-lg" style="border-top-left-radius: 0; border-top-right-radius: 0">
+                        <div class="card-body p-5">
+                            <form id="form" class="mb-3 mt-md-4" method="POST">
+                                <i class="las la-city" style="font-size: 36px"></i><b
+                                    style="font-size: 32px; margin-left: 10px">SMARTCITY</b>
+                                <p class="mt-3 mb-4 mt-1">Create new ticket!</p>
+                                {# CSRF Token #}
+                                {{ form.csrf_token() }}
+                                <div id="csrf_token_error" class="text-danger"></div>
+                                {# Form fields #}
+                                <input hidden type="number" value="{{ current_user.id }}" id="reporter_id">
+                                <div class="mb-3">
+                                    <label class="form-label" for="name">Type</label>
+                                    <select class="form-select" id="name">
+                                        <option value="signs">Traffic Signs</option>
+                                        <option value="lighting">Lighting</option>
+                                        <option value="wreck">Wreck</option>
+                                        <option value="greenery">Greenery</option>
+                                        <option value="dump">Dump/Garbage</option>
+                                        <option value="bench">Bench/Railing/Fence</option>
+                                        <option value="transportation">Public Transportation</option>
+                                        <option value="road">Road</option>
+                                        <option value="sidewalk">Sidewalk</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    {{ render_text_field(form.description) }}
+                                </div>
+                                <div class="mb-3">
+                                    <input type="file" id="image" accept="/image/*">
+                                </div>
+                                <div class="d-grid mt-5">
+                                    <button class="btn btn-outline-dark" type="submit">Create new ticket</button>
+                                </div>
+                            </form>
+                            <div id="alerts" class="mt-3"></div>
+                            <div id="success-message" style="display: none;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{%  block js %}
+    <script>
+        const form = document.getElementById("form")
+        const successMessage = document.getElementById("success-message");
+        const alerts = document.getElementById("alerts");
+        const fields = {
+            csrf_token: {
+                input: document.getElementById('csrf_token'),
+                error: document.getElementById('csrf_token-error')
+            },
+            reporter_id: {
+                input: document.getElementById('reporter_id'),
+                error: document.getElementById('reporter_id-error')
+            },
+            name: {
+                input: document.getElementById('name'),
+                error: document.getElementById('name-error')
+            },
+            description: {
+                input: document.getElementById('description'),
+                error: document.getElementById('description-error')
+            },
+            image: {
+                input: document.getElementById('image'),
+                error: document.getElementById('image-error')
+            },
+        }
+
+        // React to form submission
+        form.addEventListener("submit", async (e) => {
+           e.preventDefault();
+           // Make JSON out of the form input value
+           let data = JSON.stringify({
+               csrf_token: fields.csrf_token.input.value,
+               reporter_id: fields.reporter_id.input.value,
+               name: fields.name.input.value,
+               description: fields.description.input.value,
+               image: fields.image.input.value,
+           });
+
+           const response = await fetch("{{ url_for("resident.new_ticket") }}", {
+               method: "POST",
+               headers: {
+                   "Content-Type": "application/json"
+               },
+               body: data,
+           });
+           for (let key in fields) {
+               if (fields[key].input.classList.contains("is-invalid")) {
+                   fields[key].input.classList.remove("is-invalid");
+                   fields[key].error.innerText = "";
+               }
+           }
+           console.log(data)
+           if (response.ok) {
+               const api_response = await fetch("{{ url_for("api.auth_api.create_new_ticket") }}", {
+                   method: "POST",
+                   headers: {
+                       "Content-Type": "application/json"
+                   },
+                   body: data,
+               });
+
+               if (api_response.ok) {
+                   window.location.assign("{{ url_for("resident.new_ticket") }}")
+               } else {
+                   const message = await api_response.json();
+                   alerts.innerHTML = bootstrap_alert_macro(message["message"], "danger")
+               }
+           } else {
+               const errors = await response.json();
+               Object.keys(errors).forEach((key) => {
+                   fields[key].input.classList.add("is-invalid");
+                   fields[key].error.innerText = errors[key][0];
+               });
+           }
+        });
+    </script>
+{% endblock %}
