@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% from "macros/fields.html" import render_text_field, render_boolean_field, render_alert %}
+
+{% block title %} Manager dashboard {% endblock %}
+
+{% block content %}
+<h3>Current user: {{ current_user.fullname }}</h3>
+<h3>Tickets: {{ tickets }}</h3>
+    <h3>Selected ticket id: {{ selected_ticket_id }}</h3>
+{% endblock %}
+
+{% block js %}
+    <script>
+
+    </script>
+{% endblock %}
+

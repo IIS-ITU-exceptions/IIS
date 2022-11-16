@@ -14,7 +14,8 @@ manager_bp = Blueprint("manager", __name__)
 def manager_dashboard():
     tickets = Ticket.query.all()
     all_users = User.query.all()
-    return render_template("manager/manager_dashboard.html", current_user=current_user, tickets=tickets, all_users=all_users)
+    return render_template("manager/manager_dashboard.html", current_user=current_user, tickets=tickets,
+                           all_users=all_users)
 
 
 @manager_bp.route("/create_technician", methods=["GET", "POST"])
@@ -42,3 +43,15 @@ def create_service_task():
     create_service_task_form = CreateServiceTask(service_technicians)
     return render_template("manager/create_service_task.html", current_user=current_user, form=create_service_task_form,
                            service_technicians=service_technicians, tickets=tickets)
+
+
+@manager_bp.route("/manager_ticket_view", methods=["GET", "POST"])
+@login_required
+@roles_required(["manager"])
+def manager_ticket_view():
+    if request.method == "GET":
+        selected_ticket_id = request.args.get("ticketId")
+    tickets = Ticket.query.all()
+    service_technicians = User.query.join(RolesUsers).filter(RolesUsers.role_id == 2).all()
+    return render_template("manager/manager_ticket_view.html", current_user=current_user,
+                           service_technicians=service_technicians, tickets=tickets, selected_ticket_id=selected_ticket_id)

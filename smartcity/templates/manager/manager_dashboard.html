@@ -4,12 +4,8 @@
 {% block title %} Manager dashboard {% endblock %}
 
 {% block content %}
-
-    <div class="container">
-        <h3>Current user: {{ current_user.fullname ~', ' ~ current_user.role[0].name }}</h3>
-    </div>
     <br>
-    <div class="d-flex justify-content-center align-items-center mt-4">
+    <div class="d-flex justify-content-center align-items-center mt-1">
             <div class="mb-4" style="width: 66%">
                 <label for="filterStates"><h4>State of tickets you want to be shown</h4></label>
                 <select class="form-select mt-2" aria-label="State-filter" id="filterStates">
@@ -39,7 +35,7 @@
                     </div>
                     <div class="col-md-8">
                         <div class="card-body">
-                            <h5 class="card-title">{{ ticket.name }}</h5>
+                            <h5 class="card-title"><a href="{{ url_for("manager.manager_ticket_view") }}?ticketId={{ ticket.id }}">{{ ticket.name }}</a></h5>
                             <b class="card-text me-5 mb-5 float-end state">{{ ticket.state.value }}</b>
 
                             <p class="card-text">{{ ticket.description[:100] }}</p>
