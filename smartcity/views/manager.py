@@ -51,7 +51,10 @@ def create_service_task():
 def manager_ticket_view():
     if request.method == "GET":
         ticket_comments = Comment.query.filter_by(ticket_id=request.args.get("ticketId")).all()
-        selected_ticket_id = int(request.args.get("ticketId"))
+        try:
+            selected_ticket_id = int(request.args.get("ticketId"))
+        except Exception as e:
+            return render_template("204.html")
     tickets = Ticket.query.all()
     all_users = User.query.all()
     service_technicians = User.query.join(RolesUsers).filter(RolesUsers.role_id == 2).all()

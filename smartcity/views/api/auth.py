@@ -167,25 +167,12 @@ def create_service_task():
 @roles_required(["admin"])
 @auth_api_bp.route("/delete_user", methods=["POST"])
 def delete_user():
-    # TODO NELZE ODSTRANIT UZIVATEL KDYZ VYTVORIL TICKET
-    """
-    (pymysql.err.IntegrityError)
-     (1451, 'Cannot delete or update a parent row: a foreign key constraint fails (`smartcity`.`ticket`, CONSTRAINT `ticket_ibfk_1` FOREIGN KEY (`reporter_id`) REFERENCES `user` (`id`))')
-[SQL: DELETE FROM user WHERE user.id = %(id_1)s]
-[parameters: {'id_1': 7}]
-    """
     data = request.get_json()
     with current_app.app_context():
-        # user_to_delete = User.query.filter_by(id=data.get("id")).first()
-
         try:
-            # db.session.query(RolesUsers).filter(RolesUsers.user_id == int(data.get("user_id"))).delete()
-            # db.session.query(User).filter(User.id == int(data.get("user_id"))).delete()
             db.session.query(User).filter(User.id == int(data.get("user_id"))).update({"deactivated": 1})
             db.session.commit()
             db.session.expunge_all()
-
-
         except Exception as e:
             print(e)
             response_object = {
@@ -239,6 +226,37 @@ def edit_state():
         try:
             db.session.query(Ticket).filter(Ticket.id == int(data.get("ticket_id"))).update(
                 {"state": data.get("state")})
+            db.session.commit()
+            db.session.expunge_all()
+
+            response_object = {
+                "status": "success",
+                "message": "State successfully changed.",
+            }
+            return make_response(jsonify(response_object), 200)
+        except Exception as e:
+            print(e)
+            response_object = {
+                "status": "fail",
+                "message": "An error has occurred. Please try again.",
+            }
+            return make_response(jsonify(response_object), 500)
+
+
+@login_required
+@roles_required(["manager"])
+@auth_api_bp.route("/add_comment", methods=["POST"])
+def add_comment():
+    data = request.get_json()
+    with current_app.app_context():
+        try:
+            new_comment = Comment(
+                content = data.get("content"),
+                created_at = data.get("created_at"),
+                ticket_id = data.get("ticket_id"),
+                commenter_id = data.get("commenter_id")
+            )
+            db.session.add(new_comment)
             db.session.commit()
             db.session.expunge_all()
 
