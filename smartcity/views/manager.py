@@ -50,10 +50,11 @@ def create_service_task():
 @roles_required(["manager"])
 def manager_ticket_view():
     if request.method == "GET":
+        ticket_comments = Comment.query.filter_by(ticket_id=request.args.get("ticketId")).all()
         selected_ticket_id = int(request.args.get("ticketId"))
     tickets = Ticket.query.all()
     all_users = User.query.all()
     service_technicians = User.query.join(RolesUsers).filter(RolesUsers.role_id == 2).all()
     return render_template("manager/manager_ticket_view.html", current_user=current_user,
                            service_technicians=service_technicians, tickets=tickets,
-                           selected_ticket_id=selected_ticket_id, all_users=all_users)
+                           selected_ticket_id=selected_ticket_id, all_users=all_users, ticket_comments=ticket_comments)

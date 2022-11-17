@@ -231,6 +231,32 @@ def edit_user():
 
 
 @login_required
+@roles_required(["manager"])
+@auth_api_bp.route("/edit_state", methods=["POST"])
+def edit_state():
+    data = request.get_json()
+    with current_app.app_context():
+        try:
+            db.session.query(Ticket).filter(Ticket.id == int(data.get("ticket_id"))).update(
+                {"state": data.get("state")})
+            db.session.commit()
+            db.session.expunge_all()
+
+            response_object = {
+                "status": "success",
+                "message": "State successfully changed.",
+            }
+            return make_response(jsonify(response_object), 200)
+        except Exception as e:
+            print(e)
+            response_object = {
+                "status": "fail",
+                "message": "An error has occurred. Please try again.",
+            }
+            return make_response(jsonify(response_object), 500)
+
+
+@login_required
 @roles_required(["resident"])
 @auth_api_bp.route("/new_ticket", methods=["POST"])
 def create_new_ticket():

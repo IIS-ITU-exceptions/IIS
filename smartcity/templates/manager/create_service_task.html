@@ -38,7 +38,7 @@
                                     <label class="form-label" for="ticket_select">Assigned ticket</label>
                                     <select class="form-select" id="ticket_select">
                                         {% for ticket in tickets %}
-                                            <option value="{{ ticket.id }}">{{ ticket.id ~', ' ~ticket.name }}</option>
+                                            <option value="{{ ticket.id }}">#{{ ticket.id ~', ' ~ticket.name }}, from: {{ ticket.created_at }}</option>
                                         {% endfor %}
                                     </select>
                                 </div>

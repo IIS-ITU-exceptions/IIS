@@ -88,66 +88,155 @@
             }
         }
 
+        /* Nicer scrollbar */
+        /* width */
+        ::-webkit-scrollbar {
+            width: 20px;
+        }
+
+        /* Track */
+        ::-webkit-scrollbar-track {
+            box-shadow: inset 0 0 5px grey;
+            border-radius: 10px;
+        }
+
+        /* Handle */
+        ::-webkit-scrollbar-thumb {
+            background: grey;
+            border-radius: 10px;
+        }
+
+        /* Handle on hover */
+        ::-webkit-scrollbar-thumb:hover {
+            background: #040000;
+        }
     </style>
 {% endblock %}
 {% block content %}
+    <div class="d-flex justify-content-center align-items-center mt-4 alertWindow">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            Ticket state has been changed successfully!
+        </div>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            There was an error while updating the ticket state!
+        </div>
+    </div>
     {% for ticket in tickets %}
         {% if ticket.id == selected_ticket_id %}
             <div class="d-flex justify-content-center align-items-center mt-4">
-                <div class="row gx-4 col-10">
-
-                    <div class="col-xl-6 mb-4">
-                        <div class="card mb-4 card-header-actions h-100">
-                            <div class="card-header">
-                                <b>Summary of the ticket #{{ ticket.id }}</b>
+            <div class="row gx-4 col-10">
+                <div class="col-xl-6 mb-4 h-25">
+                    <div class="card mb-4 h-100">
+                        <div class="card-header">
+                            <div class="col-8">
+                                <b class="ticketId" id="{{ ticket.id }}">Summary of the ticket #{{ ticket.id }}</b>
                             </div>
-                            <div class="card-body">
-                                <div class="row">
-                                    <h4 class="col-9">Name: {{ ticket.name }}</h4>
-                                    <h4 class="col-3 state">{{ ticket.state.value }}</h4>
-                                </div>
-                                <div class="row">
-                                    <b class="card-text me-5 float-start mt-2">Reported
-                                        by: {{ all_users[ticket.reporter_id - 1].fullname }}</b>
-                                    {% if ticket.assignee_id != None %}
-                                        <b class="card-text me-5 mb-3 float-start mt-2">Assignee: {{ all_users[ticket.assignee_id].fullname }}</b>
-                                    {% else %}
-                                        <p class="card-text me-5 mb-3 float-start mt-2">Assignee: Nobody is assigned</p>
-                                    {% endif %}
-
-                                </div>
-                                <b style="color:red">Report date !!!!!TODO!!!!!</b>
-                                <h4 class="mt-3">Description:</h4>
-                                <p>{{ ticket.description }}</p>
-
-
-                                {% if ticket.image_path != None %}
-                                    <hr>
-                                    <div class="d-flex justify-content-center align-items-center mt-4">
-                                        <img src="{{ ticket.image_path }}" class="img-fluid rounded-start"
-                                             alt="{{ ticket.image_path }}" id="ticketImage">
-                                    </div>
-                                    <div id="myModal" class="modal">
-                                        <span class="close">&times;</span>
-                                        <img class="modal-content" id="img01" alt="{{ ticket.image_path }}">
-                                    </div>
-
-                                {% else %}
-                                    <hr>
-                                    <label for="ticketImage" class="">User has not uploaded an image for this
-                                        ticket</label>
-                                {% endif %}
+                            <div class="col-6">
+                                <p class="m-0">{{ ticket.created_at }}</p>
                             </div>
                         </div>
-                    </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <h4 class="col-9">Name: {{ ticket.name }}</h4>
+                                <select class="form-select w-50 me-1 ms-2 mt-2" aria-label="Default select example"
+                                        id="stateSelect">
+                                    <option value="NEW"
+                                            {% if ticket.state.value == "New" %}
+                                            selected
+                                            {% endif %}
+                                    >New
+                                    </option>
+                                    <option value="PLANNED"
+                                            {% if ticket.state.value == "Planned" %}
+                                            selected
+                                            {% endif %}
+                                    >Planned
+                                    </option>
+                                    <option value="WORK_IN_PROGRESS"
+                                            {% if ticket.state.value == "Work In Progress" %}
+                                            selected
+                                            {% endif %}
+                                    >Work in progress
+                                    </option>
+                                    <option value="DONE"
+                                            {% if ticket.state.value == "Done" %}
+                                            selected
+                                            {% endif %}
+                                    >Done
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="row">
+                                <b class="card-text me-5 float-start mt-2">Reported
+                                    by: {{ all_users[ticket.reporter_id - 1].fullname }}</b>
+                                {% if ticket.assignee_id != None %}
+                                    <b class="card-text me-5 mb-3 float-start mt-2">Assignee: {{ all_users[ticket.assignee_id].fullname }}</b>
+                                {% else %}
+                                    <p class="card-text me-5 mb-3 float-start mt-2">Assignee: Nobody is assigned</p>
+                                {% endif %}
 
-                    <div class="col-xl-6 mb-4">
-                        <div class="card mb-4 card-header-actions h-100">
+                            </div>
+                            <b>Report date: {{ ticket.created_at }}</b>
+                            <h4 class="mt-3">Description:</h4>
+                            <p>{{ ticket.description }}</p>
+
+
+                            {% if ticket.image_path != None %}
+                                <hr>
+                                <div class="d-flex justify-content-center align-items-center mt-4">
+                                    <img src="{{ ticket.image_path }}" class="img-fluid rounded-start"
+                                         alt="{{ ticket.image_path }}" id="ticketImage">
+                                </div>
+                                <div id="myModal" class="modal">
+                                    <span class="close">&times;</span>
+                                    <img class="modal-content" id="img01" alt="{{ ticket.image_path }}">
+                                </div>
+
+                            {% else %}
+                                <hr>
+                                <label for="ticketImage" class="">User has not uploaded an image for this
+                                    ticket</label>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-6 mb-4"> <!-- Right comment card-->
+                    <div class="card mb-4 h-50">
+                        <div class="card-body pt-0 px-0 h-50">
                             <div class="card-header">
                                 Comments of ticket: <b>{{ ticket.name }}</b>
                             </div>
-                            <div class="card-body">
-                                lasldalsdlasd
+                            <div class="card-body overflow-auto" style="height:90%" id="commentCardBody">
+                                {% for ticket_comment in ticket_comments %}
+                                    <div class="card mt-2">
+                                        <div class="card-header">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <b>{{ all_users[ticket_comment.commenter_id - 1].fullname }}</b>
+                                                    <p class="m-0">{{ ticket_comment.created_at }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card-body">
+                                            <p class="card-text">{{ ticket_comment.content }}</p>
+                                        </div>
+
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="card-footer mt-4">
+                            <div class="row">
+                                <div class="col-12">
+                                    <form id="commentForm" novalidate>
+                                        <div class="form-group">
+                                            <input type="text" class="form-control mt-1" id="commentTextField"
+                                                   placeholder="Type your comment">
+                                            <button type="submit" class="btn btn-primary mt-1 col-12">Submit</button>
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -162,26 +251,33 @@
 
 {% block js %}
     <script>
+        $(".alert-success").hide();
+        $(".alert-danger").hide();
+
+        const commentCardBody = document.getElementById("commentCardBody");
+        commentCardBody.scrollTop = commentCardBody.scrollHeight;
         // NICER IMAGE VIEW
         // Get the modal
         const modal = document.getElementById("myModal");
         // Get the image and insert it inside the modal
         const img = document.getElementById("ticketImage");
-        const modalImg = document.getElementById("img01");
-        const captionText = document.getElementById("caption");
-        img.onclick = function () {
-            modal.style.display = "block";
-            modalImg.src = this.src;
-        }
-        // Get the <span> element that closes the modal
-        const span = document.getElementsByClassName("close")[0];
-        const myModal = document.getElementById("myModal");
-        // When the user clicks on <span> (x) or anywhere, close the modal
-        span.onclick = function () {
-            modal.style.display = "none";
-        }
-        myModal.onclick = function () {
-            modal.style.display = "none";
+        if (img != null) {
+            const modalImg = document.getElementById("img01");
+            const captionText = document.getElementById("caption");
+            img.onclick = function () {
+                modal.style.display = "block";
+                modalImg.src = this.src;
+            }
+            // Get the <span> element that closes the modal
+            const span = document.getElementsByClassName("close")[0];
+            const myModal = document.getElementById("myModal");
+            // When the user clicks on <span> (x) or anywhere, close the modal
+            span.onclick = function () {
+                modal.style.display = "none";
+            }
+            myModal.onclick = function () {
+                modal.style.display = "none";
+            }
         }
 
 
@@ -198,6 +294,37 @@
                 statesList[i].style.color = "green";
             }
         }
+
+        $('#stateSelect').on('change', function () {
+            let updatedState = $(this).val();
+            let currentTicketId = $('.ticketId').attr('id');
+            console.log(updatedState);
+            console.log(currentTicketId);
+            $.ajax({
+                type: 'POST',
+                url: '{{ url_for("api.auth_api.edit_state") }}',
+                data: JSON.stringify({
+                    state: updatedState,
+                    ticket_id: currentTicketId
+                }),
+                success: function (response) {
+                    console.log(response);
+                    $(".alert-success").show();
+                    setTimeout(function () {
+                        $(".alert-success").hide();
+                    }, 2000);
+                },
+                error: function (response) {
+                    console.log(response);
+                    $(".alert-success").show();
+                    setTimeout(function () {
+                        $(".alert-success").hide();
+                    }, 2000);
+                },
+                dataType: "json",
+                contentType: "application/json"
+            });
+        })
     </script>
 {% endblock %}
 
