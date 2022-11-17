@@ -282,23 +282,33 @@ def create_new_ticket():
     data = request.get_json()
     with current_app.app_context():
         try:
-            img = data.get('image')
+            new_ticket: Ticket
             rep = data.get("reporter_id")
-            img = re.sub('^data:image/', '', img)
-            end = re.sub(';base64,.*', '', img)
-            img = re.sub('.+;base64,', '', img)
-            dt = datetime.now().strftime("%m%d%Y%H%M%S")
-            f = "smartcity/static/images/" + dt + rep + '.' + end
-            print(type(f))
-            with open(f, "wb") as fh:
-                fh.write(base64.b64decode(img))
-            new_ticket = Ticket(
-                reporter_id=int(rep),
-                name=data.get("name"),
-                description=data.get("description"),
-                image_path=f,
-                created_at=datetime.now()
-            )
+            img = data.get('image')
+            if img is not '':
+                img = re.sub('^data:image/', '', img)
+                end = re.sub(';base64,.*', '', img)
+                img = re.sub('.+;base64,', '', img)
+                dt = datetime.now().strftime("%m%d%Y%H%M%S")
+                f = "smartcity/static/images/" + dt + rep + '.' + end
+                with open(f, "wb") as fh:
+                    fh.write(base64.b64decode(img))
+
+                new_ticket = Ticket(
+                    reporter_id=int(rep),
+                    name=data.get("name"),
+                    description=data.get("description"),
+                    image_path=f,
+                    created_at=datetime.now()
+                )
+            else:
+                new_ticket = Ticket(
+                    reporter_id=int(rep),
+                    name=data.get("name"),
+                    description=data.get("description"),
+                    created_at=datetime.now()
+                )
+
             db.session.expunge_all()
             db.session.add(new_ticket)
             db.session.commit()
