@@ -9,5 +9,5 @@ class NewTicket(FlaskForm):
                                 validators=[InputRequired(message="Please, tell us more about the problem"),
                                             Length(max=2048, message="Description is too long"),
                                             Length(min=20, message="Description is too short")])
-    image = FileField("Image", [])
+    image = StringField("Image", [])
     reporter_id = IntegerField("Reporter_id", [DataRequired()])

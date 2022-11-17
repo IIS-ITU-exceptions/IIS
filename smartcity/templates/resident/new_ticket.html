@@ -39,7 +39,7 @@
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Image</label> <br>
-                                    <input type="file" id="image" accept="image/*" />
+                                    <input type="file" id="upload_image" accept="image/*" />
                                 </div>
                                 <div class="d-grid mt-5">
                                     <button class="btn btn-outline-dark" type="submit">Create new ticket</button>
@@ -61,6 +61,15 @@
         const form = document.getElementById("form")
         const successMessage = document.getElementById("success-message");
         const alerts = document.getElementById("alerts");
+        let img = "";
+        document.querySelector('#upload_image').addEventListener('change', function () {
+            const reader = new FileReader();
+            reader.readAsDataURL(this.files[0]);
+            reader.addEventListener("load", () => {
+                img = reader.result;
+                {#console.log(img);#}
+            })
+         })
         const fields = {
             csrf_token: {
                 input: document.getElementById('csrf_token'),
@@ -78,12 +87,7 @@
                 input: document.getElementById('description'),
                 error: document.getElementById('description-error')
             },
-            image: {
-                input: document.getElementById('image'),
-                error: document.getElementById('image-error')
-            },
         }
-
         // React to form submission
         form.addEventListener("submit", async (e) => {
            e.preventDefault();
@@ -93,7 +97,7 @@
                reporter_id: fields.reporter_id.input.value,
                name: fields.name.input.value,
                description: fields.description.input.value,
-               image: fields.image.input.value,
+               image: img,
            });
 
            const response = await fetch("{{ url_for("resident.new_ticket") }}", {
@@ -109,7 +113,6 @@
                    fields[key].error.innerText = "";
                }
            }
-           console.log(data)
            if (response.ok) {
                const api_response = await fetch("{{ url_for("api.auth_api.create_new_ticket") }}", {
                    method: "POST",
