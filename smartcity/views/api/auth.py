@@ -290,7 +290,7 @@ def create_new_ticket():
                 end = re.sub(';base64,.*', '', img)
                 img = re.sub('.+;base64,', '', img)
                 dt = datetime.now().strftime("%m%d%Y%H%M%S")
-                f = "smartcity/static/images/" + dt + rep + '.' + end
+                f = "/static/images/" + dt + rep + '.' + end
                 with open(f, "wb") as fh:
                     fh.write(base64.b64decode(img))
 
