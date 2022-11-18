@@ -279,6 +279,7 @@ def add_comment():
 @roles_required(["resident"])
 @auth_api_bp.route("/new_ticket", methods=["POST"])
 def create_new_ticket():
+    # data = request.data
     data = request.get_json()
     with current_app.app_context():
         try:
@@ -286,9 +287,12 @@ def create_new_ticket():
             rep = data.get("reporter_id")
             img = data.get('image')
             if img != '':
-                img = re.sub('^data:image/', '', img)
-                end = re.sub(';base64,.*', '', img)
-                img = re.sub('.+;base64,', '', img)
+                img = img[len('data:image/'):]
+                end = img[:img.find(';')]
+                img = img[img.find(',')+1:]
+                # img = re.sub('^data:image/', '', img)
+                # # end = re.sub(';base64,.*', '', img)
+                # img = re.sub('.+;base64,', '', img)
                 dt = datetime.now().strftime("%m%d%Y%H%M%S")
                 f = "/static/images/" + dt + rep + '.' + end
                 with open('smartcity' + f, "wb") as fh:

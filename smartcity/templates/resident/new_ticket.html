@@ -67,7 +67,6 @@
             reader.readAsDataURL(this.files[0]);
             reader.addEventListener("load", () => {
                 img = reader.result;
-                {#console.log(img);#}
             })
          })
         const fields = {
@@ -99,7 +98,6 @@
                description: fields.description.input.value,
                image: img,
            });
-
            const response = await fetch("{{ url_for("resident.new_ticket") }}", {
                method: "POST",
                headers: {
