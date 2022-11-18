@@ -28,7 +28,7 @@
                                         <option value="greenery">Greenery</option>
                                         <option value="dump">Dump/Garbage</option>
                                         <option value="bench">Bench/Railing/Fence</option>
-                                        <option value="transportation">Public Transportation</option>
+                                        <option value="transport">Public Transport</option>
                                         <option value="road">Road</option>
                                         <option value="sidewalk">Sidewalk</option>
                                         <option value="other">Other</option>
@@ -123,6 +123,7 @@
                });
 
                if (api_response.ok) {
+                   {# TODO: change url to map/ticket page #}
                    window.location.assign("{{ url_for("resident.new_ticket") }}")
                } else {
                    const message = await api_response.json();

@@ -285,13 +285,13 @@ def create_new_ticket():
             new_ticket: Ticket
             rep = data.get("reporter_id")
             img = data.get('image')
-            if img is not '':
+            if img != '':
                 img = re.sub('^data:image/', '', img)
                 end = re.sub(';base64,.*', '', img)
                 img = re.sub('.+;base64,', '', img)
                 dt = datetime.now().strftime("%m%d%Y%H%M%S")
                 f = "/static/images/" + dt + rep + '.' + end
-                with open(f, "wb") as fh:
+                with open('smartcity' + f, "wb") as fh:
                     fh.write(base64.b64decode(img))
 
                 new_ticket = Ticket(
@@ -325,3 +325,10 @@ def create_new_ticket():
                 "message": "An error has occurred. Please try again.",
             }
             return make_response(jsonify(response_object), 500)
+
+
+# @login_required
+# @roles_required(["resident"])
+# @auth_api_bp.route("/my_tickets", methods=["POST"])
+# def get_my_tickets():
+#     return
