@@ -23,6 +23,7 @@
         {% endif %}
         {% if current_user.is_authenticated %}
             {% if current_user.role[0].name == 'resident' %}
+                <li><a href="{{ url_for("resident.my_tickets") }}" class="nav-link px-2 link-dark">My tickets</a></li>
                 <li><a href="{{ url_for("resident.new_ticket") }}" class="nav-link px-2 link-dark">New ticket</a></li>
             {% endif %}
         {% endif %}

@@ -121,8 +121,7 @@
                });
 
                if (api_response.ok) {
-                   {# TODO: change url to map/ticket page #}
-                   window.location.assign("{{ url_for("resident.new_ticket") }}")
+                   window.location.assign("{{ url_for("resident.my_tickets") }}")
                } else {
                    const message = await api_response.json();
                    alerts.innerHTML = bootstrap_alert_macro(message["message"], "danger")

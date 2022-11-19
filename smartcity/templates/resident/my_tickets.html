@@ -1,0 +1,52 @@
+{% extends "layout.html" %}
+{% from "macros/fields.html" import render_text_field, render_boolean_field, render_alert %}
+
+{% block title %} My tickets {% endblock %}
+
+{% block content %}
+    {% for ticket in tickets %}
+        <div class="d-flex justify-content-center align-items-center mt-4">
+            <div class="card col-10 {{ ticket.state.value }}" style="max-width: 1000px;">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <img
+                                {% if ticket.image_path != None %}
+                                    src="{{ ticket.image_path }}"
+                                {% else %}
+                                    src="/static/images/No_image_available.svg.png"
+                                {% endif %}
+                                    class="img-fluid rounded-start"
+                                    alt="{{ ticket.image_path }}">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+{#                            <h5 class="card-title"><a href="{{ url_for("resident.my_tickets.html") }}?ticketId={{ ticket.id }}">{{ ticket.name }}</a></h5>#}
+                            <b class="card-text me-5 mb-5 float-end state">{{ ticket.state.value }}</b>
+
+                            <p class="card-text">{{ ticket.description[:100] }}</p>
+                            <p class="col-3">{{ ticket.created_at }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}
+
+{% block js %}
+    <script>
+        let statesList = document.getElementsByClassName("state");
+        for (let i = 0; i < statesList.length; i++) {
+            if (statesList[i].innerHTML === "New") {
+                statesList[i].style.color = "red";
+            } else if (statesList[i].innerHTML === "Planned") {
+                statesList[i].style.color = "purple";
+            } else if (statesList[i].innerHTML === "Work In Progress") {
+                statesList[i].style.color = "orange";
+            } else if (statesList[i].innerHTML === "Done") {
+                statesList[i].style.color = "green";
+            }
+        }
+    </script>
+{% endblock %}
+
