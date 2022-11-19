@@ -27,6 +27,11 @@
                 <li><a href="{{ url_for("resident.new_ticket") }}" class="nav-link px-2 link-dark">New ticket</a></li>
             {% endif %}
         {% endif %}
+        {% if current_user.is_authenticated %}
+            {% if current_user.role[0].name == 'technician' %}
+                <li><a href="{{ url_for("technician.assigned_tickets") }}" class="nav-link px-2 link-dark">Assigned tickets</a></li>
+            {% endif %}
+        {% endif %}
         </ul>
 
         <div class="col-md-3 text-end align-items-center">
