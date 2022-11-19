@@ -21,5 +21,5 @@ def new_ticket():
 @login_required
 @roles_required(["resident"])
 def my_tickets():
-    tickets = Ticket.query.filter(Ticket.reporter_id==current_user.id).order_by(desc(Ticket.id)).all()
+    tickets = Ticket.query.filter(Ticket.reporter_id == current_user.id).order_by(desc(Ticket.id)).all()
     return render_template("resident/my_tickets.html", current_user=current_user, tickets=tickets)

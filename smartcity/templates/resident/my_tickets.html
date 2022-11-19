@@ -20,7 +20,7 @@
                     </div>
                     <div class="col-md-8">
                         <div class="card-body">
-{#                            <h5 class="card-title"><a href="{{ url_for("resident.my_tickets.html") }}?ticketId={{ ticket.id }}">{{ ticket.name }}</a></h5>#}
+                            <h5 class="card-title"><b>{{ ticket.name }}</b></h5>
                             <b class="card-text me-5 mb-5 float-end state">{{ ticket.state.value }}</b>
 
                             <p class="card-text">{{ ticket.description[:100] }}</p>
