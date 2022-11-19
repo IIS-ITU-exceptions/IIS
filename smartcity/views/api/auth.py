@@ -8,7 +8,7 @@ from flask import Blueprint, request, jsonify, make_response, current_app
 from flask_login import login_required, login_user, logout_user, current_user
 
 from .. import roles_required
-from ...models import User, Role, db, ServiceTaskUsers, ServiceTask, Ticket
+from ...models import User, Role, db, ServiceTaskUsers, ServiceTask, Ticket, Comment
 
 auth_api_bp = Blueprint("auth_api", __name__)
 
