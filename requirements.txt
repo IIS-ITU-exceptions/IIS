@@ -13,3 +13,4 @@ cryptography
 pymysql
 Flask-Migrate
 python-dotenv
+gunicorn
