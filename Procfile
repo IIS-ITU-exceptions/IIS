@@ -1,1 +1,1 @@
-web: gunicorn smartcity:app
+web: gunicorn "smartcity.app:create_app()"
