@@ -10,8 +10,9 @@
                 <div class="col-12 col-md-10 col-lg-8">
                     <div class="border border-3 border-primary"></div>
                         <div class="card bg-white shadow-lg" style="border-top-left-radius: 0; border-top-right-radius: 0">
-                            <div class="card-body p-5">
+                            <div class="card-body pb-5 px-5 pt-3">
                                 <form id="form" class="mb-3 mt-md-4" method="POST" novalidate>
+                                    <p><a class="mb-5 mt-1 text-decoration-none text-dark" href="{{ url_for("home.index") }}"><i class="las la-angle-double-left pb-1" style="font-size: 18px;"></i>Go back</a></p>
                                     <i class="las la-city" style="font-size: 36px"></i><b style="font-size: 32px; margin-left: 10px">SMARTCITY</b>
                                     <p class="mt-3 mb-4 mt-1">Get started with your account!</p>
                                     {# CSRF Token #}

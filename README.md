@@ -13,6 +13,10 @@ source venv/bin/activate
 pip install -r requirements.txt
 flask run --host=0.0.0.0
 ```
+#### On every `git pull`:
+Once you setup your `.env` file for local environment, copy to somewhere (for example: `cp .env .myenv`) \
+Don't include that file in git commits. \
+After every `git pull` run something like this `cp .myenv .env`
 
 ## Images
 Save images in the `smartcity/static/images` folder. \
