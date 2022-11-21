@@ -4,9 +4,10 @@
 {% block title %} Manager dashboard {% endblock %}
 
 {% block content %}
+<div class="container">
     <br>
     <div class="d-flex justify-content-center align-items-center mt-1">
-            <div class="mb-4" style="width: 66%">
+            <div class="mb-4 col-10">
                 <label for="filterStates"><h4>State of tickets you want to be shown</h4></label>
                 <select class="form-select mt-2" aria-label="State-filter" id="filterStates">
                     <option value="All states" selected>All states</option>
@@ -51,6 +52,7 @@
                     </div>
                 </div>
             </div>
+        </div>
         </div>
     {% endfor %}
 {% endblock %}
