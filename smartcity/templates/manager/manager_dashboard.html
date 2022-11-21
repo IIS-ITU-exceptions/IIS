@@ -62,27 +62,27 @@
         console.log($('#filterStates').val());
         if($('#filterStates').val() == 'All states') {
             $('.New').show();
-            $('.Work in progress').show();
+            $('.Progress').show();
             $('.Planned').show();
             $('.Done').show();
         } else if ($('#filterStates').val() == 'New') {
             $('.New').show();
-            $('.Work in progress').hide();
+            $('.Progress').hide();
             $('.Planned').hide();
             $('.Done').hide();
         } else if ($('#filterStates').val() == 'Planned') {
             $('.New').hide();
-            $('.Work in progress').hide();
+            $('.Progress').hide();
             $('.Planned').show();
             $('.Done').hide();
         } else if ($('#filterStates').val() == 'WorkInProgress') {
             $('.New').hide();
-            $('.Work in progress').show();
+            $('.Progress').show();
             $('.Planned').hide();
             $('.Done').hide();
         } else if ($('#filterStates').val() == 'Done') {
             $('.New').hide();
-            $('.Work in progress').hide();
+            $('.Progress').hide();
             $('.Planned').hide();
             $('.Done').show();
         }
