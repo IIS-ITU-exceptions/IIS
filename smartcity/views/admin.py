@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify, make_response, current_app, render_template
 from flask_login import login_required, login_user, logout_user, current_user
-from . import roles_required
-from ..models import User, Role, RolesUsers, ServiceTask, ServiceTaskUsers, Comment, Ticket, TicketStateEnum, db
+from smartcity.views import roles_required
+from smartcity.models import User, Role, RolesUsers, ServiceTask, ServiceTaskUsers, Comment, Ticket, TicketStateEnum, db
 
 from .admin_forms import CreateCityManager, EditUser
 

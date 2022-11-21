@@ -5,19 +5,19 @@ from sqlalchemy import select
 from sqlalchemy.exc import NoResultFound
 from dotenv import load_dotenv
 
-from .views.home import home_bp
-from .views.auth import auth_bp
-from .views.manager import manager_bp
-from .views.admin import admin_bp
-from .views.api.auth import auth_api_bp
-from .views.resident import resident_bp
-from .views.technician import technician_bp
-from .extensions import (
+from smartcity.views.home import home_bp
+from smartcity.views.auth import auth_bp
+from smartcity.views.manager import manager_bp
+from smartcity.views.admin import admin_bp
+from smartcity.views.api.auth import auth_api_bp
+from smartcity.views.resident import resident_bp
+from smartcity.views.technician import technician_bp
+from smartcity.extensions import (
     # migrate,
     login_manager,
     db,
 )
-from .models import (
+from smartcity.models import (
     User,
     Role,
     RolesUsers,

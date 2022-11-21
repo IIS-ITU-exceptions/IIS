@@ -1,4 +1,5 @@
 import enum
+
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy import (
@@ -13,7 +14,7 @@ from sqlalchemy import (
 )
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from .extensions import db
+from smartcity.extensions import db
 
 
 class TicketStateEnum(enum.Enum):

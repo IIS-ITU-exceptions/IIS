@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template
 from flask_login import current_user, login_required
-from . import roles_required
-from ..models import Role, User
+from smartcity.views import roles_required
+from smartcity.models import Role, User
 
 home_bp = Blueprint("home", __name__)
 

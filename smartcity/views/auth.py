@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, jsonify, make_response, flash
 from flask_login import current_user
 
-from .auth_forms import LoginForm, SignupForm
+from smartcity.views.auth_forms import LoginForm, SignupForm
 
 auth_bp = Blueprint("auth", __name__)
 
