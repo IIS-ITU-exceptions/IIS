@@ -244,6 +244,15 @@
                                         <div class="form-group">
                                             <input type="text" class="form-control mt-1" id="commentTextField"
                                                    placeholder="Type your comment">
+
+                                            <button id="recordBtn" name="recordBtn"
+                                                    class="btn btn-search ps-0 pt-0 mb-1"
+                                                    onclick="record()">
+                                                <i class="las la-microphone" id="record"></i> <small class="form-text">
+                                                Voice type your comment
+                                            </small>
+                                            </button>
+
                                             <button type="submit" class="btn btn-primary mt-1 col-12">Submit</button>
                                         </div>
                                     </form>
@@ -262,6 +271,25 @@
 
 {% block js %}
     <script>
+        $('#recordBtn').on("click", function (e) {
+            e.preventDefault();
+        });
+
+        function record() {
+            let recognition = new webkitSpeechRecognition();
+            recognition.lang = "cs-CZE";
+            recognition.onresult = function (event) {
+                console.log(event);
+                document.getElementById('commentTextField').value = event.results[0][0].transcript;
+            }
+            recognition.start();
+            recognition.onspeechend = function () {
+                recognition.stop();
+                console.log('Speech recognition has stopped.');
+            }
+
+        }
+
         $(".alert-success").hide();
         $(".alert-danger").hide();
 
@@ -365,12 +393,12 @@
                                             <div class="row">\
                                                 <div class="col-12">\
                                                     <b>{{ current_user.fullname }}</b>\
-                                                    <p class="m-0">'+ now +'</p>\
+                                                    <p class="m-0">' + now + '</p>\
                                                 </div>\
                                         </div>\
                                         </div>\
                                         <div class="card-body">\
-                                            <p class="card-text">'+ content +'</p>\
+                                            <p class="card-text">' + content + '</p>\
                                         </div>\
                                     </div>\
                                      <!-- END of the individual comment card-->';

@@ -26,6 +26,12 @@
                                 <div class="mb-3">
                                     {{ render_text_field(form.description) }}
                                 </div>
+                                <button id="recordBtn" name="recordBtn" class="btn btn-search ps-0 pt-0 mb-1"
+                                        onclick="record()">
+                                    <i class="las la-microphone" id="record"></i> <small class="form-text">
+                                    Voice type your description
+                                </small>
+                                </button>
                                 <div class="mb-3">
                                     <label class="form-label" for="technician_select">Assigned technician</label>
                                     <select class="form-select" id="technician_select">
@@ -38,7 +44,8 @@
                                     <label class="form-label" for="ticket_select">Assigned ticket</label>
                                     <select class="form-select" id="ticket_select">
                                         {% for ticket in tickets %}
-                                            <option value="{{ ticket.id }}">#{{ ticket.id ~', ' ~ticket.name }}, from: {{ ticket.created_at }}</option>
+                                            <option value="{{ ticket.id }}">#{{ ticket.id ~', ' ~ticket.name }},
+                                                from: {{ ticket.created_at }}</option>
                                         {% endfor %}
                                     </select>
                                 </div>
@@ -57,88 +64,106 @@
 {% endblock %}
 
 {% block js %}
-<script>
-// Get form elements by IDs
-const form = document.getElementById("form")
-const successMessage = document.getElementById("success-message");
-const alerts = document.getElementById("alerts");
-const fields = {
-    csrf_token: {
-        input: document.getElementById('csrf_token'),
-        error: document.getElementById('csrf_token-error')
-    },
-    name: {
-        input: document.getElementById('name'),
-        error: document.getElementById('name-error')
-    },
-    description: {
-        input: document.getElementById('description'),
-        error: document.getElementById('description-error')
-    },
-    technician_select: {
-        input: document.getElementById('technician_select'),
-        error: document.getElementById('technician_select-error')
-    },
-    creator_id: {
-        input: document.getElementById('creator_id'),
-        error: document.getElementById('creator_id-error')
-    },
-    parent_ticket: {
-        input: document.getElementById('ticket_select'),
-        error: document.getElementById('ticket_select-error')
-    },
-}
+    <script>
+        $('#recordBtn').on("click", function (e) {
+            e.preventDefault();
+        });
 
-// React to form submission
-form.addEventListener("submit", async (e) => {
-   e.preventDefault();
-   // Make JSON out of the form input value
-   let data = JSON.stringify({
-       csrf_token: fields.csrf_token.input.value,
-       name: fields.name.input.value,
-       description: fields.description.input.value,
-       technician_id: fields.technician_select.input.value,
-       creator_id: fields.creator_id.input.value,
-       parent_ticket: fields.parent_ticket.input.value
-   });
+        function record() {
+            let recognition = new webkitSpeechRecognition();
+            recognition.lang = "cs-CZE";
+            recognition.onresult = function (event) {
+                console.log(event);
+                document.getElementById('description').value = event.results[0][0].transcript;
+            }
+            recognition.start();
+            recognition.onspeechend = function () {
+                recognition.stop();
+                console.log('Speech recognition has stopped.');
+            }
+        }
 
-   const response = await fetch("{{ url_for("manager.create_service_task") }}", {
-       method: "POST",
-       headers: {
-           "Content-Type": "application/json"
-       },
-       body: data,
-   });
-   for (let key in fields) {
-       if (fields[key].input.classList.contains("is-invalid")) {
-           fields[key].input.classList.remove("is-invalid");
-           fields[key].error.innerText = "";
-       }
-   }
-   console.log(data)
-   if (response.ok) {
-       const api_response = await fetch("{{ url_for("api.auth_api.create_service_task") }}", {
-           method: "POST",
-           headers: {
-               "Content-Type": "application/json"
-           },
-           body: data,
-       });
+        // Get form elements by IDs
+        const form = document.getElementById("form")
+        const successMessage = document.getElementById("success-message");
+        const alerts = document.getElementById("alerts");
+        const fields = {
+            csrf_token: {
+                input: document.getElementById('csrf_token'),
+                error: document.getElementById('csrf_token-error')
+            },
+            name: {
+                input: document.getElementById('name'),
+                error: document.getElementById('name-error')
+            },
+            description: {
+                input: document.getElementById('description'),
+                error: document.getElementById('description-error')
+            },
+            technician_select: {
+                input: document.getElementById('technician_select'),
+                error: document.getElementById('technician_select-error')
+            },
+            creator_id: {
+                input: document.getElementById('creator_id'),
+                error: document.getElementById('creator_id-error')
+            },
+            parent_ticket: {
+                input: document.getElementById('ticket_select'),
+                error: document.getElementById('ticket_select-error')
+            },
+        }
 
-       if (api_response.ok) {
-           window.location.assign("{{ url_for("manager.create_service_task") }}")
-       } else {
-           const message = await api_response.json();
-           alerts.innerHTML = bootstrap_alert_macro(message["message"], "danger")
-       }
-   } else {
-       const errors = await response.json();
-       Object.keys(errors).forEach((key) => {
-           fields[key].input.classList.add("is-invalid");
-           fields[key].error.innerText = errors[key][0];
-       });
-   }
-});
+        // React to form submission
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            // Make JSON out of the form input value
+            let data = JSON.stringify({
+                csrf_token: fields.csrf_token.input.value,
+                name: fields.name.input.value,
+                description: fields.description.input.value,
+                technician_id: fields.technician_select.input.value,
+                creator_id: fields.creator_id.input.value,
+                parent_ticket: fields.parent_ticket.input.value
+            });
 
-</script>
+            const response = await fetch("{{ url_for("manager.create_service_task") }}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: data,
+            });
+            for (let key in fields) {
+                if (fields[key].input.classList.contains("is-invalid")) {
+                    fields[key].input.classList.remove("is-invalid");
+                    fields[key].error.innerText = "";
+                }
+            }
+            console.log(data)
+            if (response.ok) {
+                const api_response = await fetch("{{ url_for("api.auth_api.create_service_task") }}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: data,
+                });
+
+                if (api_response.ok) {
+                    window.location.assign("{{ url_for("manager.create_service_task") }}")
+                } else {
+                    const message = await api_response.json();
+                    alerts.innerHTML = bootstrap_alert_macro(message["message"], "danger")
+                }
+            } else {
+                const errors = await response.json();
+                Object.keys(errors).forEach((key) => {
+                    fields[key].input.classList.add("is-invalid");
+                    fields[key].error.innerText = errors[key][0];
+                });
+            }
+        });
+
+    </script>
 {% endblock %}
