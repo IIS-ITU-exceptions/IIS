@@ -208,12 +208,15 @@ def edit_user():
                      "surname": data.get("surname")
                      })
             else:
+                user = User.query.filter_by(email=data.get("email")).first()
                 db.session.query(User).filter(User.id == int(data.get("user_id"))).update(
                     {"email": data.get("email"),
                      "name": data.get("name"),
-                     "surname": data.get("surname"),
-                     "password": data.get("password")
+                     "surname": data.get("surname")
                      })
+                user = User.query.filter_by(email=data.get("email")).first()
+                user.password = data.get("password")
+
             db.session.commit()
             db.session.expunge_all()
 
