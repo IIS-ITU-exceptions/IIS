@@ -20,9 +20,7 @@ class EditUser(FlaskForm):
     surname = StringField("Surname", [DataRequired(message="Forgot user's surname?")])
     email = StringField("Email Address", [Email(), DataRequired(message="Forgot user's email address?")])
     password = PasswordField("New password", [
-        #DataRequired(message="You must provide a password."),
         Length(min=8, message="Password must be at least 8 characters long."),
-        EqualTo("confirm", message="Passwords must match.")
-    ])
+    ], render_kw={"placeholder": "If left empty password will not be changed"})
     role = StringField("Role", [DataRequired(message="Forgot user's role?")])
     confirm = PasswordField("Repeat Password", [EqualTo("password", message="Passwords must match.")])

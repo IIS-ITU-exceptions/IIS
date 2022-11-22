@@ -18,13 +18,12 @@ def signup():
     data = request.get_json()
     with current_app.app_context():
         user = User.query.filter_by(email=data.get("email")).first()
-
-        if user:
+        if user.email.strip() == data.get("email").strip():
             response_object = {
                 "status": "fail",
                 "message": "User already exists. Please log in.",
             }
-            return make_response(jsonify(response_object), 202)
+            return make_response(jsonify(response_object), 401)
         else:
             try:
                 new_user = User(
@@ -88,7 +87,13 @@ def login():
             }
             return make_response(jsonify(response_object), 401)
         else:
-            if not user.verify_password(password=data.get("password")):
+            if user.deactivated:
+                response_object = {
+                    "status": "fail",
+                    "message": "User deactivated.",
+                }
+                return make_response(jsonify(response_object), 401)
+            elif not user.verify_password(password=data.get("password")):
                 response_object = {
                     "status": "fail",
                     "message": "Incorrect credentials.",
@@ -196,11 +201,19 @@ def edit_user():
     data = request.get_json()
     with current_app.app_context():
         try:
-            db.session.query(User).filter(User.id == int(data.get("user_id"))).update(
-                {"email":data.get("email"),
-                 "name":data.get("name"),
-                 "surname":data.get("surname")
-                 })
+            if data.get("password") == "":
+                db.session.query(User).filter(User.id == int(data.get("user_id"))).update(
+                    {"email": data.get("email"),
+                     "name": data.get("name"),
+                     "surname": data.get("surname")
+                     })
+            else:
+                db.session.query(User).filter(User.id == int(data.get("user_id"))).update(
+                    {"email": data.get("email"),
+                     "name": data.get("name"),
+                     "surname": data.get("surname"),
+                     "password": data.get("password")
+                     })
             db.session.commit()
             db.session.expunge_all()
 
