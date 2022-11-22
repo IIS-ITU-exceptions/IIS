@@ -114,7 +114,8 @@ form.addEventListener("submit", async (e) => {
 
        // React to API response
        if (api_response.ok) {
-           window.location.assign("{{ url_for("home.index") }}")
+           const message = await api_response.json();
+           window.location.assign(message["location"])
        } else {
            const message = await api_response.json();
            alerts.innerHTML = bootstrap_alert_macro(message["message"], "danger")

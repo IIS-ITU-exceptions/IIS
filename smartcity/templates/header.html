@@ -15,12 +15,9 @@
                 <div class="collapse navbar-collapse" id="navbarToggler01">
                     <ul class="navbar-nav me-auto mb-2 justify-content-center mb-md-0">
                         {% if not current_user.is_authenticated %}
-                            <li class="nav-item"><a href="#scrollspyHeading1"
-                                                    class="nav-link px-2 link-secondary">Home</a></li>
-                            <li class="nav-item"><a href="#scrollspyHeading2" class="nav-link px-2 link-dark">FAQ</a>
-                            </li>
-                            <li class="nav-item"><a href="#scrollspyHeading3"
-                                                    class="nav-link px-2 link-dark">Contact</a></li>
+                            <li class="nav-item"><a href="#scrollspyHeading1" class="nav-link px-2 link-dark">Home</a></li>
+                            <li class="nav-item"><a href="#scrollspyHeading2" class="nav-link px-2 link-dark">FAQ</a></li>
+                            <li class="nav-item"><a href="#scrollspyHeading3" class="nav-link px-2 link-dark">Contact</a></li>
                         {% endif %}
                         {% if current_user.is_authenticated %}
                             {% if current_user.role[0].name == 'manager' %}
@@ -59,16 +56,11 @@
                     <div class="text-left align-items-center">
                         <div class="nav-item mt-2">
                             {% if current_user.is_anonymous %}
-                                <a href="{{ url_for("auth.login") }}">
-                                    <button type="button" class="btn btn-outline-primary me-2">Login</button>
-                                </a>
-                                <a href="{{ url_for("auth.signup") }}">
-                                    <button type="button" class="btn btn-primary">Sign-Up</button>
-                                </a>
+                                <a href="{{ url_for("auth.login") }}"><button type="button" class="btn btn-outline-light me-2" style="border-color: #96031A; color: #96031A">Login</button></a>
+                                <a href="{{ url_for("auth.signup") }}"><button type="button" class="btn btn-primary" style="background-color: #96031A; border-color: #96031A;">Sign-Up</button></a>
                             {% else %}
                                 <div class="nav-item dropdown">
-                                    <a class="caret dropdown-toggle d-block link-dark text-decoration-none"
-                                       style="outline: 0;" data-bs-toggle="dropdown" aria-expanded="false" id="usernameInHeader">
+                                    <a class="caret dropdown-toggle d-block link-dark text-decoration-none" style="outline: 0;" data-bs-toggle="dropdown" aria-expanded="false">
                                         <i class="las la-user" style="font-size: 24px"></i>{{ current_user.fullname }}
                                     </a>
                                     <ul class="dropdown-menu">
