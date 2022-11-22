@@ -24,7 +24,7 @@
         <div class="d-flex justify-content-center align-items-center mt-4">
             <div class="card col-10 {{ ticket.state.value }}" style="max-width: 1000px;">
                 <div class="row g-0">
-                    <div class="col-md-4">
+                    <div class="col-md-4 d-flex justify-content-center align-items-center">
                         <img
                                 {% if ticket.image_path != None %}
                                     src="{{ ticket.image_path }}"
@@ -32,7 +32,9 @@
                                     src="/"
                                 {% endif %}
                                     class="img-fluid rounded-start"
-                                    alt="{{ ticket.image_path }}">
+                                    alt="{{ ticket.image_path }}"
+                                    style="height: 200px; object-fit: fill;"
+                        >
                     </div>
                     <div class="col-md-8">
                         <div class="card-body">
