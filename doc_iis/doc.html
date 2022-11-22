@@ -22,15 +22,16 @@
 	<dt>Autoøi</dt>
 	<dd>Dominik Vágner <!-- Nahraïte skuteèným jménem a e-mailem autora a popisem èinnosti -->
 	    <a href="mailto:xvagne10@stud.fit.vutbr.cz">xvagne10@stud.fit.vutbr.cz</a> -
-		popis èinnosti v týmu
+		návrh DB, sestrojení api, login, registrace, domovská stránka, mapa
 	</dd>
 	<dd>Ladislav Va¹ina <!-- Nahraïte skuteèným jménem a e-mailem autora a popisem èinnosti -->
 	    <a href="mailto:xvasin11@stud.fit.vutbr.cz">xvasin11@stud.fit.vutbr.cz</a> -
-		popis èinnosti v týmu
+		návrh DB, doplnìní api, administrátorské stránky (editace u¾ivatelù, vytváøení správce mìsta),
+        stránky správce mìsta (vytváøení servisních po¾adavkù, vytváøení servisních technikù, správa tiketù)
 	</dd>
   <dd>David Novák <!-- Nahraïte skuteèným jménem a e-mailem autora a popisem èinnosti -->
 	    <a href="mailto:xnovak2r@stud.fit.vutbr.cz">xnovak2r@stud.fit.vutbr.cz</a> -
-		popis èinnosti v týmu
+		návrh DB, doplnìní api, nahla¹ování závad, stránky servisního technika (doplòování servisních po¾adavkù)
 	</dd>
 	<dt>URL aplikace</dt>
 	<dd><a href="https://smartcity-vut.herokuapp.com/">https://smartcity-vut.herokuapp.com/</a></dd>
@@ -49,27 +50,34 @@
 <p>(Diagram pøípadù u¾ití není nutné vkládat, pokud IS implementuje role a pøípady u¾ití definované zadáním.)</p> 
 
 <h3>Video</h3>
+<b>TODO</b>
 
 <p>Pøilo¾te odkaz na komentované video demostrující pou¾ití informaèního systému. Zamìøte se na pøípady u¾ití definované zadáním (napø. registrace u¾ivatele, správa u¾ivatelù a èinnosti jednotlivých rolí). Video nahrajte napøíklad na VUT Google Drive, kde ho bude mo¾né pøímo spustit z odkazu.</p> 
 
 <h2>Implementace</h2>
+<b>TODO</b>
 <p>Struèná dokumentace k implementaci, která popisuje, které èásti projektu (napø. PHP skripty) implementují jednotlivé pøípady pou¾ití.</p>
 
 <h3>Databáze</h3>
+<b>TODO</b>
 
 Zde vlo¾te grafické schéma relaèní databáze (tabulek v databázi).
 
 <h2>Instalace</h2>
-
-Struènì popi¹te: 
+Nejdøíve je nutné si lokálnì nainstalovat MySQL server a vytvoøit databázi s názvem <i>smartcity</i>.<br>
+Následnì je nutné vytvoøit(zmìnit) soubor <i>.env</i>.<br> V nìm je nutné zmìnit promìnnou <i>DATABASE_URI</i>, aby odpovídala lokálnímu nastavení MySQL serveru.
+Dále provedeme následující pøíkazy:
 <ul>
-<li>postup instalace na server,</li>
-<li>softwarové po¾adavky (verze PHP apod.),</li>
-<li>jak rozbalit, konfigurovat, inicializovat databázi, ...</li>
+<li>virtualenv venv</li>
+<li>source venv/bin/activate</li>
+<li>pip install -r requirements.txt</li>
+<li>flask run --host=0.0.0.0</li>
 </ul>
+Stránka by následnì mìla lokálnì bì¾et na adrese <a href="http://127.0.0.1:5000/"><i>http://127.0.0.1:5000/</i></a> <br>(kdyby ne viz výstup terminálu po spu¹tìní pøíkazu <i>flask run --host=0.0.0.0 </i>)
 
 <h2>Známé problémy</h2>
-<p>Zde popi¹te, které body zadání nejsou implementovány a z jakého dùvodu. Napø. &bdquo;Z èasových dùvodù nebyla implementována správa u¾ivatelù.&rdquo; Pomù¾ete tím zrychlit hodnocení, kdy¾ neimplementované funkce nebudeme muset dlouze hledat.</p>
+<p>®ÁDNÉ</p>
+<p>V¹e co je uvedeno v zadání bylo implementováno.</p>
 
 </body>
 </html>
