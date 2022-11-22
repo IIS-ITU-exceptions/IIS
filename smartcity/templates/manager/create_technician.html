@@ -62,6 +62,10 @@
 
 {% block js %}
     <script>
+        // Force email keyboard on mobile devices
+        let x = document.getElementById("email");
+        x.type = "email";
+
         function showPassword() {
             let x = document.getElementById("password");
             if (x.type === "password") {
