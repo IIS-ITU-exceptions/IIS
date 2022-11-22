@@ -37,7 +37,9 @@
                         <div class="col-md-8">
                             <div class="card-body">
                                 <h5 class="card-title"><a
-                                        href="{{ url_for("manager.manager_ticket_view") }}?ticketId={{ ticket.id }}">{{ ticket.name }}</a>
+                                        href="{{ url_for("manager.manager_ticket_view") }}?ticketId={{ ticket.id }}"
+                                style="text-decoration: none;">{{ ticket.name }}
+                                </a>
                                 </h5>
 
                                 <p class="card-text">{{ ticket.description[:100] }}</p>

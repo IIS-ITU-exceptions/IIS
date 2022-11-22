@@ -51,6 +51,7 @@ def create_service_task():
 def manager_ticket_view():
     if request.method == "GET":
         ticket_comments = Comment.query.filter_by(ticket_id=request.args.get("ticketId")).all()
+        tickets_tasks = ServiceTask.query.filter_by(parent_ticket=request.args.get("ticketId")).all()
         try:
             selected_ticket_id = int(request.args.get("ticketId"))
         except Exception as e:
@@ -60,4 +61,5 @@ def manager_ticket_view():
     service_technicians = User.query.join(RolesUsers).filter(RolesUsers.role_id == 2).all()
     return render_template("manager/manager_ticket_view.html", current_user=current_user,
                            service_technicians=service_technicians, tickets=tickets,
-                           selected_ticket_id=selected_ticket_id, all_users=all_users, ticket_comments=ticket_comments)
+                           selected_ticket_id=selected_ticket_id, all_users=all_users, ticket_comments=ticket_comments,
+                           tickets_tasks=tickets_tasks)

@@ -126,7 +126,7 @@
             <div class="d-flex justify-content-center align-items-center">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ url_for("manager.manager_dashboard") }}">Dashboard</a>
+                        <li class="breadcrumb-item"><a href="{{ url_for("manager.manager_dashboard") }}" style="text-decoration: none;">Dashboard</a>
                         </li>
                         <li class="breadcrumb-item active" aria-current="page">Ticket #{{ ticket.id }}</li>
                     </ol>
@@ -189,6 +189,31 @@
                             <h4 class="mt-3">Description:</h4>
                             <p>{{ ticket.description }}</p>
 
+                            {% if tickets_tasks == [] %}
+                                <small>No service tasks were assigned with this ticket</small>
+                            {% else %}
+                                <b class="mt-3">Assigned service tasks:</b>
+                                {% for ticket_task in tickets_tasks %}
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-12 me-5 mt-2 ">
+                                            <button type="button" class="state btn btn-danger w-100" style="float:left;pointer-events: none;">{{ ticket_task.state.value }}</button>
+                                        </div>
+                                        <div class="col-7 ms-2 mt-2">
+                                            <b>Name:</b><br>
+                                            <a href="{{ url_for("technician.task_view") }}?taskID={{ ticket_task.id }}&&parent={{ ticket.id }}"
+                                                style="text-decoration: none;">
+                                                {{ ticket_task.name }}
+                                            </a>
+                                        </div>
+                                        <div class="col-3 ms-2 mt-2">
+                                            <b>Hours worked:</b>
+                                            <p>{{ ticket_task.man_hours }} hours</p>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+
 
                             {% if ticket.image_path != None %}
                                 <hr>
@@ -244,7 +269,6 @@
                                         <div class="form-group">
                                             <input type="text" class="form-control mt-1" id="commentTextField"
                                                    placeholder="Type your comment" required>
-
                                             <button id="recordBtn" name="recordBtn"
                                                     class="btn btn-search ps-0 pt-0 mb-1"
                                                     onclick="record()">
@@ -252,7 +276,6 @@
                                                 Voice type your comment
                                             </small>
                                             </button>
-
                                             <button type="submit" class="btn btn-primary mt-1 mb-3 col-12">Submit</button>
                                         </div>
                                     </form>
@@ -271,6 +294,32 @@
 
 {% block js %}
     <script>
+
+        let statesList = document.getElementsByClassName("state");
+        for (let i = 0; i < statesList.length; i++) {
+            statesList[i].style.fontWeight = "bold";
+            if (statesList[i].innerHTML === "New") {
+                statesList[i].style.color = "white";
+                //statesList[i].style.width = "146px";
+                statesList[i].classList.add("btn-danger");
+            } else if (statesList[i].innerHTML === "Planned") {
+                statesList[i].style.color = "black";
+                //statesList[i].style.width = "146px";
+                statesList[i].classList.add("btn-info");
+            } else if (statesList[i].innerHTML === "Work In Progress") {
+                statesList[i].style.color = "black";
+                statesList[i].classList.add("btn-warning");
+            } else if (statesList[i].innerHTML === "Done") {
+                statesList[i].style.color = "white";
+                //statesList[i].style.width = "146px";
+                statesList[i].classList.add("btn-success");
+            }
+        }
+
+        $(".alert-success").hide();
+        $(".alert-danger").hide();
+
+
         $('#recordBtn').on("click", function (e) {
             e.preventDefault();
         });
@@ -290,8 +339,10 @@
 
         }
 
-        $(".alert-success").hide();
-        $(".alert-danger").hide();
+
+
+
+
 
         const commentCardBody = document.getElementById("commentCardBody");
         commentCardBody.scrollTop = commentCardBody.scrollHeight;
@@ -319,21 +370,6 @@
             }
         }
 
-
-        let statesList = document.getElementsByClassName("state");
-
-        for (let i = 0; i < statesList.length; i++) {
-            if (statesList[i].innerHTML === "New") {
-                statesList[i].style.color = "red";
-            } else if (statesList[i].innerHTML === "Planned") {
-                statesList[i].style.color = "purple";
-            } else if (statesList[i].innerHTML === "Work In Progress") {
-                statesList[i].style.color = "orange";
-            } else if (statesList[i].innerHTML === "Done") {
-                statesList[i].style.color = "green";
-            }
-        }
-
         $('#stateSelect').on('change', function () {
             let updatedState = $(this).val();
             let currentTicketId = $('.ticketId').attr('id');
@@ -350,14 +386,14 @@
                     console.log(response);
                     $(".alert-success").show();
                     setTimeout(function () {
-                        $(".alert-success").alert('close');
+                        $(".alert-success").hide();
                     }, 3000);
                 },
                 error: function (response) {
                     console.log(response);
                     $(".alert-success").show();
                     setTimeout(function () {
-                        $(".alert-success").alert('close');
+                        $(".alert-success").hide();
                     }, 3000);
                 },
                 dataType: "json",
