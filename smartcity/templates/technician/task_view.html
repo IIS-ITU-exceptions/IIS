@@ -6,10 +6,13 @@
 {% block content %}
     {% for t in ticket %}
         <div class="d-flex justify-content-center align-items-center mt-4">
-            <div class="card {{ t.state.value }}" style="max-width: 1300px; min-width: 600px;">
+            <div class="card" style="max-width: 1300px; min-width: 600px;">
                 <div class="row g-0">
                     <div class="col-md-10">
                         <div class="card-body">
+                            <img src="{{ t.image_path }}" id="img" style="position: absolute; max-height: 800px;
+                             max-width: 80% ;  display: none" alt={{ "Ticket.image_path" }}>
+
                             <h5 class="card-title"><b>{{ t.name }}</b></h5>
                             <p class="card-text">{{ t.description}}</p>
                         </div>
@@ -18,37 +21,56 @@
                         <div class="p-3">
                         </div>
                         <div class="p-3">
-                            <b class="state">{{ t.state.value }}</b>
+                            <button class="state btn">{{ t.state.value }}</button>
                         </div>
                         <div class="py-3">
                             <b>{{ t.created_at.year}}-{{ t.created_at.month}}-{{ t.created_at.day}}</b>
                         </div>
                         <div class="p-3">
-                            <input type="button" value="Image" class="btn btn-secondary" id="img" onclick="image(t)"/>
+                            {% if t.image_path != None %}
+                                <input type="button" value="Image" class="btn btn-secondary"
+                                       id="img_button" onclick="image()"/>
+                            {% else %}
+                                <input type="button" value="No image" class="btn btn-secondary"
+                                       id="img_button" disabled/>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+        <div>
+{#            #}
         </div>
     {% endfor %}
 {% endblock %}
 
 {% block js %}
     <script>
-        function image(ticket) {
-            {#document.getElementsByClassName("card-body") = ticket.image_path;#}
+        function image() {
+            let img = document.getElementById("img");
+            if (img.style.display == 'block')
+                img.style.display = 'none';
+            else
+                img.style.display = 'block';
         }
 
         let statesList = document.getElementsByClassName("state");
+
         for (let i = 0; i < statesList.length; i++) {
+            statesList[i].style.fontWeight = "bold";
             if (statesList[i].innerHTML === "New") {
-                statesList[i].style.color = "red";
+                statesList[i].style.color = "white";
+                statesList[i].classList.add("btn-danger");
             } else if (statesList[i].innerHTML === "Planned") {
-                statesList[i].style.color = "purple";
+                statesList[i].style.color = "black";
+                statesList[i].classList.add("btn-info");
             } else if (statesList[i].innerHTML === "Work In Progress") {
-                statesList[i].style.color = "orange";
+                statesList[i].style.color = "black";
+                statesList[i].classList.add("btn-warning");
             } else if (statesList[i].innerHTML === "Done") {
-                statesList[i].style.color = "green";
+                statesList[i].style.color = "white";
+                statesList[i].classList.add("btn-success");
             }
         }
     </script>
