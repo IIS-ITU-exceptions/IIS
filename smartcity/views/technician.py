@@ -13,19 +13,18 @@ technician_bp = Blueprint("technician", __name__)
 @login_required
 @roles_required(["technician"])
 def assigned_tasks():
-    tasks_for_user_STU = ServiceTaskUsers.query.filter(ServiceTaskUsers.user_id == current_user.id).all()
-    service_tasks = []
-    parent_tickets = []
-    for task_STU in tasks_for_user_STU:
-        service_tasks.append(ServiceTask.query.filter(ServiceTask.id == task_STU.service_task_id).all()[0])
-    for task in service_tasks:
-        parent_tickets.append(Ticket.query.filter(Ticket.id == task.parent_ticket).all()[0])
-    return render_template("technician/assigned_tasks.html", current_user=current_user, service_tasks=service_tasks,
-                           tickets=parent_tickets)
+    service_tasks = ServiceTask.query.join(ServiceTaskUsers).filter(ServiceTaskUsers.user_id == current_user.id).all()
+    return render_template("technician/assigned_tasks.html", current_user=current_user, service_tasks=service_tasks)
 
-# @technician_bp.route("/assigned_tasks", methods=["GET"])
-# @login_required
-# @roles_required(["technician"])
-# def assigned_tasks():
-#     tickets = Ticket.query.filter(Ticket.assignee_id == current_user.id, Ticket.state != 'New').all()
-#     return render_template("technician/assigned_tasks.html", current_user=current_user, tickets=tickets)
+@technician_bp.route("/task_view", methods=["GET"])
+@login_required
+@roles_required(["technician"])
+def task_view():
+    if request.method == "GET":
+        ticket_comments = Comment.query.filter_by(ticket_id=request.args.get("ticketId")).all()
+        try:
+            selected_ticket_id = int(request.args.get("ticketId"))
+        except Exception as e:
+            return render_template("204.html")
+    tickets = Ticket.query.filter(Ticket.assignee_id == current_user.id, Ticket.state != 'New').all()
+    return render_template("technician/task_view.html", current_user=current_user, tickets=tickets)
