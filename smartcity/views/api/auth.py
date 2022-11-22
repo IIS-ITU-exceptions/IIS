@@ -4,7 +4,7 @@ import re
 
 from datetime import datetime
 
-from flask import Blueprint, request, jsonify, make_response, current_app
+from flask import Blueprint, request, jsonify, make_response, current_app, url_for
 from flask_login import login_required, login_user, logout_user, current_user
 
 from smartcity.views import roles_required
@@ -106,6 +106,16 @@ def login():
                     "status": "success",
                     "message": "User successfully logged in.",
                 }
+                role_name = user.role[0].name
+                if role_name == "resident":
+                    response_object.update({"location": url_for("resident.my_tickets")})
+                elif role_name == "technician":
+                    response_object.update({"location": url_for("technician.assigned_tickets")})
+                elif role_name == "manager":
+                    response_object.update({"location": url_for("manager.manager_dashboard")})
+                elif role_name == "admin":
+                    response_object.update({"location": url_for("admin.admin_dashboard")})
+
                 return make_response(jsonify(response_object), 200)
 
 
