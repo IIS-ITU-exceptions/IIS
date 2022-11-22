@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block content %}
     <div class="container">
-        <div data-bs-spy="scroll" data-bs-target="#navbar-example2" data-bs-root-margin="0px 0px -40%" data-bs-smooth-scroll="true" class="scrollspy-example bg-light p-3 rounded-2" tabindex="0">
+        <div data-bs-spy="scroll" data-bs-target="#navbar-main" data-bs-root-margin="0px 0px -40%" data-bs-smooth-scroll="true" class="scrollspy-example p-3 rounded-2" tabindex="0">
             <div id="myCarousel" class="carousel mb-4" data-bs-ride="carousel">
                 <div class="carousel-inner">
                     <div class="carousel-item active">
@@ -10,7 +10,7 @@
                             <div class="carousel-caption text-start">
                                 <h1 id="scrollspyHeading1" >CITY DEFECT REPORTER</h1>
                                 <p>System for reporting defect in the city to authorities.</p>
-                                <p><a class="btn btn-lg btn-primary" href="{{ url_for("auth.signup") }}">Sign-Up</a></p>
+                                <p><a class="btn btn-lg btn-primary" href="{{ url_for("auth.signup") }}" style="background-color: #96031A; border-color: #96031A;">Sign-Up</a></p>
                             </div>
                         </div>
                     </div>
