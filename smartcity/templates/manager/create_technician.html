@@ -42,7 +42,7 @@
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" value="" id="showPassCheckBox"
                                            onclick="showPassword()">
-                                    <label class="form-check-label" for="flexCheckDefault">
+                                    <label class="form-check-label" for="showPassCheckBox">
                                         Show password
                                     </label>
                                 </div>
@@ -155,7 +155,12 @@
                 });
 
                 if (api_response.ok) {
-                    window.location.assign("{{ url_for("manager.create_technician") }}")
+                    form.reset()
+                    $("#passLength").css('color', '#6c757d');
+                    alerts.innerHTML = bootstrap_alert_macro("City manager created", "success")
+                    setTimeout(function () {
+                        $(".alert").alert('close');
+                    }, 3000);
                 } else {
                     const message = await api_response.json();
                     alerts.innerHTML = bootstrap_alert_macro(message["message"], "danger")

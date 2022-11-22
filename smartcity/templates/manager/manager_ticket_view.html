@@ -350,15 +350,15 @@
                     console.log(response);
                     $(".alert-success").show();
                     setTimeout(function () {
-                        $(".alert-success").hide();
-                    }, 2000);
+                        $(".alert-success").alert('close');
+                    }, 3000);
                 },
                 error: function (response) {
                     console.log(response);
                     $(".alert-success").show();
                     setTimeout(function () {
-                        $(".alert-success").hide();
-                    }, 2000);
+                        $(".alert-success").alert('close');
+                    }, 3000);
                 },
                 dataType: "json",
                 contentType: "application/json"

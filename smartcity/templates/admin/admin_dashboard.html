@@ -6,11 +6,6 @@
 {% block content %}
 
     <div class="container col-12">
-        <h3>Current user: {{ current_user.fullname ~', ' ~ current_user.role[0].name ~', ' ~ current_user.id }}</h3>
-        <p>All users: {{ all_users }}</p>
-        <p>Forms list: {{ forms_list }}</p>
-        <p>len: {{ x }}</p>
-
         <br>
         <div class="d-flex justify-content-center align-items-center">
             <div class="mb-4" style="width: 75%">
@@ -107,8 +102,8 @@
                                             </div>
                                             <div class="form-check">
                                                 <input class="form-check-input checkBox{{ user.id }}" type="checkbox"
-                                                        value="" id="showPassCheckBox"
-                                                        onclick="showPassword('{{ user.id }}')">
+                                                       value="" id="showPassCheckBox"
+                                                       onclick="showPassword('{{ user.id }}')">
                                                 <label class="form-check-label" for="flexCheckDefault">
                                                     Show password
                                                 </label>
@@ -180,14 +175,10 @@
                     error: document.getElementById(element.id + '-error')
                 },
             }
-            console.log(fields);
-            console.log("FIELDS ID:" + fields.user_id.input.id)
-            // React to form submission
 
+            // React to form submission
             element.addEventListener("click", async (e) => {
                 e.preventDefault();
-                console.log("ASYNC!");
-                console.log(element.id);
                 // Make JSON out of the form input value
                 let data = JSON.stringify({
                     user_id: fields.user_id.input.id,
@@ -205,7 +196,6 @@
                         fields[key].error.innerText = "";
                     }
                 }
-                console.log(data)
                 if (response.ok) {
                     const api_response = await fetch("{{ url_for("api.auth_api.delete_user") }}", {
                         method: "POST",
@@ -237,70 +227,51 @@
         let editButtons = document.querySelectorAll('.btn-outline-primary');
         let editButtonsArray = Array.prototype.slice.call(editButtons);
         editButtonsArray.forEach(function (editButtons) {
-            console.log(editButtons.id);
-            // Get form elements by IDs
-            const form = document.getElementById("form" + editButtons.id);
-            const successMessage = document.getElementById("success-message");
-            const alerts = document.getElementById("alerts");
-            const fields = {
-                csrf_token: {
-                    input: document.getElementById('csrf_token'),
-                    error: document.getElementById('csrf_token-error')
-                },
-                user_id: editButtons.id,
-                name: {
-                    input: document.getElementById('name' + editButtons.id),
-                    error: document.getElementById('name-error-' + editButtons.id)
-                },
-                surname: {
-                    input: document.getElementById('surname' + editButtons.id),
-                    error: document.getElementById('surname-error-' + editButtons.id)
-                },
-                email: {
-                    input: document.getElementById('email' + editButtons.id),
-                    error: document.getElementById('email-error-' + editButtons.id)
-                },
-                password: {
-                    input: document.getElementById('password' + editButtons.id),
-                    error: document.getElementById('password-error-' + editButtons.id)
-                },
-                confirm: {
-                    input: document.getElementById('confirm' + editButtons.id),
-                    error: document.getElementById('confirm-error-' + editButtons.id)
-                }
-            }
-            // React to form submission
-            form.addEventListener("submit", async (e) => {
-                e.preventDefault();
-                console.log("ASYNC HURAA!\n" + editButtons.id);
-                // Make JSON out of the form input value
-                let data = JSON.stringify({
-                    csrf_token: fields.csrf_token.input.value,
-                    user_id: fields.user_id,
-                    name: fields.name.input.value,
-                    surname: fields.surname.input.value,
-                    email: fields.email.input.value,
-                    password: fields.password.input.value,
-                });
-                console.log(data)
-
-                const response = await fetch("{{ url_for("admin.admin_dashboard") }}", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
+                // Get form elements by IDs
+                const form = document.getElementById("form" + editButtons.id);
+                const successMessage = document.getElementById("success-message");
+                const alerts = document.getElementById("alerts");
+                const fields = {
+                    csrf_token: {
+                        input: document.getElementById('csrf_token'),
+                        error: document.getElementById('csrf_token-error')
                     },
-                    body: data,
-                });
-                console.log(response)
+                    user_id: editButtons.id,
+                    name: {
+                        input: document.getElementById('name' + editButtons.id),
+                        error: document.getElementById('name-error-' + editButtons.id)
+                    },
+                    surname: {
+                        input: document.getElementById('surname' + editButtons.id),
+                        error: document.getElementById('surname-error-' + editButtons.id)
+                    },
+                    email: {
+                        input: document.getElementById('email' + editButtons.id),
+                        error: document.getElementById('email-error-' + editButtons.id)
+                    },
+                    password: {
+                        input: document.getElementById('password' + editButtons.id),
+                        error: document.getElementById('password-error-' + editButtons.id)
+                    },
+                    confirm: {
+                        input: document.getElementById('confirm' + editButtons.id),
+                        error: document.getElementById('confirm-error-' + editButtons.id)
+                    }
+                }
+                // React to form submission
+                form.addEventListener("submit", async (e) => {
+                        e.preventDefault();
+                        // Make JSON out of the form input value
+                        let data = JSON.stringify({
+                            csrf_token: fields.csrf_token.input.value,
+                            user_id: fields.user_id,
+                            name: fields.name.input.value,
+                            surname: fields.surname.input.value,
+                            email: fields.email.input.value,
+                            password: fields.password.input.value,
+                        });
 
-                {#for (let key in fields) {#}
-                {#    if (fields[key].input.classList.contains("is-invalid")) {#}
-                {#        fields[key].input.classList.remove("is-invalid");#}
-                {#        fields[key].error.innerText = "";#}
-                {#    }#}
-                {#}#}
-                    if (response.ok) {
-                        const api_response = await fetch("{{ url_for("api.auth_api.edit_user") }}", {
+                        const response = await fetch("{{ url_for("admin.admin_dashboard") }}", {
                             method: "POST",
                             headers: {
                                 "Content-Type": "application/json"
@@ -308,35 +279,35 @@
                             body: data,
                         });
 
-                        if (api_response.ok) {
-                            console.log("User with id: " + fields.user_id + " has been edited");
-                            let nameClassToEdit = "name" + fields.user_id;
-                            let surnameClassToEdit = "surname" + fields.user_id;
-                            let emailClassToEdit = "email" + fields.user_id;
-                            $("." + nameClassToEdit).text(fields.name.input.value);
-                            $("." + surnameClassToEdit).text(fields.surname.input.value);
-                            $("." + emailClassToEdit).text(fields.email.input.value);
-                            let modalToClose = "editUserModal" + fields.user_id;
-                            $('#' + modalToClose).modal('toggle');
-                            //window.location.assign("{{ url_for("admin.admin_dashboard") }}")
-                        } else {
-                            const message = await api_response.json();
-                            alerts.innerHTML = bootstrap_alert_macro(message["message"], "danger")
+                        if (response.ok) {
+                            const api_response = await fetch("{{ url_for("api.auth_api.edit_user") }}", {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json"
+                                },
+                                body: data,
+                            });
+
+                            if (api_response.ok) {
+                                let nameClassToEdit = "name" + fields.user_id;
+                                let surnameClassToEdit = "surname" + fields.user_id;
+                                let emailClassToEdit = "email" + fields.user_id;
+                                $("." + nameClassToEdit).text(fields.name.input.value);
+                                $("." + surnameClassToEdit).text(fields.surname.input.value);
+                                $("." + emailClassToEdit).text(fields.email.input.value);
+                                let modalToClose = "editUserModal" + fields.user_id;
+                                $('#' + modalToClose).modal('toggle');
+                            } else {
+                                const message = await api_response.json();
+                                alerts.innerHTML = bootstrap_alert_macro(message["message"], "danger")
+                            }
                         }
                     }
-                    {#else{#}
-                    {#    const errors = await response.json();#}
-                    {#    Object.keys(errors).forEach((key) => {#}
-                    {#        fields[key].input.classList.add("is-invalid");#}
-                    {#        fields[key].error.innerText = errors[key][0];#}
-                    {#    });#}
-                    {#}#}
-                    }
                 )
-                    ;
-                }
-            )
                 ;
+            }
+        )
+        ;
 
     </script>
 {% endblock %}
