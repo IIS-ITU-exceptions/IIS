@@ -11,7 +11,7 @@
                 <div class="col-12 col-md-10 col-lg-8">
                     <div class="card bg-white shadow-lg" style="border-top-left-radius: 0; border-top-right-radius: 0">
                         <div class="card-body p-5">
-                            <form id="form" class="mb-3 mt-md-4" method="POST" novalidate>
+                            <form id="form" class="mb-3 mt-md-4" method="POST">
                                 <i class="las la-city" style="font-size: 36px"></i><b
                                     style="font-size: 32px; margin-left: 10px">SMARTCITY</b>
                                 <p class="mt-3 mb-4 mt-1">Create new service task!</p>
@@ -151,7 +151,12 @@
                 });
 
                 if (api_response.ok) {
-                    window.location.assign("{{ url_for("manager.create_service_task") }}")
+                    form.reset()
+                    $("#passLength").css('color', '#6c757d');
+                    alerts.innerHTML = bootstrap_alert_macro("Service task created", "success")
+                    setTimeout(function () {
+                        $(".alert").alert('close');
+                    }, 3000);
                 } else {
                     const message = await api_response.json();
                     alerts.innerHTML = bootstrap_alert_macro(message["message"], "danger")
