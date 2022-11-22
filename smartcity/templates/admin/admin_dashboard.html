@@ -5,12 +5,12 @@
 
 {% block content %}
 
-    <div class="container">
+    <div class="container col-12">
         <h3>Current user: {{ current_user.fullname ~', ' ~ current_user.role[0].name ~', ' ~ current_user.id }}</h3>
         <p>All users: {{ all_users }}</p>
         <p>Forms list: {{ forms_list }}</p>
         <p>len: {{ x }}</p>
-    </div>
+
     <br>
     <div class="d-flex justify-content-center align-items-center">
      <div class="mb-4" style="width: 75%">
@@ -27,7 +27,7 @@
     {% for user in all_users %}
         {% if not user.id == current_user.id and user.deactivated != 1 %}
             <div class="d-flex justify-content-center align-items-center">
-                <div class="w-75 card text-black mb-4 bg-light {{ user.role[0] }}">
+                <div class="w-75 card text-black mb-4 bg-light {{ user.role[0] }} userId{{ user.id }}">
                     <div class="card-body">
                         <div class="container">
                             <div class="row">
@@ -123,6 +123,7 @@
             </div>
         {% endif %}
     {% endfor %}
+    </div>
 {% endblock %}
 
 {% block js %}
@@ -199,7 +200,8 @@
                     });
 
                     if (api_response.ok) {
-                        window.location.assign("{{ url_for("admin.admin_dashboard") }}")
+                        let element_to_hide = "userId" + element.id;
+                        $("." + element_to_hide).hide();
                     } else {
                         const message = await api_response.json();
                         alerts.innerHTML = bootstrap_alert_macro(message["message"], "danger")
