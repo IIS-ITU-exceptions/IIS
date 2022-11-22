@@ -60,7 +60,7 @@
                                 <a href="{{ url_for("auth.signup") }}"><button type="button" class="btn btn-primary" style="background-color: #96031A; border-color: #96031A;">Sign-Up</button></a>
                             {% else %}
                                 <div class="nav-item dropdown">
-                                    <a class="caret dropdown-toggle d-block link-dark text-decoration-none" style="outline: 0;" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <a class="caret dropdown-toggle d-block link-dark text-decoration-none" style="outline: 0;" data-bs-toggle="dropdown" aria-expanded="false" id="usernameInHeader">
                                         <i class="las la-user" style="font-size: 24px"></i>{{ current_user.fullname }}
                                     </a>
                                     <ul class="dropdown-menu">
