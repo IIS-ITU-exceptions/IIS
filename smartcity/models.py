@@ -8,6 +8,7 @@ from sqlalchemy import (
     String,
     ForeignKey,
     DateTime,
+    Date,
     Enum,
     Text,
     Boolean,
@@ -122,7 +123,7 @@ class ServiceTask(db.Model):
     id = Column(Integer, primary_key=True)
     name = Column(String(255), nullable=False)
     description = Column(Text(2048), nullable=False)
-    days_to_complete = Column(Integer)
+    days_to_complete = Column(Date)
     state = Column(Enum(TicketStateEnum), nullable=False, server_default=TicketStateEnum.NEW.value)
     man_hours = Column(Integer, default=0)
     creator_id = Column(Integer, ForeignKey("user.id"), nullable=False)
