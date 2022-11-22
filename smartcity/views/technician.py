@@ -9,9 +9,23 @@ from smartcity.models import User, Role, RolesUsers, ServiceTask, ServiceTaskUse
 technician_bp = Blueprint("technician", __name__)
 
 
-@technician_bp.route("/assigned_tickets", methods=["GET"])
+@technician_bp.route("/assigned_tasks", methods=["GET"])
 @login_required
 @roles_required(["technician"])
-def assigned_tickets():
-    tickets = Ticket.query.filter(Ticket.assignee_id == current_user.id, Ticket.state != 'New').all()
-    return render_template("technician/assigned_tickets.html", current_user=current_user, tickets=tickets)
+def assigned_tasks():
+    tasks_for_user_STU = ServiceTaskUsers.query.filter(ServiceTaskUsers.user_id == current_user.id).all()
+    service_tasks = []
+    parent_tickets = []
+    for task_STU in tasks_for_user_STU:
+        service_tasks.append(ServiceTask.query.filter(ServiceTask.id == task_STU.service_task_id).all()[0])
+    for task in service_tasks:
+        parent_tickets.append(Ticket.query.filter(Ticket.id == task.parent_ticket).all()[0])
+    return render_template("technician/assigned_tasks.html", current_user=current_user, service_tasks=service_tasks,
+                           tickets=parent_tickets)
+
+# @technician_bp.route("/assigned_tasks", methods=["GET"])
+# @login_required
+# @roles_required(["technician"])
+# def assigned_tasks():
+#     tickets = Ticket.query.filter(Ticket.assignee_id == current_user.id, Ticket.state != 'New').all()
+#     return render_template("technician/assigned_tasks.html", current_user=current_user, tickets=tickets)
