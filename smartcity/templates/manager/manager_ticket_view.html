@@ -126,7 +126,8 @@
             <div class="d-flex justify-content-center align-items-center">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ url_for("manager.manager_dashboard") }}" style="text-decoration: none;">Dashboard</a>
+                        <li class="breadcrumb-item"><a href="{{ url_for("manager.manager_dashboard") }}"
+                                                       style="text-decoration: none;">Dashboard</a>
                         </li>
                         <li class="breadcrumb-item active" aria-current="page">Ticket #{{ ticket.id }}</li>
                     </ol>
@@ -189,36 +190,10 @@
                             <h4 class="mt-3">Description:</h4>
                             <p>{{ ticket.description }}</p>
 
-                            {% if tickets_tasks == [] %}
-                                <small>No service tasks were assigned with this ticket</small>
-                            {% else %}
-                                <b class="mt-3">Assigned service tasks:</b>
-                                {% for ticket_task in tickets_tasks %}
-                                    <hr>
-                                    <div class="row">
-                                        <div class="col-12 me-5 mt-2 ">
-                                            <button type="button" class="state btn btn-danger w-100" style="float:left;pointer-events: none;">{{ ticket_task.state.value }}</button>
-                                        </div>
-                                        <div class="col-7 ms-2 mt-2">
-                                            <b>Name:</b><br>
-                                            <a href="{{ url_for("technician.task_view") }}?taskID={{ ticket_task.id }}&&parent={{ ticket.id }}"
-                                                style="text-decoration: none;">
-                                                {{ ticket_task.name }}
-                                            </a>
-                                        </div>
-                                        <div class="col-3 ms-2 mt-2">
-                                            <b>Hours worked:</b>
-                                            <p>{{ ticket_task.man_hours }} hours</p>
-                                        </div>
-                                    </div>
-                                {% endfor %}
-                            {% endif %}
-
-
                             {% if ticket.image_path != None %}
                                 <hr>
                                 <div class="d-flex justify-content-center align-items-center mt-4">
-                                    <img src="{{ ticket.image_path }}" class="img-fluid rounded-start"
+                                    <img src="{{ ticket.image_path }}" class="img-fluid rounded-start mb-3"
                                          alt="{{ ticket.image_path }}" id="ticketImage">
                                 </div>
                                 <div id="myModal" class="modal">
@@ -231,6 +206,35 @@
                                 <label for="ticketImage" class="">User has not uploaded an image for this
                                     ticket</label>
                             {% endif %}
+                            <!-- Assigned service tasks below-->
+                            {% if tickets_tasks == [] %}
+                                <small>No service tasks were assigned with this ticket</small>
+                            {% else %}
+                                <b class="mt-3">Assigned service tasks:</b>
+                                {% for ticket_task in tickets_tasks %}
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-12 me-5 mt-2 ">
+                                            <button type="button" class="state btn btn-danger w-100"
+                                                    style="float:left;pointer-events: none;">{{ ticket_task.state.value }}</button>
+                                        </div>
+                                        <div class="col-7 ms-2 mt-2">
+                                            <b>Name:</b><br>
+                                            <a href="{{ url_for("technician.task_view") }}?taskID={{ ticket_task.id }}&&parent={{ ticket.id }}"
+                                               style="text-decoration: none;">
+                                                {{ ticket_task.name }}
+                                            </a>
+                                        </div>
+                                        <div class="col-3 ms-2 mt-2">
+                                            <b>Hours worked:</b>
+                                            <p>{{ ticket_task.man_hours }} hours</p>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                            <!-- END of assigned service tasks-->
+
+
                         </div>
                     </div>
                 </div>
@@ -276,7 +280,8 @@
                                                 Voice type your comment
                                             </small>
                                             </button>
-                                            <button type="submit" class="btn btn-primary mt-1 mb-3 col-12">Submit</button>
+                                            <button type="submit" class="btn btn-primary mt-1 mb-3 col-12">Submit
+                                            </button>
                                         </div>
                                     </form>
                                 </div>
@@ -338,10 +343,6 @@
             }
 
         }
-
-
-
-
 
 
         const commentCardBody = document.getElementById("commentCardBody");
