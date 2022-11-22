@@ -4,18 +4,20 @@ from smartcity.views import roles_required
 from smartcity.models import User, Role, RolesUsers, ServiceTask, ServiceTaskUsers, Comment, Ticket, TicketStateEnum, db
 
 from smartcity.views.manager_forms import CreateTechnician, CreateServiceTask
-
+from .admin_forms import EditUser
 manager_bp = Blueprint("manager", __name__)
 
 
-@manager_bp.route("/manager_dashboard", methods=["GET"])
+@manager_bp.route("/manager_dashboard", methods=["GET", "POST"])
 @login_required
 @roles_required(["manager"])
 def manager_dashboard():
     tickets = Ticket.query.all()
     all_users = User.query.all()
+    users = User.query.filter_by(email=current_user.email).first()
+    edit_form = EditUser(name=users.name, surname=users.surname, email=users.email, role=users.role[0].name)
     return render_template("manager/manager_dashboard.html", current_user=current_user, tickets=tickets,
-                           all_users=all_users)
+                           all_users=all_users, userProfileForm=edit_form)
 
 
 @manager_bp.route("/create_technician", methods=["GET", "POST"])
@@ -31,7 +33,9 @@ def create_technician():
             return jsonify(response_object), 200
         else:
             return jsonify(create_technician_form.errors), 400
-    return render_template("manager/create_technician.html", current_user=current_user, form=create_technician_form)
+    users = User.query.filter_by(email=current_user.email).first()
+    edit_form = EditUser(name=users.name, surname=users.surname, email=users.email, role=users.role[0].name)
+    return render_template("manager/create_technician.html", current_user=current_user, form=create_technician_form, userProfileForm=edit_form)
 
 
 @manager_bp.route("/create_service_task", methods=["GET", "POST"])
@@ -41,8 +45,10 @@ def create_service_task():
     tickets = Ticket.query.all()
     service_technicians = User.query.join(RolesUsers).filter(RolesUsers.role_id == 2).all()
     create_service_task_form = CreateServiceTask(service_technicians)
+    users = User.query.filter_by(email=current_user.email).first()
+    edit_form = EditUser(name=users.name, surname=users.surname, email=users.email, role=users.role[0].name)
     return render_template("manager/create_service_task.html", current_user=current_user, form=create_service_task_form,
-                           service_technicians=service_technicians, tickets=tickets)
+                           service_technicians=service_technicians, tickets=tickets, userProfileForm=edit_form)
 
 
 @manager_bp.route("/manager_ticket_view", methods=["GET", "POST"])
@@ -59,7 +65,9 @@ def manager_ticket_view():
     tickets = Ticket.query.all()
     all_users = User.query.all()
     service_technicians = User.query.join(RolesUsers).filter(RolesUsers.role_id == 2).all()
+    users = User.query.filter_by(email=current_user.email).first()
+    edit_form = EditUser(name=users.name, surname=users.surname, email=users.email, role=users.role[0].name)
     return render_template("manager/manager_ticket_view.html", current_user=current_user,
                            service_technicians=service_technicians, tickets=tickets,
                            selected_ticket_id=selected_ticket_id, all_users=all_users, ticket_comments=ticket_comments,
-                           tickets_tasks=tickets_tasks)
+                           tickets_tasks=tickets_tasks, userProfileForm=edit_form)

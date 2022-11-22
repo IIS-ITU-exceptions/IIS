@@ -17,6 +17,6 @@ def index():
         users = User.query.filter_by(email=current_user.email).first()
     if current_user.is_authenticated:
         edit_form = EditUser(name=users.name, surname=users.surname, email=users.email, role=users.role[0].name)
-        return render_template("public/index.html", roles=roles, users=users, current_user=current_user, form=edit_form)
+        return render_template("public/index.html", roles=roles, users=users, current_user=current_user, userProfileForm=edit_form)
     else:
         return render_template("public/index.html", roles=roles, users=users, current_user=current_user)

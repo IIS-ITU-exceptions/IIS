@@ -4,7 +4,7 @@ from smartcity.views import roles_required
 from smartcity.models import User, Role, RolesUsers, ServiceTask, ServiceTaskUsers, Comment, Ticket, TicketStateEnum, db
 
 from .admin_forms import CreateCityManager, EditUser
-
+from .admin_forms import EditUser
 admin_bp = Blueprint("admin", __name__)
 
 
@@ -17,9 +17,10 @@ def admin_dashboard():
     for user in all_users:
         edit_form = EditUser(name=user.name, surname=user.surname, email=user.email, role=user.role[0].name)
         forms_list.append(edit_form)
-
+    users = User.query.filter_by(email=current_user.email).first()
+    edit_form = EditUser(name=users.name, surname=users.surname, email=users.email, role=users.role[0].name)
     return render_template("admin/admin_dashboard.html", current_user=current_user, all_users=all_users, form=edit_form,
-                           forms_list=forms_list)
+                           forms_list=forms_list, userProfileForm=edit_form)
 
 
 @admin_bp.route("/create_city_manager", methods=["GET", "POST"])
@@ -35,4 +36,6 @@ def create_city_manager():
             return jsonify(response_object), 200
         else:
             return jsonify(create_city_manager_form.errors), 400
-    return render_template("admin/create_city_manager.html", current_user=current_user, form=create_city_manager_form)
+    users = User.query.filter_by(email=current_user.email).first()
+    edit_form = EditUser(name=users.name, surname=users.surname, email=users.email, role=users.role[0].name)
+    return render_template("admin/create_city_manager.html", current_user=current_user, form=create_city_manager_form, userProfileForm=edit_form)

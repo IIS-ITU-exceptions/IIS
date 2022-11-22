@@ -47,8 +47,8 @@
                         {% endif %}
                         {% if current_user.is_authenticated %}
                             {% if current_user.role[0].name == 'technician' %}
-                                <li class="nav-item"><a href="{{ url_for("technician.assigned_tickets") }}"
-                                                        class="nav-link px-2 link-dark">Assigned tickets</a></li>
+                                <li class="nav-item"><a href="{{ url_for("technician.assigned_tasks") }}"
+                                                        class="nav-link px-2 link-dark">Assigned tasks</a></li>
                             {% endif %}
                         {% endif %}
                     </ul>
@@ -94,22 +94,22 @@
             <div class="modal-body py-0">
                 <form id="editUserForm{{ current_user.id }}" class="mb-3 mt-md-4" method="POST">
                     {# CSRF Token #}
-                    {{ form.csrf_token() }}
+                    {{ userProfileForm.csrf_token() }}
                     <div id="csrf_token_error" class="text-danger"></div>
-                    {# Form fields #}
+                    {# userProfileForm fields #}
                     <div class="mb-3 row">
                         <div class="col">
-                            {{ render_specific_id_text_field(form.name, "name" ~ current_user.id, current_user.id, form.name.object_data ) }}
+                            {{ render_specific_id_text_field(userProfileForm.name, "name" ~ current_user.id, current_user.id, userProfileForm.name.object_data ) }}
                         </div>
                         <div class="col">
-                            {{ render_specific_id_text_field(form.surname, "surname" ~ current_user.id, current_user.id, form.surname.object_data ) }}
+                            {{ render_specific_id_text_field(userProfileForm.surname, "surname" ~ current_user.id, current_user.id, userProfileForm.surname.object_data ) }}
                         </div>
                     </div>
                     <div class="mb-3">
-                        {{ render_specific_id_text_field(form.email, "email" ~ current_user.id, current_user.id, form.email.object_data ) }}
+                        {{ render_specific_id_text_field(userProfileForm.email, "email" ~ current_user.id, current_user.id, userProfileForm.email.object_data ) }}
                     </div>
                     <div class="mb-3">
-                        {{ render_specific_id_text_field(form.password, "password" ~ current_user.id, current_user.id ) }}
+                        {{ render_specific_id_text_field(userProfileForm.password, "password" ~ current_user.id, current_user.id ) }}
                     </div>
                     <div class="form-check">
                         <input class="form-check-input checkBox{{ current_user.id }}" type="checkbox"
