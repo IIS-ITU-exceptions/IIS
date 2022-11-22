@@ -4,13 +4,53 @@
 {% block title %} Assigned Tasks {% endblock %}
 
 {% block content %}
-    <div>
-        {% task %}
-    </div>
+    {% for t in ticket %}
+        <div class="d-flex justify-content-center align-items-center mt-4">
+            <div class="card {{ t.state.value }}" style="max-width: 1300px;">
+                <div class="row g-0">
+                    <div class="col-md-11">
+                        <div class="card-body">
+                            <h5 class="card-title"><b>{{ t.name }}</b></h5>
+                            <p class="card-text">{{ t.description}}</p>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center flex-column col-md-1">
+                        <div class="p-3">
+                        </div>
+                        <div class="p-3">
+                            <b class="state">{{ t.state.value }}</b>
+                        </div>
+                        <div class="py-3">
+                            <b>{{ t.created_at.year}}-{{ t.created_at.month}}-{{ t.created_at.day}}</b>
+                        </div>
+                        <div class="p-3">
+                            <input type="button" value="Image" class="btn btn-secondary" id="img" onclick="image(t)"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
 {% endblock %}
 
 {% block js %}
     <script>
+        function image(ticket) {
+            {#document.getElementsByClassName("card-body") = ticket.image_path;#}
+        }
+
+        let statesList = document.getElementsByClassName("state");
+        for (let i = 0; i < statesList.length; i++) {
+            if (statesList[i].innerHTML === "New") {
+                statesList[i].style.color = "red";
+            } else if (statesList[i].innerHTML === "Planned") {
+                statesList[i].style.color = "purple";
+            } else if (statesList[i].innerHTML === "Work In Progress") {
+                statesList[i].style.color = "orange";
+            } else if (statesList[i].innerHTML === "Done") {
+                statesList[i].style.color = "green";
+            }
+        }
     </script>
 {% endblock %}
 {#    <br>#}

@@ -5,8 +5,9 @@
 
 {% block content %}
     <div class="row justify-content-end align-items-center">
-        <div class="col-sm-2"><input value="Hide completed tasks" class="btn btn-primary" type="button" id="hide"
-                                     onclick="func()"/></div>
+        <div class="col-sm-2">
+            <input value="Hide completed tasks" class="btn btn-primary" type="button" id="hide" onclick="func()"/>
+        </div>
     </div>
     <br>
     {% for task in service_tasks %}
@@ -15,7 +16,7 @@
                 <div class="row g-0" style="min-height: 100px;">
                     <div class="col-md-7 mx-3 mt-1">
                         <h4 class="card-title">
-                            <a href="{{ url_for("technician.task_view") }}?taskId={{ task.id }}">
+                            <a href="{{ url_for("technician.task_view") }}?taskId={{ task.id }}&&parent={{ task.parent_ticket }}">
                             {{ task.name }}
                             </a>
                         </h4>
