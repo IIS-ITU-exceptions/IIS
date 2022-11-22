@@ -48,6 +48,9 @@
 
 {% block js %}
 <script>
+// Force email keyboard on mobile devices
+let x = document.getElementById("email");
+x.type = "email";
 // Get form elements by IDs
 const form = document.getElementById("form")
 const successMessage = document.getElementById("success-message");
