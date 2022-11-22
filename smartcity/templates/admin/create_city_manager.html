@@ -61,6 +61,11 @@
 
 {% block js %}
     <script>
+        // Handler for .load() called.
+        let x = document.getElementById("email");
+        x.type = "email";
+        console.log("document is ready");
+
         function showPassword() {
             let x = document.getElementById("password");
             if (x.type === "password") {
