@@ -23,6 +23,6 @@ def task_view():
     if request.method == "GET":
         ticket = Ticket.query.join(ServiceTask).filter(Ticket.id == request.args.get("parent")).all()
         comments = Comment.query.filter(Comment.ticket_id == ticket[0].id).all()
-        task = ServiceTask.query.filter(ServiceTask.id == request.args.get("taskID")).all() ###????
+        task = ServiceTask.query.filter(ServiceTask.id == request.args.get("taskID")).all()
     return render_template("technician/task_view.html", current_user=current_user, ticket=ticket,
                            comments=comments, task=task)
