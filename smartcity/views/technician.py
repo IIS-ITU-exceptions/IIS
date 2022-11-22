@@ -18,7 +18,7 @@ def assigned_tasks():
 
 @technician_bp.route("/task_view", methods=["GET", "POST"])
 @login_required
-@roles_required(["technician"])
+@roles_required(["technician", "manager"])
 def task_view():
     if request.method == "GET":
         ticket = Ticket.query.join(ServiceTask).filter(Ticket.id == request.args.get("parent")).all()
