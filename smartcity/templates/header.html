@@ -47,8 +47,8 @@
                         {% endif %}
                         {% if current_user.is_authenticated %}
                             {% if current_user.role[0].name == 'technician' %}
-                                <li class="nav-item"><a href="{{ url_for("technician.assigned_tickets") }}"
-                                                        class="nav-link px-2 link-dark">Assigned tickets</a></li>
+                                <li class="nav-item"><a href="{{ url_for("technician.assigned_tasks") }}"
+                                                        class="nav-link px-2 link-dark">Assigned tasks</a></li>
                             {% endif %}
                         {% endif %}
                     </ul>
