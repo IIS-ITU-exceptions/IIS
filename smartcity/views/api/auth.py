@@ -18,12 +18,13 @@ def signup():
     data = request.get_json()
     with current_app.app_context():
         user = User.query.filter_by(email=data.get("email")).first()
-        if user.email.strip() == data.get("email").strip():
-            response_object = {
-                "status": "fail",
-                "message": "User already exists. Please log in.",
-            }
-            return make_response(jsonify(response_object), 401)
+        if user:
+            if user.email == data.get("email"):
+                response_object = {
+                    "status": "fail",
+                    "message": "User already exists. Please log in.",
+                }
+                return make_response(jsonify(response_object), 401)
         else:
             try:
                 new_user = User(
