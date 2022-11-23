@@ -6,12 +6,12 @@
 {% block content %}
     {% for t in ticket %}
         <div class="d-flex justify-content-center align-items-center mt-4">
-            <div class="card" style="max-width: 1300px; min-width: 600px;">
+            <div class="card" style="max-width: 1300px; min-width: 700px;">
                 <div class="row g-0">
+                            <img src="{{ t.image_path }}" id="img" style="position: absolute; max-width: 100%; height: auto;
+                             object-fit: scale-down; display: none" alt={{ "Ticket.image_path" }}>
                     <div class="col-md-10">
                         <div class="card-body">
-                            <img src="{{ t.image_path }}" id="img" style="position: absolute; max-height: 800px;
-                             max-width: 80% ;  display: none" alt={{ "Ticket.image_path" }}>
 
                             <h5 class="card-title"><b>{{ t.name }}</b></h5>
                             <p class="card-text">{{ t.description}}</p>
@@ -21,7 +21,7 @@
                         <div class="p-3">
                         </div>
                         <div class="p-3">
-                            <button class="state btn">{{ t.state.value }}</button>
+                            <button class="state btn" style="pointer-events: none">{{ t.state.value }}</button>
                         </div>
                         <div class="py-3">
                             <b>{{ t.created_at.year}}-{{ t.created_at.month}}-{{ t.created_at.day}}</b>
@@ -29,13 +29,17 @@
                         <div class="p-3">
                             {% if t.image_path != None %}
                                 <input type="button" value="Image" class="btn btn-secondary"
-                                       id="img_button" onclick="image()"/>
+                                       id="img_button" onclick="image()" style="position: relative"/>
                             {% else %}
                                 <input type="button" value="No image" class="btn btn-secondary"
                                        id="img_button" disabled/>
                             {% endif %}
                         </div>
                     </div>
+                </div>
+                <div class="row g-0">
+{#                    <img src="{{ t.image_path }}" id="img" style="position: absolute; right: 20%; max-height: 800px;#}
+{#                     display: none" alt={{ "Ticket.image_path" }}>#}
                 </div>
             </div>
         </div>

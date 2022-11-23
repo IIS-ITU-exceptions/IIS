@@ -4,8 +4,8 @@
 {% block title %} Assigned Tasks {% endblock %}
 
 {% block content %}
-    <div class="row justify-content-end align-items-center">
-        <div class="col-sm-2">
+    <div class="row justify-content-end align-items-center" style="position: relative; right: 10%">
+        <div class="col-sm-2 py-3">
             <input value="Hide completed tasks" class="btn btn-primary" type="button" id="hide" onclick="func()"/>
         </div>
     </div>
@@ -24,12 +24,11 @@
                     </div>
                     <div class="col-md-1"></div>
                     <div class="col-md-2 align-self-center">
-                                {% if task.days_to_complete != None %}
-                                    Done by <b>{{ task.days_to_complete }}</b>
-                                {% else %}
-                                    No estimate
-                                {% endif %}
-
+                        {% if task.days_to_complete != None %}
+                            Done by <b>{{ task.days_to_complete }}</b>
+                        {% else %}
+                            No estimate
+                        {% endif %}
                     </div>
                     <div class="col-md-1 mx-3 align-self-center">
                         <b class="state">{{ task.state.value }}</b>
