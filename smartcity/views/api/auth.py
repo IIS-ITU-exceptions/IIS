@@ -285,7 +285,7 @@ def edit_state():
 
 
 @login_required
-@roles_required(["manager"])
+@roles_required(["technician", "manager"])
 @auth_api_bp.route("/add_comment", methods=["POST"])
 def add_comment():
     data = request.get_json()

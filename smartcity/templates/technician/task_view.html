@@ -109,13 +109,13 @@ File containing teask view for technician
                         </div>
                     </div>
                     <div class="d-flex align-items-center flex-column col-md-2">
-                        <div class="p-3">
+                        <div class="p-2">
                             <button class="state btn" style="pointer-events: none">{{ t.state.value }}</button>
                         </div>
-                        <div class="py-3">
+                        <div class="py-2">
                             <b>{{ t.created_at.year}}-{{ t.created_at.month}}-{{ t.created_at.day}}</b>
                         </div>
-                        <div class="p-3">
+                        <div class="p-2">
                             {% if t.image_path != None %}
                                 <input type="button" value="Image" class="btn btn-secondary"
                                        id="img_button" style="position: relative"/>
@@ -211,10 +211,6 @@ File containing teask view for technician
         span.onclick = function() {
           modal.style.display = "none";
         }
-        {#function image() {#}
-        {#    const img = document.getElementById("img-div");#}
-        {#    img.style.display = 'block';#}
-
         modal.onclick = function () {
             modal.style.display = "none";
         }
@@ -238,40 +234,57 @@ File containing teask view for technician
                 statesList[i].classList.add("btn-success");
             }
         }
+
+        const commentCardBody = document.getElementById("commentCardBody");
+        commentCardBody.scrollTop = commentCardBody.scrollHeight;
+
+        $("#commentForm").submit(function (e) {
+            e.preventDefault();
+            let content = $("#commentTextField").val();
+            let currentTicketId = {{ ticket[0].id }};
+            let currentUserId = {{ current_user.id }};
+            // Convert to mysql datetime format
+            let now = new Date().toISOString().slice(0, 19).replace('T', ' ');
+            console.log(content);
+            console.log(currentTicketId);
+            console.log(currentUserId);
+            console.log(now);
+            $.ajax({
+                type: 'POST',
+                url: '{{ url_for("api.auth_api.add_comment") }}',
+                data: JSON.stringify({
+                    content: content,
+                    created_at: now,
+                    ticket_id: currentTicketId,
+                    commenter_id: currentUserId
+                }),
+                success: function (response) {
+                    console.log(response);
+                    let commentToAppend = ' <!-- START of the individual comment card-->\
+                                    <div class="card mt-2">\
+                                        <div class="card-header">\
+                                            <div class="row">\
+                                                <div class="col-12">\
+                                                    <b>{{ current_user.fullname }}</b>\
+                                                    <p class="m-0">' + now + '</p>\
+                                                </div>\
+                                        </div>\
+                                        </div>\
+                                        <div class="card-body">\
+                                            <p class="card-text">' + content + '</p>\
+                                        </div>\
+                                    </div>\
+                                     <!-- END of the individual comment card-->';
+                    $("#commentCardBody").append(commentToAppend);
+                    commentCardBody.scrollTop = commentCardBody.scrollHeight;
+                    $("#commentTextField").val("");
+                },
+                error: function (response) {
+                    console.log(response);
+                },
+                dataType: "json",
+                contentType: "application/json"
+            });
+        });
     </script>
 {% endblock %}
-{#    <br>#}
-{#    <div class="d-flex justify-content-center align-items-center mt-1">#}
-{#        <div class="mb-4" style="width: 66%">#}
-{#            <label for="hide"><h4>Hide completed tickets</h4></label>#}
-{#            <input type="checkbox" id="hide" onclick="func()"/>#}
-{#        </div>#}
-{#    </div>#}
-{#    {% for ticket in tickets %}#}
-{#        <div class="d-flex justify-content-center align-items-center mt-4">#}
-{#            <div class="card col-10 {{ ticket.state.value }}" style="max-width: 1000px;">#}
-{#                <div class="row g-0">#}
-{##}
-{#                    <div class="col-md-4">#}
-{#                        <img#}
-{#                                {% if ticket.image_path != None %}#}
-{#                                    src="{{ ticket.image_path }}"#}
-{#                                {% else %}#}
-{#                                    src="/static/images/No_image_available.svg.png"#}
-{#                                {% endif %}#}
-{#                                    class="img-fluid rounded-start"#}
-{#                                    alt="{{ ticket.image_path }}">#}
-{#                    </div>#}
-{#                    <div class="col-md-8">#}
-{#                        <div class="card-body">#}
-{#                            <h5 class="card-title"><b>{{ ticket.name }}</b></h5>#}
-{#                            <b class="card-text me-5 mb-5 float-end state">{{ ticket.state.value }}</b>#}
-{##}
-{#                            <p class="card-text">{{ ticket.description[:100] }}</p>#}
-{#                            <p class="col-3">{{ ticket.created_at }}</p>#}
-{#                        </div>#}
-{#                    </div>#}
-{#                </div>#}
-{#            </div>#}
-{#        </div>#}
-{#    {% endfor %}#}
