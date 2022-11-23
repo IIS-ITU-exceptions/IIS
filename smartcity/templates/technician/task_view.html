@@ -150,7 +150,7 @@ File containing teask view for technician
                 <div class="card mb-4" style="height: 60%">
                     <div class="card-body pt-0 px-0 h-50">
                         <div class="card-header">
-                            Comments of task: <b>{{ t.name }}</b>
+                            <b>Comments</b>
                         </div>
                         <div class="card-body overflow-auto" style="height:90%" id="commentCardBody">
                             {#------ Individual comments ------#}
@@ -191,6 +191,7 @@ File containing teask view for technician
             {% endfor %}
         </div>
     </div>
+{% endblock %}
 
 {% block js %}
     <script>

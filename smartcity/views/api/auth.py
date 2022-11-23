@@ -378,7 +378,7 @@ def create_new_ticket():
             return make_response(jsonify(response_object), 500)
 
 @login_required
-@roles_required(["techician"])
+@roles_required(["technician", "manager"])
 @auth_api_bp.route("/add_task_comment", methods=["POST"])
 def add_task_comment():
     data = request.get_json()
