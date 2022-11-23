@@ -32,6 +32,7 @@ from smartcity.models import (
     Comment,
     ServiceTask,
     ServiceTaskUsers,
+    ServiceTaskComment,
 )
 
 
@@ -84,7 +85,8 @@ def register_shell_context(app):
     def shell_context():
         return {
             "db": db, "User": User, "Role": Role, "RolesUsers": RolesUsers, "Ticket": Ticket,
-            "Comment": Comment, "ServiceTask": ServiceTask, "ServiceTaskUsers": ServiceTaskUsers
+            "Comment": Comment, "ServiceTask": ServiceTask, "ServiceTaskUsers": ServiceTaskUsers,
+            "ServiceTaskComment": ServiceTaskComment
         }
 
     app.shell_context_processor(shell_context)
