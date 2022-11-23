@@ -21,7 +21,7 @@ from flask import Blueprint, request, jsonify, make_response, current_app, url_f
 from flask_login import login_required, login_user, logout_user, current_user
 
 from smartcity.views import roles_required
-from smartcity.models import User, Role, db, ServiceTaskUsers, ServiceTask, Ticket, Comment
+from smartcity.models import User, Role, db, ServiceTaskUsers, ServiceTask, Ticket, Comment, ServiceTaskComment
 
 auth_api_bp = Blueprint("auth_api", __name__)
 
