@@ -1,3 +1,13 @@
+<!--
+File containing rendering macros
+
+@author: Dominik Vágner
+@email: xvagne10@stud.fit.vutbr.cz
+
+@author: Ladislav Vašina
+@email: xvasin11@stud.fit.vutbr.cz
+-->
+
 {% macro render_text_field(field, form_text="") %}
     {{ field.label(class_="form-label") }}
     {{ field(class_="form-control") }}

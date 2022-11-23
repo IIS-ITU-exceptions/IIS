@@ -1,3 +1,10 @@
+"""
+File containing forms for resident's views
+
+@author: David Novák
+@email: xnovak2r@stud.fit.vutbr.cz
+"""
+
 from wtforms.validators import DataRequired, Length, InputRequired
 from flask_wtf import FlaskForm
 from wtforms import StringField, TextAreaField, IntegerField, FileField

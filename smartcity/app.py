@@ -1,3 +1,10 @@
+"""
+File containing app setup and initialization
+
+@author: Dominik Vágner
+@email: xvagne10@stud.fit.vutbr.cz
+"""
+
 import os
 
 from flask import Flask, render_template, current_app, Blueprint

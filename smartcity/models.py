@@ -1,3 +1,16 @@
+"""
+File containg the database models for the smartcity app
+
+@author: Dominik Vágner
+@email: xvagne10@stud.fit.vutbr.cz
+
+@author: Ladislav Vašina
+@email: xvasin11@stud.fit.vutbr.cz
+
+@author: David Novák
+@email: xnovak2r@stud.fit.vutbr.cz
+"""
+
 import enum
 
 from flask_sqlalchemy import SQLAlchemy

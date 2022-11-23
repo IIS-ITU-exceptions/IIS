@@ -1,3 +1,10 @@
+"""
+File containing the forms for the auth views
+
+@author: Dominik Vágner
+@email: xvagne10@stud.fit.vutbr.cz
+"""
+
 from wtforms.validators import Email, DataRequired, Length, EqualTo
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField

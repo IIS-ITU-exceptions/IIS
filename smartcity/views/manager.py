@@ -1,3 +1,10 @@
+"""
+File containing functions that renders manager's templates
+
+@author: Ladislav Vašina
+@email: xvasin11@stud.fit.vutbr.cz
+"""
+
 from flask import Blueprint, request, jsonify, make_response, current_app, render_template
 from flask_login import login_required, login_user, logout_user, current_user
 from smartcity.views import roles_required

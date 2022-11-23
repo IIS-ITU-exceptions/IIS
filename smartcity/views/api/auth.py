@@ -1,3 +1,16 @@
+"""
+File containing whole website API
+
+@author: Dominik Vágner
+@email: xvagne10@stud.fit.vutbr.cz
+
+@author: Ladislav Vašina
+@email: xvasin11@stud.fit.vutbr.cz
+
+@author: David Novák
+@email: xnovak2r@stud.fit.vutbr.cz
+"""
+
 import datetime
 import base64
 import re
@@ -363,10 +376,3 @@ def create_new_ticket():
                 "message": "An error has occurred. Please try again.",
             }
             return make_response(jsonify(response_object), 500)
-
-
-# @login_required
-# @roles_required(["resident"])
-# @auth_api_bp.route("/my_tickets", methods=["POST"])
-# def get_my_tickets():
-#     return

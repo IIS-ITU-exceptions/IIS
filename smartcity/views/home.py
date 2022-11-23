@@ -1,3 +1,10 @@
+"""
+File contains function that renders main page template
+
+@author: Dominik Vágner
+@email: xvagne10@stud.fit.vutbr.cz
+"""
+
 from flask import Blueprint, render_template
 from flask_login import current_user, login_required
 from smartcity.views import roles_required

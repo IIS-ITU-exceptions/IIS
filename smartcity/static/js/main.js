@@ -1,3 +1,10 @@
+/*
+File containing some javascript for website
+
+@author: Dominik Vágner
+@email: xvagne10@stud.fit.vutbr.cz
+*/
+
 $(document).ready(function() {
     if(window.location.pathname === '/new_ticket') {
         const lat = document.getElementById("latitude")

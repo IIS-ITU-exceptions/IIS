@@ -1,3 +1,10 @@
+"""
+File containing functions that renders technician's views
+
+@author: David Novák
+@email: xnovak2r@stud.fit.vutbr.cz
+"""
+
 from sqlalchemy import desc
 from flask import Blueprint, request, jsonify, make_response, current_app, render_template
 from flask_login import login_required, login_user, logout_user, current_user

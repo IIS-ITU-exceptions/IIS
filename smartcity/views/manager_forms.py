@@ -1,3 +1,10 @@
+"""
+File containing the forms for the manager views
+
+@author: Ladislav Vašina
+@email: xvasin11@stud.fit.vutbr.cz
+"""
+
 from wtforms.validators import Email, DataRequired, Length, EqualTo
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, TextAreaField, SelectField

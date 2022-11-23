@@ -1,3 +1,10 @@
+"""
+File containing functions that renders login and signup templates
+
+@author: Dominik Vágner
+@email: xvagne10@stud.fit.vutbr.cz
+"""
+
 from flask import Blueprint, render_template, request, jsonify, make_response, flash
 from flask_login import current_user
 

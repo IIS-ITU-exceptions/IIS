@@ -1,3 +1,10 @@
+"""
+init file
+
+@author: Dominik Vágner
+@email: xvagne10@stud.fit.vutbr.cz
+"""
+
 from functools import wraps
 
 from flask import abort
