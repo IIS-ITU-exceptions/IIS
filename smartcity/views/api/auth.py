@@ -310,6 +310,12 @@ def create_new_ticket():
     data = request.get_json()
     with current_app.app_context():
         try:
+            if data.get("latitude") is None or data.get("latitude") == "-1000":
+                response_object = {
+                    "status": "fail",
+                    "message": "Please select a location.",
+                }
+                return make_response(jsonify(response_object), 400)
             new_ticket: Ticket
             rep = data.get("reporter_id")
             img = data.get('image')
@@ -317,9 +323,6 @@ def create_new_ticket():
                 img = img[len('data:image/'):]
                 end = img[:img.find(';')]
                 img = img[img.find(',')+1:]
-                # img = re.sub('^data:image/', '', img)
-                # # end = re.sub(';base64,.*', '', img)
-                # img = re.sub('.+;base64,', '', img)
                 dt = datetime.now().strftime("%m%d%Y%H%M%S")
                 f = "/static/images/" + dt + rep + '.' + end
                 with open('smartcity' + f, "wb") as fh:
@@ -329,6 +332,8 @@ def create_new_ticket():
                     reporter_id=int(rep),
                     name=data.get("name"),
                     description=data.get("description"),
+                    latitude=float(data.get("latitude").replace(",", ".")),
+                    longitude=float(data.get("longitude").replace(",", ".")),
                     image_path=f,
                     created_at=datetime.now()
                 )
@@ -337,6 +342,8 @@ def create_new_ticket():
                     reporter_id=int(rep),
                     name=data.get("name"),
                     description=data.get("description"),
+                    latitude=float(data.get("latitude").replace(",", ".")),
+                    longitude=float(data.get("longitude").replace(",", ".")),
                     created_at=datetime.now()
                 )
 

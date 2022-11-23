@@ -125,8 +125,8 @@
                         </button>
                     </div>
                 </form>
-                <div id="alerts" class="mt-3"></div>
-                <div id="success-message" style="display: none;"></div>
+                <div id="user-edit-alerts" class="mt-3"></div>
+                <div id="user-edit-success-message" style="display: none;"></div>
             </div>
         </div>
     </div>
@@ -147,10 +147,10 @@
         let y = document.getElementById("email" + {{ current_user.id }});
         y.disabled = true;
 
-        const form = document.getElementById("editUserForm" + {{ current_user.id }});
-        const successMessage = document.getElementById("success-message");
-        const alerts = document.getElementById("alerts");
-        const fields = {
+        const user_edit_form = document.getElementById("editUserForm" + {{ current_user.id }});
+        const user_edit_successMessage = document.getElementById("user-edit-success-message");
+        const user_edit_alerts = document.getElementById("user-edit-alerts");
+        const user_edit_fields = {
             csrf_token: {
                 input: document.getElementById('csrf_token'),
                 error: document.getElementById('csrf_token-error')
@@ -178,17 +178,17 @@
             }
         }
         // React to form submission
-        form.addEventListener("submit", async (e) => {
+        user_edit_form.addEventListener("submit", async (e) => {
                 e.preventDefault();
                 $('#userProfileModal').modal('toggle');
                 // Make JSON out of the form input value
                 let data = JSON.stringify({
-                    csrf_token: fields.csrf_token.input.value,
-                    user_id: fields.user_id,
-                    name: fields.name.input.value,
-                    surname: fields.surname.input.value,
-                    email: fields.email.input.value,
-                    password: fields.password.input.value,
+                    csrf_token: user_edit_fields.csrf_token.input.value,
+                    user_id: user_edit_fields.user_id,
+                    name: user_edit_fields.name.input.value,
+                    surname: user_edit_fields.surname.input.value,
+                    email: user_edit_fields.email.input.value,
+                    password: user_edit_fields.password.input.value,
                 });
 
                 const response = await fetch("#", {
@@ -208,13 +208,13 @@
                         body: data,
                     });
                         let usernameTextToEdit = document.getElementById("usernameInHeader")
-                        console.log('<i class="las la-user" style="font-size: 24px"></i>' + fields.name.input.value + ' ' + fields.surname.input.value);
-                        usernameTextToEdit.innerHTML = '<i class="las la-user" style="font-size: 24px"></i>' + fields.name.input.value + ' ' + fields.surname.input.value;
+                        console.log('<i class="las la-user" style="font-size: 24px"></i>' + user_edit_fields.name.input.value + ' ' + user_edit_fields.surname.input.value);
+                        usernameTextToEdit.innerHTML = '<i class="las la-user" style="font-size: 24px"></i>' + user_edit_fields.name.input.value + ' ' + user_edit_fields.surname.input.value;
                     if (api_response.ok) {
 
                     } else {
                         const message = await api_response.json();
-                        alerts.innerHTML = bootstrap_alert_macro(message["message"], "danger")
+                        user_edit_alerts.innerHTML = bootstrap_alert_macro(message["message"], "danger")
                     }
                 }
             }

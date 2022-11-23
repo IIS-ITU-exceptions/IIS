@@ -12,6 +12,7 @@ from sqlalchemy import (
     Enum,
     Text,
     Boolean,
+    FLOAT,
 )
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -97,6 +98,8 @@ class Ticket(db.Model):
     description = Column(Text(2048), nullable=False)
     state = Column(Enum(TicketStateEnum), nullable=False, server_default=TicketStateEnum.NEW.value)
     image_path = Column(String(255))
+    latitude = Column(FLOAT(precision=10), nullable=False)
+    longitude = Column(FLOAT(precision=10), nullable=False)
     reporter_id = Column(Integer, ForeignKey("user.id"), nullable=False)
     assignee_id = Column(Integer, ForeignKey("user.id"))
     created_at = Column(DateTime(), nullable=False)
