@@ -28,5 +28,6 @@ def task_view():
         task = ServiceTask.query.filter(ServiceTask.id == request.args.get("taskID")).all()
     users = User.query.filter_by(email=current_user.email).first()
     edit_form = EditUser(name=users.name, surname=users.surname, email=users.email, role=users.role[0].name)
+    all_users = User.query.all()
     return render_template("technician/task_view.html", current_user=current_user, ticket=ticket,
-                           comments=comments, task=task, userProfileForm=edit_form)
+                           comments=comments, task=task, userProfileForm=edit_form, all_users=all_users)
