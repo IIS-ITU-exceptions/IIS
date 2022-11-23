@@ -13,6 +13,7 @@ File containing whole website API
 
 import datetime
 import base64
+import json
 import re
 
 from datetime import datetime
@@ -406,3 +407,14 @@ def add_task_comment():
                 "message": "An error has occurred. Please try again.",
             }
             return make_response(jsonify(response_object), 500)
+
+
+@login_required
+@roles_required(["resident"])
+@auth_api_bp.route("/get_tickets", methods=["GET"])
+def get_tickets():
+    with current_app.app_context():
+        tickets = db.session.query(Ticket).all()
+        ticket_dict = [entry.to_dict() for entry in tickets]
+        response_object = json.dumps(ticket_dict)
+        return make_response(jsonify(response_object), 200)
