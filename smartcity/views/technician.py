@@ -31,8 +31,8 @@ def assigned_tasks():
 def task_view():
     if request.method == "GET":
         ticket = Ticket.query.join(ServiceTask).filter(Ticket.id == request.args.get("parent")).all()
-        comments = Comment.query.filter(Comment.ticket_id == ticket[0].id).all()
         task = ServiceTask.query.filter(ServiceTask.id == request.args.get("taskID")).all()
+        comments = ServiceTaskComment.query.filter(ServiceTaskComment.service_task_id == task[0].id).all()
     users = User.query.filter_by(email=current_user.email).first()
     edit_form = EditUser(name=users.name, surname=users.surname, email=users.email, role=users.role[0].name)
     all_users = User.query.all()

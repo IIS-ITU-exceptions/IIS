@@ -126,6 +126,14 @@ class Comment(db.Model):
     ticket_id = Column(Integer, ForeignKey("ticket.id"), nullable=False)
     commenter_id = Column(Integer, ForeignKey("user.id"), nullable=False)
 
+class ServiceTaskComment(db.Model):
+    __tablename__ = "service_task_comment"
+    id = Column(Integer, primary_key=True)
+    content = Column(Text(2048), nullable=False)
+    created_at = Column(DateTime(), nullable=False)
+    service_task_id = Column(Integer, ForeignKey("service_task.id"), nullable=False)
+    commenter_id = Column(Integer, ForeignKey("user.id"), nullable=False)
+
 
 class ServiceTaskUsers(db.Model):
     __tablename__ = "service_task_users"

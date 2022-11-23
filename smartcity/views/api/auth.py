@@ -285,7 +285,7 @@ def edit_state():
 
 
 @login_required
-@roles_required(["technician", "manager"])
+@roles_required(["manager"])
 @auth_api_bp.route("/add_comment", methods=["POST"])
 def add_comment():
     data = request.get_json()
@@ -369,6 +369,36 @@ def create_new_ticket():
                 "message": "Service task successfully created.",
             }
             return make_response(jsonify(response_object), 201)
+        except Exception as e:
+            print(e)
+            response_object = {
+                "status": "fail",
+                "message": "An error has occurred. Please try again.",
+            }
+            return make_response(jsonify(response_object), 500)
+
+@login_required
+@roles_required(["techician"])
+@auth_api_bp.route("/add_task_comment", methods=["POST"])
+def add_task_comment():
+    data = request.get_json()
+    with current_app.app_context():
+        try:
+            new_comment = ServiceTaskComment(
+                content = data.get("content"),
+                created_at = data.get("created_at"),
+                service_task_id = data.get("service_task_id"),
+                commenter_id = data.get("commenter_id")
+            )
+            db.session.add(new_comment)
+            db.session.commit()
+            db.session.expunge_all()
+
+            response_object = {
+                "status": "success",
+                "message": "State successfully changed.",
+            }
+            return make_response(jsonify(response_object), 200)
         except Exception as e:
             print(e)
             response_object = {
