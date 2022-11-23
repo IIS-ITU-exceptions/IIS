@@ -10,7 +10,7 @@ from flask import Blueprint, request, jsonify, make_response, current_app, rende
 from flask_login import login_required, login_user, logout_user, current_user
 
 from smartcity.views import roles_required
-from smartcity.models import User, Role, RolesUsers, ServiceTask, ServiceTaskUsers, Comment, Ticket, TicketStateEnum, db
+from smartcity.models import User, Role, RolesUsers, ServiceTask, ServiceTaskUsers, Comment, Ticket, TicketStateEnum, db, ServiceTaskComment
 from .admin_forms import EditUser
 
 technician_bp = Blueprint("technician", __name__)
