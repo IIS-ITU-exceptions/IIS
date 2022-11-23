@@ -132,15 +132,94 @@ File containing teask view for technician
     <br>
     <div class="container">
         <div class="row g-4">
+
             {#------ Task -> bottom-left ------#}
             {% for tk in task %}
                 <div class="col-xl-6 mb-4">
                     <div class="card">
                         <div class="card-header">
-                            <b>{{ tk.name }}</b>
+                            Service task <b>{{ tk.name }}</b>
                         </div>
                         <div class="card-body">
-                            <p>{{ tk.id }}</p>
+                            <div class="row g-1">
+                                <div class="col">
+                                    <div class="card">
+                                        <form id="form" method="POST" novalidate>
+                                            <fieldset id="fieldset">
+                                                {# CSRF Token #}
+                                                {{ form.csrf_token() }}
+                                                <div id="csrf_token_error" class="text-danger"></div>
+                                                {# Form fields #}
+                                                <div class="input-group mb-3 p-1">
+                                                    <span class="input-group-text" id="basic-addon1">Set cost:</span>
+                                                    <input id="cost" class="form-control" type="number" min="0" step="100" value="{{ tk.cost }}">
+                                                </div>
+                                                <div class="input-group mb-3 p-1">
+                                                    <span class="input-group-text" id="basic-addon2">Set man-hours:</span>
+                                                    <input id="man_hours" class="form-control" type="number" min="0" step="1" value="{{ tk.man_hours }}">
+                                                </div>
+                                                <div class="input-group mb-3 p-1">
+                                                    <span class="input-group-text" id="basic-addon3">Completed by:</span>
+                                                    <input id="completion" class="form-control" type="date">
+                                                </div>
+                                                <div class="input-group mb-3 p-1">
+                                                    <span class="input-group-text" id="basic-addon1">Set state:</span>
+                                                    <select class="form-select" id="task_state">
+                                                        <option value="New">New</option>
+                                                        <option value="Planned">Planned</option>
+                                                        <option value="Work In Progress">Work In Progress</option>
+                                                        <option value="Done">Done</option>
+                                                    </select>
+                                                </div>
+                                                <hr>
+                                                <div class="d-grid p-1">
+                                                    <button class="btn btn-outline-dark" type="submit">Update task</button>
+                                                </div>
+                                            </fieldset>
+                                        </form>
+
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="card">
+                                        <form>
+                                            <div class="input-group mb-3 p-1">
+                                                <span class="input-group-text">Cost:</span>
+                                                <input class="form-control" type="number" value="{{ tk.cost }}" disabled>
+                                            </div>
+                                            <div class="input-group mb-3 p-1">
+                                                <span class="input-group-text">Man-hours:</span>
+                                                <input class="form-control" type="number" value="{{ tk.man_hours }}" disabled>
+                                            </div>
+                                            <div class="input-group mb-3 p-1">
+                                                <span class="input-group-text" id="basic-addon3">Planned completion:</span>
+                                                {% if tk.days_to_complete == none %}
+                                                    <input class="form-control" value="No estimate" disabled>
+                                                {% else %}
+                                                    <input class="form-control" value={{ tk.days_to_complete }} disabled>
+                                                {% endif %}
+                                            </div>
+                                            <div class="input-group mb-3 p-1">
+                                                <span class="input-group-text" id="basic-addon1">State:</span>
+                                                <input class="form-control" value="{{ tk.state.value }}" disabled>
+                                            </div>
+                                            <hr>
+                                            <div class="d-grid p-1">
+                                                <button class="btn btn-secondary" type="submit" disabled>Currently</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="card">
+                                    <div class="card-header">
+                                        <b>Task description</b>
+                                    </div>
+                                    <div class="card-body">
+                                        {{ tk.description }}
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -150,7 +229,7 @@ File containing teask view for technician
                 <div class="card mb-4" style="height: 60%">
                     <div class="card-body pt-0 px-0 h-50">
                         <div class="card-header">
-                            <b>Comments</b>
+                            Comments for <b>{{ tk.name }}</b>
                         </div>
                         <div class="card-body overflow-auto" style="height:90%" id="commentCardBody">
                             {#------ Individual comments ------#}
@@ -172,7 +251,7 @@ File containing teask view for technician
                             </div>
                     {#------ Submit comment ------#}
                     </div>
-                        <div class="container mt-4">
+                        <div class="container">
                             <div class="row">
                                 <div class="col-12">
                                     <form id="commentForm">
@@ -194,6 +273,26 @@ File containing teask view for technician
 
 {% block js %}
     <script>
+        {# --------- Misc ---------- #}
+        let roles = {
+            technician  : "technician",
+            manager     : "manager",
+        }
+        let role = roles.{{ current_user.role[0] }};
+        if ( role != "technician")
+            document.getElementById("fieldset").setAttribute("disabled", "disabled");
+
+        document.getElementById("completion").valueAsDate = new Date();
+        document.getElementById("completion").min = new Date().toISOString().split("T")[0];
+        {##}
+        {#let plan = document.getElementById("plan");#}
+        {#if (roles.{{ task[0].days_to_complete }} == "none")#}
+        {#    plan.setAttribute("value", "No estimate");#}
+        {#else#}
+        {#    plan.setAttribute("value", {{ task[0].days_to_complete }});#}
+
+
+        {# --------- Image ---------- #}
         const modal = document.getElementById("myModal");
 
         // Get the image and insert it inside the modal - use its "alt" text as a caption
@@ -215,6 +314,7 @@ File containing teask view for technician
         }
 
 
+        {# --------- States ---------- #}
         let statesList = document.getElementsByClassName("state");
 
         for (let i = 0; i < statesList.length; i++) {
@@ -234,6 +334,7 @@ File containing teask view for technician
             }
         }
 
+        {# --------- Comments ---------- #}
         const commentCardBody = document.getElementById("commentCardBody");
         commentCardBody.scrollTop = commentCardBody.scrollHeight;
 
@@ -244,10 +345,10 @@ File containing teask view for technician
             let currentUserId = {{ current_user.id }};
             // Convert to mysql datetime format
             let now = new Date().toISOString().slice(0, 19).replace('T', ' ');
-            console.log(content);
-            console.log(currentTaskId);
-            console.log(currentUserId);
-            console.log(now);
+            {#console.log(content);#}
+            {#console.log(currentTaskId);#}
+            {#console.log(currentUserId);#}
+            {#console.log(now);#}
             $.ajax({
                 type: 'POST',
                 url: '{{ url_for("api.auth_api.add_task_comment") }}',
@@ -284,6 +385,87 @@ File containing teask view for technician
                 dataType: "json",
                 contentType: "application/json"
             });
+        });
+
+        {# --------- Form ---------- #}
+        const form = document.getElementById("form")
+        const successMessage = document.getElementById("success-message");
+        const alerts = document.getElementById("alerts");
+        const fields = {
+            csrf_token: {
+                input: document.getElementById('csrf_token'),
+                error: document.getElementById('csrf_token-error')
+            },
+            cost: {
+                input: document.getElementById('cost'),
+                error: document.getElementById('cost-error')
+            },
+            man_hours: {
+                input: document.getElementById('man_hours'),
+                error: document.getElementById('man_hours-error')
+            },
+            completion: {
+                input: document.getElementById('completion'),
+                error: document.getElementById('completion-error')
+            },
+            task_state: {
+                input: document.getElementById('task_state'),
+                error: document.getElementById('task_state-error')
+            },
+        }
+
+        // React to form submission
+        form.addEventListener("submit", async (e) => {
+           e.preventDefault();
+           // Make JSON out of the form input value
+           let data = JSON.stringify({
+               csrf_token: fields.csrf_token.input.value,
+               reporter_id: fields.cost.input.value,
+               name: fields.man_hours.input.value,
+               description: fields.completion.input.value,
+               task_state: fields.task_state.input.value,
+               id: {{ task[0].id }},
+           });
+           const response = await fetch("{{ url_for("technician.task_view") }}", {  {# ############# #}
+               method: "POST",
+               headers: {
+                   "Content-Type": "application/json"
+               },
+               body: data,
+           });
+           for (let key in fields) {
+               if (fields[key].input.classList.contains("is-invalid")) {
+                   fields[key].input.classList.remove("is-invalid");
+                   fields[key].error.innerText = "";
+               }
+           }
+           if (response.ok) {
+               const api_response = await fetch("{{ url_for("api.auth_api.update_service_task") }}", {
+                   method: "POST",
+                   headers: {
+                       "Content-Type": "application/json"
+                   },
+                   body: data,
+               });
+
+               if (api_response.ok) {
+                    form.reset()
+                    $("#passLength").css('color', '#6c757d');
+                    alerts.innerHTML = bootstrap_alert_macro("Service task updated", "success")
+                    setTimeout(function () {
+                        $(".alert").alert('close');
+                    }, 3000);
+               } else {
+                   const message = await api_response.json();
+                   alerts.innerHTML = bootstrap_alert_macro(message["message"], "danger")
+               }
+           } else {
+               const errors = await response.json();
+               Object.keys(errors).forEach((key) => {
+                   fields[key].input.classList.add("is-invalid");
+                   fields[key].error.innerText = errors[key][0];
+               });
+           }
         });
     </script>
 {% endblock %}

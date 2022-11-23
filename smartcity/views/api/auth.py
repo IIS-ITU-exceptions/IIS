@@ -406,3 +406,10 @@ def add_task_comment():
                 "message": "An error has occurred. Please try again.",
             }
             return make_response(jsonify(response_object), 500)
+
+
+@login_required
+@roles_required(["technician"])
+@auth_api_bp.route("/update_service_task", methods=["POST"])
+def update_service_task():
+    pass

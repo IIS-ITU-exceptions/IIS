@@ -12,6 +12,7 @@ from flask_login import login_required, login_user, logout_user, current_user
 from smartcity.views import roles_required
 from smartcity.models import User, Role, RolesUsers, ServiceTask, ServiceTaskUsers, Comment, Ticket, TicketStateEnum, db, ServiceTaskComment
 from .admin_forms import EditUser
+from .technician_forms import UpdateServiceTask
 
 technician_bp = Blueprint("technician", __name__)
 
@@ -29,6 +30,7 @@ def assigned_tasks():
 @login_required
 @roles_required(["technician", "manager"])
 def task_view():
+    task_form = UpdateServiceTask()
     if request.method == "GET":
         ticket = Ticket.query.join(ServiceTask).filter(Ticket.id == request.args.get("parent")).all()
         task = ServiceTask.query.filter(ServiceTask.id == request.args.get("taskID")).all()
@@ -37,4 +39,5 @@ def task_view():
     edit_form = EditUser(name=users.name, surname=users.surname, email=users.email, role=users.role[0].name)
     all_users = User.query.all()
     return render_template("technician/task_view.html", current_user=current_user, ticket=ticket,
-                           comments=comments, task=task, userProfileForm=edit_form, all_users=all_users)
+                           comments=comments, task=task, userProfileForm=edit_form, all_users=all_users,
+                           form=task_form)

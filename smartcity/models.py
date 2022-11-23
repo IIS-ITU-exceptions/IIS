@@ -152,6 +152,6 @@ class ServiceTask(db.Model):
     man_hours = Column(Integer, default=0)
     creator_id = Column(Integer, ForeignKey("user.id"), nullable=False)
     parent_ticket = Column(Integer, ForeignKey("ticket.id"), nullable=False)
-    cost = Column(Integer)
+    cost = Column(Integer, default=0)
     technicians = relationship("User", secondary="service_task_users", backref=backref("service_task", lazy="dynamic"))
 
