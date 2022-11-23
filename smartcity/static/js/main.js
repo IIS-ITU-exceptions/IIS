@@ -248,27 +248,6 @@ $(document).ready(async function () {
     });
 });
 
-// function create_my_location_event() {
-//     let latitude;
-//     let longitude;
-//     const successCallback = (position) => {
-//         latitude = position.coords.latitude;
-//         longitude = position.coords.longitude;
-//         console.log(position);
-//         console.log("Your GPS is " + latitude + "°N " + longitude + "°E");
-//         let event = new CustomEvent("my-location", {"detail": {"latitude": latitude, "longitude": longitude}});
-//         console.log(event);
-//         window.dispatchEvent(event);
-//     };
-//
-//     const errorCallback = (error) => {
-//       console.log(error);
-//     };
-//
-//     const id = navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
-//     navigator.geolocation.clearWatch(id);
-//
-// }
 
 async function get_tickets() {
     const response = await fetch(window.location.origin + "/api/get_tickets");
