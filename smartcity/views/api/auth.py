@@ -409,6 +409,17 @@ def add_task_comment():
 
 
 @login_required
+@roles_required(["resident"])
+@auth_api_bp.route("/get_tickets", methods=["GET"])
+def get_tickets():
+    with current_app.app_context():
+        tickets = db.session.query(Ticket).all()
+        ticket_dict = [entry.to_dict() for entry in tickets]
+        response_object = json.dumps(ticket_dict)
+        return make_response(jsonify(response_object), 200)
+
+
+@login_required
 @roles_required(["technician"])
 @auth_api_bp.route("/update_service_task", methods=["POST"])
 def update_service_task():

@@ -117,6 +117,18 @@ class Ticket(db.Model):
     assignee_id = Column(Integer, ForeignKey("user.id"))
     created_at = Column(DateTime(), nullable=False)
 
+    def to_dict(self):
+        response = {
+            "id": self.id,
+            "name": self.name,
+            "description": self.description,
+            "state": str(self.state)[str(self.state).find('.')+1:],
+            "latitude": self.latitude,
+            "longitude": self.longitude,
+            "created_at": str(self.created_at),
+        }
+        return response
+
 
 class Comment(db.Model):
     __tablename__ = "comment"

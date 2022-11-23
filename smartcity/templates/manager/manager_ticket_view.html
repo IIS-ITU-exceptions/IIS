@@ -197,6 +197,11 @@ File containing manager's dashboard view
                             <h4 class="mt-3">Description:</h4>
                             <p>{{ ticket.description }}</p>
 
+                            <hr>
+                            <div id="manager-ticket-view-map" style="height: 400px"></div>
+                            <p style="display: none" id="latitude">{{ ticket.latitude }}</p>
+                            <p style="display: none" id="longitude">{{ ticket.longitude }}</p>
+
                             {% if ticket.image_path != None %}
                                 <hr>
                                 <div class="d-flex justify-content-center align-items-center mt-4">
