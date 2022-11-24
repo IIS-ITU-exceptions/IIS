@@ -20,8 +20,17 @@ File containing techician's tasks
     {% for task in service_tasks %}
         <div class="d-flex justify-content-center align-items-center mt-4">
             <div class="card col-10 {{ task.state.value }}" style="max-width: 1000px; min-height: 100px;">
-                <a href="{{ url_for("technician.task_view") }}?taskID={{ task.id }}&&parent={{ task.parent_ticket }}"
-                   class="btn btn-secondary btn-lg"  role="button">{{ task.name }}</a>
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col md-10">
+                            <h4><b>{{ task.name }}</b></h4>
+                        </div>
+                        <div class="col md-2">
+                            <a href="{{ url_for("technician.task_view") }}?taskID={{ task.id }}&&parent={{ task.parent_ticket }}"
+                               class="btn btn-secondary float-end" role="button">View task</a>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="row g-0" style="min-height: 100px;">
                     <div class="col-md-7 mx-3 mt-1">
