@@ -230,6 +230,86 @@ $(document).ready(async function () {
         map_layer.addMarker(mark);
     }
 
+    if (window.location.pathname === "/ticket_view") {
+        const lat = parseFloat(document.getElementById("latitude").innerText);
+        const long = parseFloat(document.getElementById("longitude").innerText);
+
+        let center = SMap.Coords.fromWGS84(long, lat);
+
+        let map = new SMap(JAK.gel("ticket-view-map"), center, 13);
+        map.addDefaultLayer(SMap.DEF_OPHOTO);
+        map.addDefaultLayer(SMap.DEF_OPHOTO0203);
+        map.addDefaultLayer(SMap.DEF_OPHOTO0406);
+        map.addDefaultLayer(SMap.DEF_TURIST);
+        map.addDefaultLayer(SMap.DEF_TURIST_WINTER);
+        map.addDefaultLayer(SMap.DEF_HISTORIC);
+        map.addDefaultLayer(SMap.DEF_BASE).enable();
+        map.addDefaultControls();
+
+        let layerSwitch = new SMap.Control.Layer({
+            width: 65,
+            items: 4,
+            page: 4
+        });
+        layerSwitch.addDefaultLayer(SMap.DEF_BASE);
+        layerSwitch.addDefaultLayer(SMap.DEF_OPHOTO);
+        layerSwitch.addDefaultLayer(SMap.DEF_TURIST);
+        layerSwitch.addDefaultLayer(SMap.DEF_TURIST_WINTER);
+        layerSwitch.addDefaultLayer(SMap.DEF_OPHOTO0406);
+        layerSwitch.addDefaultLayer(SMap.DEF_OPHOTO0203);
+        layerSwitch.addDefaultLayer(SMap.DEF_HISTORIC);
+        map.addControl(layerSwitch, {left: "8px", top: "9px"});
+
+        let mouse = new SMap.Control.Mouse(SMap.MOUSE_PAN | SMap.MOUSE_WHEEL | SMap.MOUSE_ZOOM);
+        map.addControl(mouse);
+
+        let map_layer = new SMap.Layer.Marker();
+        map.addLayer(map_layer).enable();
+
+        let mark = new SMap.Marker(center);
+        map_layer.addMarker(mark);
+    }
+
+    if (window.location.pathname === "/task_view") {
+        const lat = parseFloat(document.getElementById("latitude").innerText);
+        const long = parseFloat(document.getElementById("longitude").innerText);
+
+        let center = SMap.Coords.fromWGS84(long, lat);
+
+        let map = new SMap(JAK.gel("task-view-map"), center, 13);
+        map.addDefaultLayer(SMap.DEF_OPHOTO);
+        map.addDefaultLayer(SMap.DEF_OPHOTO0203);
+        map.addDefaultLayer(SMap.DEF_OPHOTO0406);
+        map.addDefaultLayer(SMap.DEF_TURIST);
+        map.addDefaultLayer(SMap.DEF_TURIST_WINTER);
+        map.addDefaultLayer(SMap.DEF_HISTORIC);
+        map.addDefaultLayer(SMap.DEF_BASE).enable();
+        map.addDefaultControls();
+
+        let layerSwitch = new SMap.Control.Layer({
+            width: 65,
+            items: 4,
+            page: 4
+        });
+        layerSwitch.addDefaultLayer(SMap.DEF_BASE);
+        layerSwitch.addDefaultLayer(SMap.DEF_OPHOTO);
+        layerSwitch.addDefaultLayer(SMap.DEF_TURIST);
+        layerSwitch.addDefaultLayer(SMap.DEF_TURIST_WINTER);
+        layerSwitch.addDefaultLayer(SMap.DEF_OPHOTO0406);
+        layerSwitch.addDefaultLayer(SMap.DEF_OPHOTO0203);
+        layerSwitch.addDefaultLayer(SMap.DEF_HISTORIC);
+        map.addControl(layerSwitch, {left: "8px", top: "9px"});
+
+        let mouse = new SMap.Control.Mouse(SMap.MOUSE_PAN | SMap.MOUSE_WHEEL | SMap.MOUSE_ZOOM);
+        map.addControl(mouse);
+
+        let map_layer = new SMap.Layer.Marker();
+        map.addLayer(map_layer).enable();
+
+        let mark = new SMap.Marker(center);
+        map_layer.addMarker(mark);
+    }
+
     ///////////////////////////////////////////////////////////////////////////////////////////////
     const btn = document.getElementById("logout_submit")
 

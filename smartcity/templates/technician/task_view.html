@@ -129,7 +129,6 @@ File containing teask view for technician
                 </div>
             </div>
         </div>
-    {% endfor %}
     <br>
     <div class="container">
         <div class="row g-4">
@@ -241,6 +240,10 @@ File containing teask view for technician
                                         {{ tk.description }}
                                     </div>
                                 </div>
+                                <hr>
+                                <div id="task-view-map" style="height: 400px"></div>
+                                <p style="display: none" id="latitude">{{ t.latitude }}</p>
+                                <p style="display: none" id="longitude">{{ t.longitude }}</p>
                             </div>
                         </div>
                     </div>
@@ -292,6 +295,7 @@ File containing teask view for technician
             {% endfor %}
         </div>
     </div>
+    {% endfor %}
 {% endblock %}
 
 {% block js %}
