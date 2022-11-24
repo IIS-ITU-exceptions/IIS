@@ -152,7 +152,8 @@ File containing teask view for technician
                                                 {# Form fields #}
                                                 <div class="input-group mb-3 p-1">
                                                     <span class="input-group-text" id="basic-addon1">Set cost:</span>
-                                                    <input id="cost" class="form-control" type="number" min="0" step="100" value="{{ tk.cost }}">
+                                                    <input id="cost" class="form-control" type="number" min="0" step="10" value="{{ tk.cost }}">
+                                                    <span class="input-group-text">$</span>
                                                 </div>
                                                 <div class="input-group mb-3 p-1">
                                                     <span class="input-group-text" id="basic-addon2">Set man-hours:</span>
@@ -160,15 +161,19 @@ File containing teask view for technician
                                                 </div>
                                                 <div class="input-group mb-3 p-1">
                                                     <span class="input-group-text" id="basic-addon3">Completed by:</span>
-                                                    <input id="completion" class="form-control" type="date">
+                                                    {% if tk.days_to_complete == none %}
+                                                        <input id="completion" class="form-control" value="{{ Date().toISOString().split("T")[0] }}" type="date">
+                                                    {% else %}
+                                                        <input id="completion" class="form-control" value="{{ tk.days_to_complete }}" type="date">
+                                                    {% endif %}
                                                 </div>
                                                 <div class="input-group mb-3 p-1">
                                                     <span class="input-group-text" id="basic-addon1">Set state:</span>
                                                     <select class="form-select" id="task_state">
-                                                        <option value="New">New</option>
-                                                        <option value="Planned">Planned</option>
-                                                        <option value="Work In Progress">Work In Progress</option>
-                                                        <option value="Done">Done</option>
+                                                        <option id="New" value="New">New</option>
+                                                        <option id="Planned" value="Planned">Planned</option>
+                                                        <option id="Work In Progress" value="Work In Progress">Work In Progress</option>
+                                                        <option id="Done" value="Done">Done</option>
                                                     </select>
                                                 </div>
                                                 <hr>
@@ -186,6 +191,7 @@ File containing teask view for technician
                                             <div class="input-group mb-3 p-1">
                                                 <span class="input-group-text">Cost:</span>
                                                 <input class="form-control" type="number" value="{{ tk.cost }}" disabled>
+                                                <span class="input-group-text">$</span>
                                             </div>
                                             <div class="input-group mb-3 p-1">
                                                 <span class="input-group-text">Man-hours:</span>
@@ -282,15 +288,10 @@ File containing teask view for technician
         if ( role != "technician")
             document.getElementById("fieldset").setAttribute("disabled", "disabled");
 
-        document.getElementById("completion").valueAsDate = new Date();
+        {#document.getElementById("completion").valueAsDate = new Date();#}
         document.getElementById("completion").min = new Date().toISOString().split("T")[0];
-        {##}
-        {#let plan = document.getElementById("plan");#}
-        {#if (roles.{{ task[0].days_to_complete }} == "none")#}
-        {#    plan.setAttribute("value", "No estimate");#}
-        {#else#}
-        {#    plan.setAttribute("value", {{ task[0].days_to_complete }});#}
 
+        document.getElementById("{{ task[0].state.value }}").setAttribute("selected", "selected")
 
         {# --------- Image ---------- #}
         const modal = document.getElementById("myModal");
@@ -345,10 +346,6 @@ File containing teask view for technician
             let currentUserId = {{ current_user.id }};
             // Convert to mysql datetime format
             let now = new Date().toISOString().slice(0, 19).replace('T', ' ');
-            {#console.log(content);#}
-            {#console.log(currentTaskId);#}
-            {#console.log(currentUserId);#}
-            {#console.log(now);#}
             $.ajax({
                 type: 'POST',
                 url: '{{ url_for("api.auth_api.add_task_comment") }}',
