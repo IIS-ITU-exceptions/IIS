@@ -21,7 +21,7 @@ from flask import Blueprint, request, jsonify, make_response, current_app, url_f
 from flask_login import login_required, login_user, logout_user, current_user
 
 from smartcity.views import roles_required
-from smartcity.models import User, Role, db, ServiceTaskUsers, ServiceTask, Ticket, Comment, ServiceTaskComment
+from smartcity.models import User, Role, db, ServiceTaskUsers, ServiceTask, Ticket, Comment, ServiceTaskComment, TicketStateEnum
 
 auth_api_bp = Blueprint("auth_api", __name__)
 
@@ -319,7 +319,6 @@ def add_comment():
 @roles_required(["resident"])
 @auth_api_bp.route("/new_ticket", methods=["POST"])
 def create_new_ticket():
-    # data = request.data
     data = request.get_json()
     with current_app.app_context():
         try:
@@ -423,4 +422,23 @@ def get_tickets():
 @roles_required(["technician"])
 @auth_api_bp.route("/update_service_task", methods=["POST"])
 def update_service_task():
-    pass
+    data = request.get_json()
+    with current_app.app_context():
+        try:
+            db.session.query(ServiceTask).filter(ServiceTask.id == int(data.get("id"))).update(
+                {"cost" : int(data.get("cost")), "man_hours" : int(data.get("man_hours")), "days_to_complete" : data.get("completion"), "state" : TicketStateEnum(data.get("task_state"))})
+            db.session.commit()
+            db.session.expunge_all()
+
+            response_object = {
+                "status": "success",
+                "message": "Task successfully updated.",
+            }
+            return make_response(jsonify(response_object), 200)
+        except Exception as e:
+            print(e)
+            response_object = {
+                "status": "fail",
+                "message": "An error has occurred. Please try again.",
+            }
+            return make_response(jsonify(response_object), 500)

@@ -8,12 +8,12 @@ File containing the forms for the technician views
 
 from wtforms.validators import DataRequired, Length, EqualTo
 from flask_wtf import FlaskForm
-from wtforms import StringField, IntegerField, SelectField, DateField
+from wtforms import StringField
 
 
 class UpdateServiceTask(FlaskForm):
-    id = IntegerField("id")
-    cost = IntegerField("cost", [DataRequired(message="Forgot to set cost?")])
-    man_hours = IntegerField("man_hours", [DataRequired(message="Forgot calculate man-hours?")])
-    completion = DateField("completion", [DataRequired(message="Forgot pass planned date of completion?")])
-    # task_state = SelectField()
+    id = StringField("id")
+    cost = StringField("cost", [DataRequired(message="Forgot to set cost?")])
+    man_hours = StringField("man_hours", [DataRequired(message="Forgot calculate man-hours?")])
+    completion = StringField("completion", [DataRequired(message="Forgot pass planned date of completion?")])
+    task_state = StringField("task_state", [DataRequired(message="No state passed.")])

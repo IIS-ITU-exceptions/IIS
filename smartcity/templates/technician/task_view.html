@@ -420,13 +420,13 @@ File containing teask view for technician
            // Make JSON out of the form input value
            let data = JSON.stringify({
                csrf_token: fields.csrf_token.input.value,
-               reporter_id: fields.cost.input.value,
-               name: fields.man_hours.input.value,
-               description: fields.completion.input.value,
+               cost: fields.cost.input.value,
+               man_hours: fields.man_hours.input.value,
+               completion: fields.completion.input.value,
                task_state: fields.task_state.input.value,
                id: {{ task[0].id }},
            });
-           const response = await fetch("{{ url_for("technician.task_view") }}", {  {# ############# #}
+           const response = await fetch("{{ url_for("technician.task_view") }}?taskID={{ task[0].id }}&&parent={{ task[0].parent_ticket }}", {
                method: "POST",
                headers: {
                    "Content-Type": "application/json"
@@ -449,12 +449,7 @@ File containing teask view for technician
                });
 
                if (api_response.ok) {
-                    form.reset()
-                    $("#passLength").css('color', '#6c757d');
-                    alerts.innerHTML = bootstrap_alert_macro("Service task updated", "success")
-                    setTimeout(function () {
-                        $(".alert").alert('close');
-                    }, 3000);
+                    window.location.assign("{{ url_for("technician.task_view") }}?taskID={{ task[0].id }}&&parent={{ task[0].parent_ticket }}")
                } else {
                    const message = await api_response.json();
                    alerts.innerHTML = bootstrap_alert_macro(message["message"], "danger")
