@@ -39,7 +39,7 @@ File containing user's tickets
                                             style="float:right; pointer-events: none;">{{ ticket.state.value }}</button>
                                     <p class="card-text" style="float:right;">{{ ticket.created_at }}</p>
                                     <button class="btn p-2 mt-1 btn-secondary" data-bs-toggle="modal" type="button"
-                                            style="float:right; width: 146px;" data-bs-target="#ticket{{ ticket.id }}">
+                                            style="float:right; width: 146px;" data-bs-target="#ticket{{ ticket.id }}" onclick="comment_query()">
                                         <b>Details</b>
                                     </button>
                                 </div>
@@ -81,12 +81,26 @@ File containing user's tickets
                                 <b>Comments</b>
                             </div>
                             <div id="comments" class="card-body">
-                                COMMENTS
+                                <div class="card-body overflow-auto" style="height:90%" id="commentCardBody">
+                                    {% for ticket_comment in ticket_comments %}
+                                        <div class="card mt-2">
+                                            <div class="card-header">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card-body">
+                                                <p class="card-text">{{ ticket_comment.content }}</p>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>
@@ -116,6 +130,10 @@ File containing user's tickets
                 statesList[i].style.width = "146px";
                 statesList[i].classList.add("btn-success");
             }
+        }
+        
+        function comment_query() {
+            let ticket_comments = [{content : "hi"}]
         }
     </script>
 {% endblock %}
