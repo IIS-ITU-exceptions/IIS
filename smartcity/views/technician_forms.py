@@ -5,10 +5,9 @@ File containing the forms for the technician views
 @email: xnovak2r@stud.fit.vutbr.cz
 """
 
-
-from wtforms.validators import DataRequired, Length, EqualTo
 from flask_wtf import FlaskForm
 from wtforms import StringField
+from wtforms.validators import DataRequired, Length, EqualTo
 
 
 class UpdateServiceTask(FlaskForm):

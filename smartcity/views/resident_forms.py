@@ -5,9 +5,9 @@ File containing forms for resident's views
 @email: xnovak2r@stud.fit.vutbr.cz
 """
 
-from wtforms.validators import DataRequired, Length, InputRequired
 from flask_wtf import FlaskForm
 from wtforms import StringField, TextAreaField, IntegerField, FileField
+from wtforms.validators import DataRequired, Length, InputRequired
 
 
 class NewTicket(FlaskForm):

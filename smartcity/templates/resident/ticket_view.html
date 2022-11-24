@@ -127,7 +127,8 @@ File containing ticket view for resident
                 <div class="card-header">
                     <div class="row g-0">
                         <div class="col-md-6">
-                            <h5 class="card-title"><b>{{ t.name }}</b></h5> from <b>{{ t.created_at.year }}-{{ t.created_at.month }}-{{ t.created_at.day }}</b>
+                            <h5 class="card-title"><b>{{ t.name }}</b></h5> from
+                            <b>{{ t.created_at.year }}-{{ t.created_at.month }}-{{ t.created_at.day }}</b>
                         </div>
                         <div class="col-md-6">
                             <button class="state btn p-2 mt-1 mb-3" type="button"
@@ -137,21 +138,23 @@ File containing ticket view for resident
                 </div>
                 <div class="row g-0">
                     <div class="col-md-4 d-flex justify-content-center align-items-center">
-                            {% if t.image_path != None %}
-                                <hr>
-                                <div class="d-flex justify-content-center align-items-center mt-3">
-                                    <img src="{{ t.image_path }}" class="img-fluid rounded-start mb-3"
-                                         alt="{{ t.image_path }}" id="ticketImage" style="max-height:400px;">
-                                </div>
-                                <div id="myModal" class="modal">
-                                    <span class="close">&times;</span>
-                                    <img class="modal-content" id="img01" alt="{{ t.image_path }}">
-                                </div>
+                        {% if t.image_path != None %}
+                            <hr>
+                            <div class="d-flex justify-content-center align-items-center mt-3">
+                                <img src="{{ t.image_path }}" class="img-fluid rounded-start mb-3"
+                                     alt="{{ t.image_path }}" id="ticketImage" style="max-height:400px;">
+                            </div>
+                            <div id="myModal" class="modal">
+                                <span class="close">&times;</span>
+                                <img class="modal-content" id="img01" alt="{{ t.image_path }}">
+                            </div>
 
-                            {% else %}
-                                <hr>
-                                    <img src="/static/images/No_image_available.svg.png" style="height: 200px; object-fit: fill;" class="img-fluid rounded-start" alt="{{ No_image_available }}">
-                            {% endif %}
+                        {% else %}
+                            <hr>
+                            <img src="/static/images/No_image_available.svg.png"
+                                 style="height: 200px; object-fit: fill;" class="img-fluid rounded-start"
+                                 alt="{{ No_image_available }}">
+                        {% endif %}
                     </div>
                     <div class="col-md-8">
                         <div class="card-body">
@@ -167,7 +170,9 @@ File containing ticket view for resident
                 {#------ Map -> bottom-left ------#}
                 <div class="col-xl-6 mb-4" style="max-height: 1000px; min-height: 500px;">
                     <div class="card mb-4" style="height: 60%">
-                        Map
+                        <div id="manager-ticket-view-map" style="height: 400px"></div>
+                        <p style="display: none" id="latitude">{{ t.latitude }}</p>
+                        <p style="display: none" id="longitude">{{ t.longitude }}</p>
                     </div>
                 </div>
                 {#------ Comments -> bottom-right ------#}
@@ -229,7 +234,6 @@ File containing ticket view for resident
                 modal.style.display = "none";
             }
         }
-
         {# --------- States ---------- #}
         let statesList = document.getElementsByClassName("state");
 

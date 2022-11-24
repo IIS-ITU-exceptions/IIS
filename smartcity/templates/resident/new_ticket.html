@@ -6,7 +6,7 @@ File containing new tickets
 -->
 
 {% extends "layout.html" %}
-{% from "macros/fields.html" import render_text_field, render_boolean_field, render_alert%}
+{% from "macros/fields.html" import render_text_field, render_boolean_field, render_alert %}
 
 {% block title %} New ticket {% endblock %}
 
@@ -46,22 +46,24 @@ File containing new tickets
                                 </div>
                                 <div class="mb-3">
                                     <label for="upload_image" class="form-label">Image</label> <br>
-                                    <input type="file" class="form-control form-control-sm" id="upload_image" accept="image/*" />
+                                    <input type="file" class="form-control form-control-sm" id="upload_image"
+                                           accept="image/*"/>
                                 </div>
 
                                 <input hidden id="latitude" type="number" name="latitude" value="-1000">
                                 <input hidden id="longitude" type="number" name="longitude" value="-1000">
                                 <div class="mb-3 mt-4">
                                     <label class="form-label">Location</label> <br>
-                                    <a id="map-my-location" class="btn btn-dark w-100 mb-2">Report defect on my location</a>
+                                    <a id="map-my-location" class="btn btn-dark w-100 mb-2">Report defect on my
+                                        location</a>
                                     <div class="card">
-                                    <div class="card-header" id="new-ticket-location">
-                                        Please move the marker to the correct location.
+                                        <div class="card-header" id="new-ticket-location">
+                                            Please move the marker to the correct location.
+                                        </div>
+                                        <div class="card-body p-0">
+                                            <div class="w-100" style="height: 380px" id="new-ticket-map"></div>
+                                        </div>
                                     </div>
-                                    <div class="card-body p-0">
-                                        <div class="w-100" style="height: 380px" id="new-ticket-map"></div>
-                                    </div>
-                                </div>
                                 </div>
 
                                 <div class="d-grid mt-5">
@@ -79,7 +81,7 @@ File containing new tickets
 {% endblock %}
 
 
-{%  block js %}
+{% block js %}
     <script>
         const form = document.getElementById("form")
         const successMessage = document.getElementById("success-message");
@@ -91,7 +93,7 @@ File containing new tickets
             reader.addEventListener("load", () => {
                 img = reader.result;
             })
-         })
+        })
         const fields = {
             csrf_token: {
                 input: document.getElementById('csrf_token'),
@@ -120,52 +122,52 @@ File containing new tickets
         }
         // React to form submission
         form.addEventListener("submit", async (e) => {
-           e.preventDefault();
-           // Make JSON out of the form input value
-           let data = JSON.stringify({
-               csrf_token: fields.csrf_token.input.value,
-               reporter_id: fields.reporter_id.input.value,
-               name: fields.name.input.value,
-               description: fields.description.input.value,
-               latitude: hidden_fields.latitude.input.value,
-               longitude: hidden_fields.longitude.input.value,
-               image: img,
-           });
-           const response = await fetch("{{ url_for("resident.new_ticket") }}", {
-               method: "POST",
-               headers: {
-                   "Content-Type": "application/json"
-               },
-               body: data,
-           });
-           for (let key in fields) {
-               if (fields[key].input.classList.contains("is-invalid")) {
-                   fields[key].input.classList.remove("is-invalid");
-                   fields[key].error.innerText = "";
-               }
-           }
-           if (response.ok) {
-               const api_response = await fetch("{{ url_for("api.auth_api.create_new_ticket") }}", {
-                   method: "POST",
-                   headers: {
-                       "Content-Type": "application/json"
-                   },
-                   body: data,
-               });
+            e.preventDefault();
+            // Make JSON out of the form input value
+            let data = JSON.stringify({
+                csrf_token: fields.csrf_token.input.value,
+                reporter_id: fields.reporter_id.input.value,
+                name: fields.name.input.value,
+                description: fields.description.input.value,
+                latitude: hidden_fields.latitude.input.value,
+                longitude: hidden_fields.longitude.input.value,
+                image: img,
+            });
+            const response = await fetch("{{ url_for("resident.new_ticket") }}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: data,
+            });
+            for (let key in fields) {
+                if (fields[key].input.classList.contains("is-invalid")) {
+                    fields[key].input.classList.remove("is-invalid");
+                    fields[key].error.innerText = "";
+                }
+            }
+            if (response.ok) {
+                const api_response = await fetch("{{ url_for("api.auth_api.create_new_ticket") }}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: data,
+                });
 
-               if (api_response.ok) {
-                   window.location.assign("{{ url_for("resident.my_tickets") }}")
-               } else {
-                   const message = await api_response.json();
-                   alerts.innerHTML = bootstrap_alert_macro(message["message"], "danger")
-               }
-           } else {
-               const errors = await response.json();
-               Object.keys(errors).forEach((key) => {
-                   fields[key].input.classList.add("is-invalid");
-                   fields[key].error.innerText = errors[key][0];
-               });
-           }
+                if (api_response.ok) {
+                    window.location.assign("{{ url_for("resident.my_tickets") }}")
+                } else {
+                    const message = await api_response.json();
+                    alerts.innerHTML = bootstrap_alert_macro(message["message"], "danger")
+                }
+            } else {
+                const errors = await response.json();
+                Object.keys(errors).forEach((key) => {
+                    fields[key].input.classList.add("is-invalid");
+                    fields[key].error.innerText = errors[key][0];
+                });
+            }
         });
     </script>
 {% endblock %}

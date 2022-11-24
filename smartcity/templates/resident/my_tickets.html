@@ -39,7 +39,8 @@ File containing user's tickets
                                             style="float:right; pointer-events: none;">{{ ticket.state.value }}</button>
                                     <p class="card-text" style="float:right;">{{ ticket.created_at }}</p>
                                     <a class="btn p-2 mt-1 btn-secondary" type="button"
-                                            style="float:right; width: 146px;" data-bs-target="#ticket{{ ticket.id }}" href="{{ url_for("resident.ticket_view") }}?ticketID={{ ticket.id }}">
+                                       style="float:right; width: 146px;" data-bs-target="#ticket{{ ticket.id }}"
+                                       href="{{ url_for("resident.ticket_view") }}?ticketID={{ ticket.id }}">
                                         <b>Details</b>
                                     </a>
                                 </div>
