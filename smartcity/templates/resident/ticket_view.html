@@ -170,9 +170,11 @@ File containing ticket view for resident
                 {#------ Map -> bottom-left ------#}
                 <div class="col-xl-6 mb-4" style="max-height: 1000px; min-height: 500px;">
                     <div class="card mb-4" style="height: 60%">
-                        <div id="manager-ticket-view-map" style="height: 400px"></div>
-                        <p style="display: none" id="latitude">{{ t.latitude }}</p>
-                        <p style="display: none" id="longitude">{{ t.longitude }}</p>
+                        <div class="card-body">
+                            <div id="manager-ticket-view-map" style="height: 400px"></div>
+                            <p style="display: none" id="latitude">{{ t.latitude }}</p>
+                            <p style="display: none" id="longitude">{{ t.longitude }}</p>
+                        </div>
                     </div>
                 </div>
                 {#------ Comments -> bottom-right ------#}
