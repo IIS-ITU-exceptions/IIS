@@ -186,21 +186,27 @@ File containing ticket view for resident
                             </div>
                             <div class="card-body overflow-auto" style="height:90%" id="commentCardBody">
                                 {#------ Individual comments ------#}
-                                {% for comment in ticket_comments %}
-                                    <div class="card mt-2">
-                                        <div class="card-header">
-                                            <div class="row">
-                                                <div class="col-12">
-                                                    <b>{{ all_users[comment.commenter_id - 1].fullname }}</b>
-                                                    <p class="m-0">{{ comment.created_at }}</p>
+                                {% if ticket_comments == [] %}
+                                    <div class="card-text text-center">
+                                        <b>There are no comments for this ticket.</b>
+                                    </div>
+                                {% else %}
+                                    {% for comment in ticket_comments %}
+                                        <div class="card mt-2">
+                                            <div class="card-header">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <b>{{ all_users[comment.commenter_id - 1].fullname }}</b>
+                                                        <p class="m-0">{{ comment.created_at }}</p>
+                                                    </div>
                                                 </div>
                                             </div>
+                                            <div class="card-body">
+                                                <p class="card-text">{{ comment.content }}</p>
+                                            </div>
                                         </div>
-                                        <div class="card-body">
-                                            <p class="card-text">{{ comment.content }}</p>
-                                        </div>
-                                    </div>
-                                {% endfor %}
+                                    {% endfor %}
+                                {% endif %}
                             </div>
                         </div>
                     </div>
