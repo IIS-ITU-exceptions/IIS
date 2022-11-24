@@ -43,3 +43,14 @@ def map_of_tickets():
     users = User.query.filter_by(email=current_user.email).first()
     edit_form = EditUser(name=users.name, surname=users.surname, email=users.email, role=users.role[0].name)
     return render_template("resident/map_of_tickets.html", current_user=current_user, userProfileForm=edit_form)
+
+@resident_bp.route("/ticket_view", methods=["GET", "POST"])
+@login_required
+@roles_required(["resident"])
+def ticket_view():
+    users = User.query.filter_by(email=current_user.email).first()
+    edit_form = EditUser(name=users.name, surname=users.surname, email=users.email, role=users.role[0].name)
+    ticket = Ticket.query.filter(Ticket.id == int(request.args.get("ticketID"))).all()
+    ticket_comments = Comment.query.join(Ticket).filter(Ticket.id == int(request.args.get("ticketID"))).all()
+    all_users = User.query.all()
+    return render_template("resident/ticket_view.html", current_user=current_user, ticket=ticket, ticket_comments=ticket_comments, userProfileForm=edit_form, all_users=all_users)

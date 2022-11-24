@@ -38,69 +38,13 @@ File containing user's tickets
                                     <button class="state btn p-2 mt-1 mb-3" type="button"
                                             style="float:right; pointer-events: none;">{{ ticket.state.value }}</button>
                                     <p class="card-text" style="float:right;">{{ ticket.created_at }}</p>
-                                    <button class="btn p-2 mt-1 btn-secondary" data-bs-toggle="modal" type="button"
-                                            style="float:right; width: 146px;" data-bs-target="#ticket{{ ticket.id }}" onclick="comment_query()">
+                                    <a class="btn p-2 mt-1 btn-secondary" type="button"
+                                            style="float:right; width: 146px;" data-bs-target="#ticket{{ ticket.id }}" href="{{ url_for("resident.ticket_view") }}?ticketID={{ ticket.id }}">
                                         <b>Details</b>
-                                    </button>
+                                    </a>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="modal fade" id="ticket{{ ticket.id }}" tabindex="-1" aria-labelledby="exampleModalLabel"
-             aria-hidden="true">
-            <div class="modal-dialog modal-dialog-scrollable">  {# ???????????????????????????????????? #}
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">{{ ticket.name }}</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="card">
-                            <div class="card-header">
-                                <b>Description</b>
-                            </div>
-                            <div class="card-body">
-                                {{ ticket.description }}
-                            </div>
-                        </div>
-                        <br>
-                        <div class="card">
-                            <div class="card-header">
-                                <b>Map</b>
-                            </div>
-                            <div id="map" class="card-body">
-                                MAP
-                            </div>
-                        </div>
-                        <br>
-                        <div class="card">
-                            <div class="card-header">
-                                <b>Comments</b>
-                            </div>
-                            <div id="comments" class="card-body">
-                                <div class="card-body overflow-auto" style="height:90%" id="commentCardBody">
-                                    {% for ticket_comment in ticket_comments %}
-                                        <div class="card mt-2">
-                                            <div class="card-header">
-                                                <div class="row">
-                                                    <div class="col-12">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="card-body">
-                                                <p class="card-text">{{ ticket_comment.content }}</p>
-                                            </div>
-                                        </div>
-                                    {% endfor %}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>
@@ -130,10 +74,6 @@ File containing user's tickets
                 statesList[i].style.width = "146px";
                 statesList[i].classList.add("btn-success");
             }
-        }
-        
-        function comment_query() {
-            let ticket_comments = [{content : "hi"}]
         }
     </script>
 {% endblock %}
