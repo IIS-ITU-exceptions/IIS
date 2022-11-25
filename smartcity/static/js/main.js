@@ -144,16 +144,22 @@ $(document).ready(async function () {
         let marker_layer = new SMap.Layer.Marker();
         map.addLayer(marker_layer).enable();
 
+        let clusterer = new SMap.Marker.Clusterer(map);
+        marker_layer.setClusterer(clusterer);
+
         const response = await get_tickets();
         let tickets = eval(response);
         tickets.forEach(function(value) {
             let c = new SMap.Card();
             c.setSize(350, 200);
-            c.getHeader().innerHTML = "<strong>" + value.name + "</strong>";
+            c.getHeader().innerHTML = "<strong>Category:</strong> " + value.name ;
             c.getBody().style.margin = "5px 0px";
             c.getBody().style.backgroundColor = "ddd";
-            c.getBody().innerHTML = value.description;
-            c.getFooter().innerHTML = "<strong>Created at</strong>:   " + value.created_at;
+            c.getBody().innerHTML = "<strong>Created at:</strong> " + value.created_at + "<br>"
+            c.getBody().innerHTML += "<strong>Descirption:</strong> " + value.description;
+            c.getFooter().innerHTML = " <strong>View ticket:</strong> <a href='" +
+                                      window.location.origin + "/ticket_view?ticketID="
+                                      + value.id + "'>Here" + "</a>"
 
             let coords = SMap.Coords.fromWGS84(value.longitude, value.latitude);
 
