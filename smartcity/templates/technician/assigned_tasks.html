@@ -12,7 +12,7 @@ File containing techician's tasks
 
 {% block content %}
     <div class="row justify-content-end align-items-center" style="position: relative; right: 10%">
-        <div class="col-md-2 py-3">
+        <div class="col-sm-3 py-3">
             <input value="Hide completed tasks" class="btn btn-primary" type="button" id="hide" onclick="func()"/>
         </div>
     </div>
@@ -22,10 +22,10 @@ File containing techician's tasks
             <div class="card col-10 {{ task.state.value }}" style="max-width: 1000px; min-height: 100px;">
                 <div class="card-header">
                     <div class="row">
-                        <div class="col md-10">
+                        <div class="col-sm-10">
                             <h4><b>{{ task.name }}</b></h4>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-sm-2">
                             <a href="{{ url_for("technician.task_view") }}?taskID={{ task.id }}&&parent={{ task.parent_ticket }}"
                                class="btn btn-secondary float-end" role="button" style="width: 110px;">View task</a>
                         </div>
@@ -33,11 +33,11 @@ File containing techician's tasks
                 </div>
 
                 <div class="row g-0" style="min-height: 100px;">
-                    <div class="col-md-7 mx-3 mt-1">
+                    <div class="col-sm-4 col-lg-7 mx-3 mt-1">
                         <p class="card-text">{{ task.description[:140] }}</p>
                     </div>
-                    <div class="col-md-1"></div>
-                    <div class="col-md-2 align-self-center">
+                    <div class="col-sm-0 col-lg-1"></div>
+                    <div class="col-sm-4 col-lg-2 align-self-center">
                         For ticket <b>#{{ task.parent_ticket }}</b>
                         <br>
                         {% if task.days_to_complete != None %}
@@ -46,7 +46,7 @@ File containing techician's tasks
                             No estimate
                         {% endif %}
                     </div>
-                    <div class="col-md-1 mx-2 align-self-center">
+                    <div class="col-sm-4 col-lg-1 mx-2 align-self-center">
                         <button class="state btn" style="pointer-events: none">{{ task.state.value }}</button>
                     </div>
                 </div>
