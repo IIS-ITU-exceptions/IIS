@@ -8,7 +8,7 @@ File containing teask view for technician
 {% extends "layout.html" %}
 {% from "macros/fields.html" import render_text_field, render_boolean_field, render_alert %}
 
-{% block title %} Assigned Tasks {% endblock %}
+{% block title %} Task {{ task[0].name }} {% endblock %}
 {% block css %}
     <style>
         /* Style the Image Used to Trigger the Modal */
@@ -102,7 +102,7 @@ File containing teask view for technician
             <div class="card" style="max-width: 1300px; min-width: 700px;">
                 <div class="row g-0">
                     <div class="card-header">
-                        <h5 class="card-title"><b>{{ t.name }}</b></h5>
+                        <h5 class="card-title"><b>{{ t.name }}</b> - ticket #{{ t.id }}</h5>
                     </div>
                     <div class="col-md-10">
                         <div class="card-body">
@@ -111,7 +111,7 @@ File containing teask view for technician
                     </div>
                     <div class="d-flex align-items-center flex-column col-md-2">
                         <div class="p-2">
-                            <button class="state btn" style="pointer-events: none">{{ t.state.value }}</button>
+                            <button class="state btn" style="width: 100px; pointer-events: none">{{ t.state.value }}</button>
                         </div>
                         <div class="py-2">
                             <b>{{ t.created_at.year }}-{{ t.created_at.month }}-{{ t.created_at.day }}</b>
@@ -119,10 +119,10 @@ File containing teask view for technician
                         <div class="p-2">
                             {% if t.image_path != None %}
                                 <input type="button" value="Image" class="btn btn-secondary"
-                                       id="img_button" style="position: relative"/>
+                                       id="img_button" style="position: relative; width: 100px;"/>
                             {% else %}
                                 <input type="button" value="No image" class="btn btn-secondary"
-                                       id="img_button" disabled/>
+                                       id="img_button" style="position: relative; width: 100px;" disabled/>
                             {% endif %}
                         </div>
                     </div>
@@ -241,7 +241,7 @@ File containing teask view for technician
                                     </div>
                                 </div>
                                 <hr>
-                                <div id="task-view-map" style="height: 400px"></div>
+                                <div id="task-view-map" style="height: 400px; z-index: 0;"></div>
                                 <p style="display: none" id="latitude">{{ t.latitude }}</p>
                                 <p style="display: none" id="longitude">{{ t.longitude }}</p>
                             </div>

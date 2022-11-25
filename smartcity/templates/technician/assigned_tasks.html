@@ -25,9 +25,9 @@ File containing techician's tasks
                         <div class="col md-10">
                             <h4><b>{{ task.name }}</b></h4>
                         </div>
-                        <div class="col md-2">
+                        <div class="col-md-2">
                             <a href="{{ url_for("technician.task_view") }}?taskID={{ task.id }}&&parent={{ task.parent_ticket }}"
-                               class="btn btn-secondary float-end" role="button">View task</a>
+                               class="btn btn-secondary float-end" role="button" style="width: 110px;">View task</a>
                         </div>
                     </div>
                 </div>
@@ -38,13 +38,15 @@ File containing techician's tasks
                     </div>
                     <div class="col-md-1"></div>
                     <div class="col-md-2 align-self-center">
+                        For ticket <b>#{{ task.parent_ticket }}</b>
+                        <br>
                         {% if task.days_to_complete != None %}
                             Done by <b>{{ task.days_to_complete }}</b>
                         {% else %}
                             No estimate
                         {% endif %}
                     </div>
-                    <div class="col-md-1 mx-3 align-self-center">
+                    <div class="col-md-1 mx-2 align-self-center">
                         <button class="state btn" style="pointer-events: none">{{ task.state.value }}</button>
                     </div>
                 </div>
