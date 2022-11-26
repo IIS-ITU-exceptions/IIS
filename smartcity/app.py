@@ -98,9 +98,12 @@ def register_error_handler(app):
     """Register Flask app error handler."""
     def render_error(error):
         error_code = getattr(error, "code", 500)
-        users = User.query.filter_by(email=current_user.email).first()
-        edit_form = EditUser(name=users.name, surname=users.surname, email=users.email, role=users.role[0].name)
-        return render_template(f"{error_code}.html", userProfileForm=edit_form), error_code
+        if current_user.is_authenticated:
+            users = User.query.filter_by(email=current_user.email).first()
+            edit_form = EditUser(name=users.name, surname=users.surname, email=users.email, role=users.role[0].name)
+            return render_template(f"{error_code}.html", userProfileForm=edit_form), error_code
+        else:
+            return render_template(f"{error_code}.html"), error_code
 
     for err in [401, 404, 500]:
         app.errorhandler(err)(render_error)
