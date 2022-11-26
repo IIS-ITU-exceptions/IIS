@@ -11,6 +11,20 @@ File containing user's tickets
 {% block title %} My tickets {% endblock %}
 
 {% block content %}
+    {% if not tickets %}
+        <div class="container">
+        <div class="row">
+            <div class="d-flex justify-content-center align-items-center mt-3 mb-4">
+                <b>YOU HAVE NOT CREATED ANY TICKETS</b>
+            </div>
+        </div>
+        <div class="row">
+            <div class="d-flex justify-content-center align-items-center mt-3 mb-5">
+                <a class="btn btn-outline-dark col-6" href="{{url_for("resident.new_ticket") }}">CREATE TICKET</a>
+            </div>
+        </div>
+        </div>
+    {% else %}
     {% for ticket in tickets %}
         <div class="d-flex justify-content-center align-items-center mt-4">
             <div class="card col-10 {{ ticket.state.value }}" style="max-width: 1000px;">
@@ -51,6 +65,7 @@ File containing user's tickets
             </div>
         </div>
     {% endfor %}
+    {% endif %}
 {% endblock %}
 
 {% block js %}
