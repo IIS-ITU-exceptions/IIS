@@ -121,7 +121,7 @@ def login():
                 }
                 role_name = user.role[0].name
                 if role_name == "resident":
-                    response_object.update({"location": url_for("resident.my_tickets")})
+                        response_object.update({"location": url_for("resident.map_of_tickets")})
                 elif role_name == "technician":
                     response_object.update({"location": url_for("technician.assigned_tasks")})
                 elif role_name == "manager":
