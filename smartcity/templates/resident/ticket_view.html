@@ -8,7 +8,7 @@ File containing ticket view for resident
 {% extends "layout.html" %}
 {% from "macros/fields.html" import render_text_field, render_boolean_field, render_alert %}
 
-{% block title %} Ticket view {% endblock %}
+{% block title %} Ticket {{ ticket[0].name }} {% endblock %}
 {% block css %}
     <style>
         /* Style the Image Used to Trigger the Modal */
@@ -171,7 +171,7 @@ File containing ticket view for resident
                 <div class="col-xl-6 mb-4" style="max-height: 1000px; min-height: 500px;">
                     <div class="card mb-4">
                         <div class="card-body">
-                            <div id="ticket-view-map" style="height: 400px"></div>
+                            <div id="ticket-view-map" style="height: 400px; z-index: 0;"></div>
                             <p style="display: none" id="latitude">{{ t.latitude }}</p>
                             <p style="display: none" id="longitude">{{ t.longitude }}</p>
                         </div>
