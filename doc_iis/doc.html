@@ -22,7 +22,7 @@
 	<dt>Autoøi</dt>
 	<dd>Dominik Vágner <!-- Nahraïte skuteèným jménem a e-mailem autora a popisem èinnosti -->
 	    <a href="mailto:xvagne10@stud.fit.vutbr.cz">xvagne10@stud.fit.vutbr.cz</a> -
-		návrh DB, sestrojení api, login, registrace, domovská stránka, mapy
+		návrh DB, sestrojení api, login, registrace, domovská stránka, mapy, nasazení aplikace
 	</dd>
 	<dd>Ladislav Va¹ina <!-- Nahraïte skuteèným jménem a e-mailem autora a popisem èinnosti -->
 	    <a href="mailto:xvasin11@stud.fit.vutbr.cz">xvasin11@stud.fit.vutbr.cz</a> -
@@ -53,8 +53,25 @@
 <p>Pøilo¾te odkaz na komentované video demostrující pou¾ití informaèního systému. Zamìøte se na pøípady u¾ití definované zadáním (napø. registrace u¾ivatele, správa u¾ivatelù a èinnosti jednotlivých rolí). Video nahrajte napøíklad na VUT Google Drive, kde ho bude mo¾né pøímo spustit z odkazu.</p> 
 
 <h2>Implementace</h2>
-<b>TODO</b>
-<p>Struèná dokumentace k implementaci, která popisuje, které èásti projektu (napø. PHP skripty) implementují jednotlivé pøípady pou¾ití.</p>
+<h5>Pou¾ité techologie:</h5>
+<p>
+    Backend aplikace je vytvoøen v Python frameworku Flask.
+    Pro frontend byly pou¾ity technologie/frameworky Javascript (jQuery), HTML, CSS, Jinja, Bootstrap.
+    K zobrazení map se pou¾ilo veøejné neplacené API od <a href="https://api.mapy.cz/">mapy.cz</a>.
+</p>
+<h5>Popis adresáøe s kódem:</h5>
+<ul>
+    <li>smartcity</li>
+        <ul>
+            <li>static/ = Slo¾ka se statickými èástmi aplikace jako dedikované CSS, Javascript soubory a fotky.</li>
+            <li>templates/ = Slo¾ka obsahující v¹echny HTML soubory, které hojnì vyu¾ívají ¹ablonovacího jazyku Jinja. V nich je také vlo¾ený Javascript zpracovávající jednotlivé formuláøe.</li>
+            <li>views/ = Python implementace API, soubory které definují routes a formuláøe pro ka¾dého mo¾ného u¾ivatele.</li>
+            <li>app.py = Inicializace aplikace, naètení prommìných prostøedí, prvotní naplnìní datábaze, propojení funkcionality.</li>
+            <li>extensions.py = Inicializace nìkterých z knihoven.</li>
+            <li>models.py = Definice modelu aplikace. Namapování databáze na Python objekty pomocí knihovny SQLAlchemy a metody pro dané tøídy.</li>
+        </ul>
+</ul>
+
 
 <h3>Databáze</h3>
 <img src="https://i.imgur.com/OrEmDXi.png" alt="Databazove schema. Obrazek je nahran zde-> https://i.imgur.com/OrEmDXi.png" >
