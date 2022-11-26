@@ -8,10 +8,12 @@ File containing app setup and initialization
 import os
 
 from flask import Flask, render_template, current_app, Blueprint
+from flask_login import current_user
 from sqlalchemy import select
 from sqlalchemy.exc import NoResultFound
 from dotenv import load_dotenv
 
+from smartcity.views.admin_forms import EditUser
 from smartcity.views.home import home_bp
 from smartcity.views.auth import auth_bp
 from smartcity.views.manager import manager_bp
@@ -96,7 +98,9 @@ def register_error_handler(app):
     """Register Flask app error handler."""
     def render_error(error):
         error_code = getattr(error, "code", 500)
-        return render_template(f"{error_code}.html"), error_code
+        users = User.query.filter_by(email=current_user.email).first()
+        edit_form = EditUser(name=users.name, surname=users.surname, email=users.email, role=users.role[0].name)
+        return render_template(f"{error_code}.html", userProfileForm=edit_form), error_code
 
     for err in [401, 404, 500]:
         app.errorhandler(err)(render_error)
