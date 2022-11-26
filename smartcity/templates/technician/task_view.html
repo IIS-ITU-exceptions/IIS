@@ -144,7 +144,7 @@ File containing teask view for technician
                             <div class="row g-1">
                                 <div class="col">
                                     <div class="card">
-                                        <form id="form" method="POST" novalidate>
+                                        <form id="form" method="POST">
                                             <fieldset id="fieldset">
                                                 {# CSRF Token #}
                                                 {{ form.csrf_token() }}
@@ -153,21 +153,21 @@ File containing teask view for technician
                                                 <div class="input-group mb-3 p-1">
                                                     <span class="input-group-text" id="basic-addon1">Set cost:</span>
                                                     <input id="cost" class="form-control" type="number" min="0"
-                                                           step="10" value="{{ tk.cost }}">
+                                                           step="10" value="{{ tk.cost }}" required>
                                                     <span class="input-group-text">$</span>
                                                 </div>
                                                 <div class="input-group mb-3 p-1">
                                                     <span class="input-group-text"
                                                           id="basic-addon2">Set man-hours:</span>
                                                     <input id="man_hours" class="form-control" type="number" min="0"
-                                                           step="1" value="{{ tk.man_hours }}">
+                                                           step="1" value="{{ tk.man_hours }}" required>
                                                 </div>
                                                 <div class="input-group mb-3 p-1">
                                                     <span class="input-group-text"
                                                           id="basic-addon3">Completed by:</span>
                                                     {% if tk.days_to_complete == none %}
                                                         <input id="completion" class="form-control"
-                                                               value="{{ Date().toISOString().split("T")[0] }}"
+{#                                                               value="{{ Date().toISOString().split("T")[0] }}"#}
                                                                type="date">
                                                     {% else %}
                                                         <input id="completion" class="form-control"
@@ -431,6 +431,7 @@ File containing teask view for technician
                 error: document.getElementById('task_state-error')
             },
         }
+
 
         // React to form submission
         form.addEventListener("submit", async (e) => {
