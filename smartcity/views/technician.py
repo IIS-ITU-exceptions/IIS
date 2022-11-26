@@ -18,7 +18,7 @@ from .technician_forms import UpdateServiceTask
 technician_bp = Blueprint("technician", __name__)
 
 
-@technician_bp.route("/assigned_tasks", methods=["GET"])
+@technician_bp.route("/assigned_tasks", methods=["GET", "POST"])
 @login_required
 @roles_required(["technician"])
 def assigned_tasks():
