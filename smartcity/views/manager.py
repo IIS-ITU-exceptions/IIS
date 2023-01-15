@@ -10,7 +10,7 @@ from flask_login import login_required, login_user, logout_user, current_user
 from smartcity.views import roles_required
 from smartcity.models import User, Role, RolesUsers, ServiceTask, ServiceTaskUsers, Comment, Ticket, TicketStateEnum, db
 
-from smartcity.views.manager_forms import CreateTechnician, CreateServiceTask
+from smartcity.views.manager_forms import CreateTechnician, CreateServiceTask, CreateNotice
 from .admin_forms import EditUser
 manager_bp = Blueprint("manager", __name__)
 
@@ -78,3 +78,26 @@ def manager_ticket_view():
                            service_technicians=service_technicians, tickets=tickets,
                            selected_ticket_id=selected_ticket_id, all_users=all_users, ticket_comments=ticket_comments,
                            tickets_tasks=tickets_tasks, userProfileForm=edit_form)
+
+
+@manager_bp.route("/manager_message_board", methods=["GET", "POST"])
+@login_required
+@roles_required(["manager"])
+def manager_message_board():
+    create_notice_form = CreateNotice()
+    if request.method == "POST":
+        if create_notice_form.validate():
+            response_object = {
+                "status": "success", "message": "Form verification successful"
+            }
+            return jsonify(response_object), 200
+        else:
+            return jsonify(create_notice_form.errors), 400
+    users = User.query.filter_by(email=current_user.email).first()
+    edit_form = EditUser(name=users.name, surname=users.surname, email=users.email, role=users.role[0].name)
+    return render_template(
+        "manager/manager_message_board.html",
+        current_user=current_user,
+        userProfileForm=edit_form,
+        create_form=create_notice_form
+    )

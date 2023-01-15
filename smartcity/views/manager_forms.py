@@ -27,3 +27,13 @@ class CreateTechnician(FlaskForm):
 class CreateServiceTask(FlaskForm):
     name = StringField("Name", [DataRequired(message="Forgot service task name?")])
     description = TextAreaField("Description", [DataRequired(message="Forgot service task description?")])
+
+
+class CreateNotice(FlaskForm):
+    title = StringField("Title", [DataRequired(message="Forgot notice title?")])
+    description = TextAreaField(
+        "Description",
+        [DataRequired(message="Forgot notice description?"),
+         Length(min=20, message="Description must be at least 20 characters long.")]
+    )
+    duration = StringField("Duration", [DataRequired(message="Forgot notice date range?")])

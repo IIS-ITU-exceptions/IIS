@@ -39,6 +39,13 @@ class TicketStateEnum(enum.Enum):
     DONE = "Done"
 
 
+class NoticeTypeEnum(enum.Enum):
+    ANNOUNCEMENT = "Announcement"
+    EXTRAORDINARITY = "Extraordinarity"
+    MAINTENANCE = "Maintenance"
+    CLOSURE = "Closure"
+
+
 class RolesUsers(db.Model):
     __tablename__ = "roles_users"
     id = Column(Integer, primary_key=True)
@@ -167,3 +174,25 @@ class ServiceTask(db.Model):
     cost = Column(Integer, default=0)
     technicians = relationship("User", secondary="service_task_users", backref=backref("service_task", lazy="dynamic"))
 
+
+class Notice(db.Model):
+    __tablename__ = "notice"
+    id = Column(Integer, primary_key=True)
+    title = Column(String(255), nullable=False)
+    description = Column(Text(2048), nullable=False)
+    type = Column(Enum(NoticeTypeEnum), nullable=False, server_default=NoticeTypeEnum.ANNOUNCEMENT.value)
+    start_date = Column(Date, nullable=False)
+    end_date = Column(Date, nullable=False)
+    deleted = Column(Boolean, default=False)
+    creator_id = Column(Integer, ForeignKey("user.id"), nullable=False)
+
+    def to_dict(self):
+        response = {
+            "id": self.id,
+            "title": self.title,
+            "description": self.description,
+            "type": str(self.type)[str(self.type).find('.')+1:].capitalize(),
+            "start_date": self.start_date.strftime("%m/%d/%Y"),
+            "end_date": self.end_date.strftime("%m/%d/%Y")
+        }
+        return response

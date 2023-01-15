@@ -15,13 +15,14 @@ import datetime
 import base64
 import json
 
-from datetime import datetime
+from datetime import datetime, date
 
 from flask import Blueprint, request, jsonify, make_response, current_app, url_for
 from flask_login import login_required, login_user, logout_user, current_user
 
 from smartcity.views import roles_required
-from smartcity.models import User, Role, db, ServiceTaskUsers, ServiceTask, Ticket, Comment, ServiceTaskComment, TicketStateEnum
+from smartcity.models import User, Role, db, ServiceTaskUsers, ServiceTask, Ticket, Comment, ServiceTaskComment, \
+    TicketStateEnum, NoticeTypeEnum, Notice
 
 auth_api_bp = Blueprint("auth_api", __name__)
 
@@ -433,6 +434,172 @@ def update_service_task():
             response_object = {
                 "status": "success",
                 "message": "Task successfully updated.",
+            }
+            return make_response(jsonify(response_object), 200)
+        except Exception as e:
+            print(e)
+            response_object = {
+                "status": "fail",
+                "message": "An error has occurred. Please try again.",
+            }
+            return make_response(jsonify(response_object), 500)
+
+
+@login_required
+@roles_required(["manager"])
+@auth_api_bp.route("/create_notice", methods=["POST"])
+def create_notice():
+    data = request.get_json()
+    with current_app.app_context():
+        try:
+            duration = data.get("duration")
+            start_date, end_date = [datetime.strptime(x, '%m/%d/%Y') for x in duration.split(" - ")]
+            new_notice = Notice(
+                title=data.get("title"),
+                description=data.get("description"),
+                type=NoticeTypeEnum(data.get("type")),
+                start_date=start_date,
+                end_date=end_date,
+                deleted=False,
+                creator_id=data.get("creator_id"),
+            )
+            db.session.add(new_notice)
+            db.session.commit()
+            db.session.expunge_all()
+
+            response_object = {
+                "status": "success",
+                "message": "State successfully changed.",
+            }
+            return make_response(jsonify(response_object), 200)
+        except Exception as e:
+            print(e)
+            response_object = {
+                "status": "fail",
+                "message": "An error has occurred. Please try again.",
+            }
+            return make_response(jsonify(response_object), 500)
+
+
+@login_required
+@auth_api_bp.route("/query_notices", methods=["POST"])
+def query_notices():
+    data = request.get_json()
+    with current_app.app_context():
+        try:
+            notice_type = data.get("type")
+            daterange = data.get("daterange")
+            notices = db.session.query(Notice).filter(Notice.deleted == 0).all()
+
+            if notice_type.lower() != "all types":
+                notices = [x for x in notices if x.type.value.lower() == notice_type.lower()]
+            if daterange:
+                start_date, end_date = [datetime.strptime(x, '%m/%d/%Y').date() for x in daterange.split(" - ")]
+                notices = [x for x in notices if start_date <= x.end_date and end_date >= x.start_date]
+
+            notice_dict = [entry.to_dict() for entry in notices]
+            response_object = json.dumps(notice_dict)
+            return make_response(jsonify(response_object), 200)
+        except Exception as e:
+            print(e)
+            response_object = {
+                "status": "fail",
+                "message": "An error has occurred. Please try again.",
+            }
+            return make_response(jsonify(response_object), 500)
+
+
+@login_required
+@roles_required(["manager"])
+@auth_api_bp.route("/edit_notice", methods=["POST"])
+def edit_notice():
+    data = request.get_json()
+    with current_app.app_context():
+        try:
+            notice_title = data.get("notice_title")
+            notice_type = data.get("notice_type")
+            notice_duration = data.get("notice_duration")
+            notice_description = data.get("notice_description")
+
+            if notice_title == "undefined" or notice_title == "":
+                response_object = {
+                    "status": "fail",
+                    "message": "Invalid or empty Title.",
+                }
+                return make_response(jsonify(response_object), 400)
+            if notice_type == "undefined" or notice_type == "":
+                response_object = {
+                    "status": "fail",
+                    "message": "Type not selected.",
+                }
+                return make_response(jsonify(response_object), 400)
+            if notice_type not in [e.value for e in NoticeTypeEnum]:
+                response_object = {
+                    "status": "fail",
+                    "message": "Invalid Type.",
+                }
+                return make_response(jsonify(response_object), 400)
+            if notice_description == "undefined" or notice_description == "":
+                response_object = {
+                    "status": "fail",
+                    "message": "Invalid or empty description.",
+                }
+                return make_response(jsonify(response_object), 400)
+            if notice_duration == "undefined" or notice_duration == "":
+                response_object = {
+                    "status": "fail",
+                    "message": "Invalid or empty duration.",
+                }
+                return make_response(jsonify(response_object), 400)
+            try:
+                start_date, end_date = [datetime.strptime(x, '%m/%d/%Y') for x in notice_duration.split(" - ")]
+            except Exception as e:
+                print(e)
+                response_object = {
+                    "status": "fail",
+                    "message": "Invalid duration format.",
+                }
+                return make_response(jsonify(response_object), 400)
+
+            db.session.query(Notice).filter(Notice.id == int(data.get("notice_id"))).update({
+                "title": notice_title,
+                "type": NoticeTypeEnum(notice_type),
+                "start_date": start_date,
+                "end_date": end_date,
+                "description": notice_description,
+            })
+            db.session.commit()
+            db.session.expunge_all()
+
+            response_object = {
+                "status": "success",
+                "message": "Notice successfully updated.",
+            }
+            return make_response(jsonify(response_object), 200)
+        except Exception as e:
+            print(e)
+            response_object = {
+                "status": "fail",
+                "message": "An error has occurred. Please try again.",
+            }
+            return make_response(jsonify(response_object), 500)
+
+
+@login_required
+@roles_required(["manager"])
+@auth_api_bp.route("/delete_notice", methods=["POST"])
+def delete_notice():
+    data = request.get_json()
+    with current_app.app_context():
+        try:
+            notice_id = data.get("notice_id")
+            print(notice_id)
+            db.session.query(Notice).filter(Notice.id == notice_id).update({"deleted": 1})
+            db.session.commit()
+            db.session.expunge_all()
+            response_object = {
+                "status": "success",
+                "message": "State successfully changed.",
             }
             return make_response(jsonify(response_object), 200)
         except Exception as e:

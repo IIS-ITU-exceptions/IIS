@@ -59,3 +59,12 @@ def ticket_view():
     all_users = User.query.all()
     return render_template("resident/ticket_view.html", current_user=current_user, ticket=ticket,
                            ticket_comments=ticket_comments, userProfileForm=edit_form, all_users=all_users)
+
+
+@resident_bp.route("/resident_message_board", methods=["GET", "POST"])
+@login_required
+@roles_required(["resident"])
+def resident_message_board():
+    users = User.query.filter_by(email=current_user.email).first()
+    edit_form = EditUser(name=users.name, surname=users.surname, email=users.email, role=users.role[0].name)
+    return render_template("resident/resident_message_board.html", current_user=current_user, userProfileForm=edit_form)

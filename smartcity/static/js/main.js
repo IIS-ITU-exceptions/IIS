@@ -332,6 +332,37 @@ $(document).ready(async function () {
         console.log(await api_response.json())
         window.location.assign(window.location.origin)
     });
+
+
+    $('input[id="daterange"]').daterangepicker({
+        drops: "down",
+        opens: "center",
+        locale: {
+          cancelLabel: 'Clear'
+        },
+    });
+    $('input[id="daterange"]').on('cancel.daterangepicker', function(ev, picker) {
+        $(this).val('');
+    });
+    $('input[id="daterange"]').trigger("cancel.daterangepicker");
+
+
+    $('input[name="duration"]').daterangepicker({
+        drops: "down",
+        opens: "center",
+        parentEl: "#addNewNoticeModal",
+        autoUpdateInput: false,
+        locale: {
+          cancelLabel: 'Clear'
+        },
+        minDate: moment().format('MM-DD-YYYY')
+    });
+    $('input[name="duration"]').on('apply.daterangepicker', function(ev, picker) {
+        $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+    });
+    $('input[name="duration"]').on('cancel.daterangepicker', function(ev, picker) {
+        $(this).val('');
+    });
 });
 
 
@@ -348,3 +379,124 @@ function bootstrap_alert_macro(message, type) {
 </div>
     `
 }
+
+function notice_card_macro(notice) {
+    return `
+<div class="card mt-2">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-12">
+                <div class="d-flex">
+                    <b class="me-auto" id="card-notice-title-${notice.id}">${notice.title}</b>
+                </div>
+                <div class="d-flex mt-2">
+                    <p class="my-0 me-auto" id="card-notice-duration-${notice.id}">From: ${notice.start_date}, To: ${notice.end_date}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <p class="card-text" id="card-notice-description-${notice.id}">${notice.description}</p>
+    </div>
+</div> 
+`
+}
+
+function manager_notice_card_macro(notice) {
+    return `
+<div class="card mt-2">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-12">
+                <div class="d-flex">
+                    <b class="me-auto" id="card-notice-title-${notice.id}">${notice.title}</b>
+                    <btn class="btn btn-outline-danger btn-sm delete-button py-0 ms-2" id="del-btn-${notice.id}" 
+                         data-bs-toggle="modal" data-bs-target="#delete-notice-modal-${notice.id}">
+                        <i class="las la-trash"></i> Delete
+                    </btn>
+                </div>
+                <div class="d-flex mt-2">
+                    <p class="my-0 me-auto" id="card-notice-duration-${notice.id}">From: ${notice.start_date}, To: ${notice.end_date}</p>
+                    <btn class="btn btn-outline-primary btn-sm edit-button py-0 px-3 ms-2" id="edit-btn-${notice.id}"
+                         data-bs-toggle="modal" data-bs-target="#edit-notice-modal-${notice.id}">
+                        <i class="las la-edit"></i> Edit
+                    </btn>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <p class="card-text" id="card-notice-description-${notice.id}">${notice.description}</p>
+    </div>
+</div>
+<div class="modal fade" id="delete-notice-modal-${notice.id}" tabindex="-1" aria-labelledby="deleteNoticeModalLabel" aria-hidden="true" style="z-index: 999999999;">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header" style="border-bottom: none; padding-bottom: 0px">
+                <h1 class="modal-title fs-5">Are you sure you want to delete this notice?</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body py-0">
+                <hr>
+            </div>
+            <div class="modal-footer" style="border-top: none; padding-top: 0px;">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button data-notice-id="${notice.id}" type="button" class="btn btn-danger delete-notice">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="edit-notice-modal-${notice.id}" tabindex="-1" aria-labelledby="editNoticeModalLabel" aria-hidden="true" style="z-index: 999999999;">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5">Edit notice</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body py-0">
+                <form id="edit-notice-form-${notice.id}" class="mb-3 mt-md-4" method="POST" novalidate>
+                    <div id="csrf_token_error" class="text-danger"></div>
+                    <div class="mb-3">
+                        <label class="form-label" for="notice-title-${notice.id}">Title</label>
+                        <input class="form-control" id="notice-title-${notice.id}" name="notice-title-${notice.id}" required="" type="text" value="${notice.title}">
+                        <div id="title-error" class="invalid-feedback"></div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="notice-type-${notice.id}">Type</label>
+                        <select class="form-select" id="notice-type-${notice.id}">
+                            <option value="Announcement" ${notice.type === "Announcement" ? "selected" : ""}>Announcement</option>
+                            <option value="Extraordinarity" ${notice.type === "Extraordinarity" ? "selected" : ""}>Extraordinarity</option>
+                            <option value="Maintenance" ${notice.type === "Maintenance" ? "selected" : ""}>Maintenance</option>
+                            <option value="Closure" ${notice.type === "Closure" ? "selected" : ""}>Closure</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="text" for="notice-duration-${notice.id}">Duration</label>
+                        <input type="text" class="form-control notice-duration" name="notice-duration-${notice.id}" 
+                               id="notice-duration-${notice.id}" value="${notice.start_date + " - " + notice.end_date}">
+                        <div id="duration-error" class="invalid-feedback"></div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="notice-description-${notice.id}">Description</label>
+                        <textarea class="form-control" id="notice-description-${notice.id}" name="notice-description-${notice.id}" required="">${notice.description}</textarea>
+                        <div id="description-error" class="invalid-feedback"></div>
+                    </div>
+                </form>
+                <div class="d-grid mt-5">
+                    <button class="btn btn-primary edit-notice" style="background-color: #96031A; border-color: #96031A;"
+                        data-notice-id="${notice.id}">
+                        <i class="las la-save"></i> Save edits
+                    </button>
+                </div>
+                <div id="edit-notice-alerts-${notice.id}" class="mt-3"></div>
+                <div id="edit-notice-success-message-${notice.id}" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+`
+}
+// <span class="badge bg-secondary">${notice.type}</span><br>
