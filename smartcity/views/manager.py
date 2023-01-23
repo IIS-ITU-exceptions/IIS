@@ -3,6 +3,9 @@ File containing functions that renders manager's templates
 
 @author: Ladislav Vašina
 @email: xvasin11@stud.fit.vutbr.cz
+
+@author: Dominik Vágner
+@email: xvagne10@stud.fit.vutbr.cz
 """
 
 from flask import Blueprint, request, jsonify, make_response, current_app, render_template
